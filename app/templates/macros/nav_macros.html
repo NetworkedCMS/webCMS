@@ -22,7 +22,11 @@
 {% macro header_items(current_user) %}
     {% set endpoints = [
       ('main.index', config.APP_NAME, 'home'),
-      ('main.about', 'About', 'info')
+	  ('template_manager.index', 'Template Manager', 'newspaper'),
+    ('content_manager.index', 'Content Manager', 'columns'), 
+    ('html_manager.index', 'Html Manager', 'code'),
+    ('page_manager.added_page', 'Pages Manager', 'file outline'),
+    ('messaging_manager.contact_messages', 'Contact Messages', 'envelope'),
     ]%}
     {% set user = [] %}
     {% if current_user.is_authenticated %}

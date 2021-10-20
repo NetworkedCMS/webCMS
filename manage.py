@@ -11,7 +11,10 @@ from app import create_app, db
 from app.models import Role, User
 from config import Config
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+from dotenv import load_dotenv
+load_dotenv('.env')
+
+app = create_app(os.environ.get('FLASK_CONFIG'))# or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
@@ -41,6 +44,15 @@ def recreate_db():
     production.
     """
     db.drop_all()
+    db.create_all()
+    db.session.commit()
+
+
+@manager.command
+def create_tables():
+    """
+    Recreates a local database's tables without dropping the database.
+    """
     db.create_all()
     db.session.commit()
 
