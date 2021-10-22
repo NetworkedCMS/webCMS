@@ -21,16 +21,21 @@
 
 {% macro header_items(current_user) %}
     {% set endpoints = [
-      ('main.index', config.APP_NAME, 'home'),
-	  ('template_manager.index', 'Template Manager', 'newspaper'),
-    ('content_manager.index', 'Content Manager', 'columns'), 
-    ('html_manager.index', 'Html Manager', 'code'),
-    ('page_manager.added_page', 'Pages Manager', 'file outline'),
-    ('messaging_manager.contact_messages', 'Contact Messages', 'envelope'),
+
     ]%}
     {% set user = [] %}
     {% if current_user.is_authenticated %}
-      {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
+
+    {% set user = ([
+      ('main.index', config.APP_NAME, 'home'),
+      ('template_manager.index', 'Template', 'newspaper'),
+      ('content_manager.index', 'Content', 'columns'), 
+      ('html_manager.index', 'Html', 'code'),
+      ('page_manager.added_page', 'Pages', 'file outline'),
+      ('messaging_manager.contact_messages', 'Messages', 'envelope'),
+      ('api.index', 'APIs', 'key'),
+      (current_user.role.index + '.index', current_user.role.name + '', 'user')
+      ]) %}
     {% endif %} 
     {{ render_menu_items( endpoints +  user ) }}
 {% endmacro %}

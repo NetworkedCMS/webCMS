@@ -10,6 +10,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_ckeditor import CKEditor
+from flask_jwt_extended import JWTManager
+
 
 from app.assets import app_css, app_js, vendor_css, vendor_js
 from config import config as Config
@@ -23,6 +25,7 @@ csrf = CSRFProtect()
 compress = Compress()
 images = UploadSet('images', IMAGES)
 docs = UploadSet('docs', ('rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'pdf', 'css'))
+
 
 # Set up Flask-Login
 login_manager = LoginManager()
@@ -45,6 +48,8 @@ def create_app(config):
     app.config['UPLOADED_IMAGES_DEST'] = os.environ.get('UPLOADED_IMAGES_DEST')
     app.config['UPLOADED_DOCS_DEST'] = os.environ.get('UPLOADED_DOCS_DEST')
     app.config['docs'] = app.config['UPLOADED_DOCS_DEST']
+    app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this "super secret" with something else!
+    jwt = JWTManager(app)
 
 
 
@@ -58,6 +63,7 @@ def create_app(config):
     configure_uploads(app, docs)
     CKEditor(app)
     RQ(app)
+    
 
     # Register Jinja template functions
     from .utils import register_template_utils
@@ -111,5 +117,8 @@ def create_app(config):
 
     from .blueprints.admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
+    from .blueprints.api import api as api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix='/api')
 
     return app

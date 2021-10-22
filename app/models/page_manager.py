@@ -11,3 +11,11 @@ class Page(db.Model):
     #seo_title = db.Column(db.String(180), nullable=True)
     #seo_description = db.Column(db.String(250), nullable=True)
     content = db.Column(db.Text)
+
+def page_serializer(page):
+    return {
+        'id':page.id,
+        'name': page.name ,
+        'content': page.content,
+        }
+

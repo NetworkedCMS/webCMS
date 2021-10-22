@@ -8,7 +8,7 @@ from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User
+from app.models import Role, User, ApiKey
 from config import Config
 
 from dotenv import load_dotenv
@@ -27,6 +27,12 @@ manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 manager.add_command('runserver', Server(host="0.0.0.0"))
 
+@manager.command
+def add_api_key():
+    """
+    Adds Api key to the database.
+    """
+    ApiKey.insert_key()
 
 @manager.command
 def test():

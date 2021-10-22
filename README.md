@@ -182,6 +182,12 @@ Note that this will create an admin user with email and password specified by th
 $ python manage.py add_fake_data
 ```
 
+##### [For API security] Generate API access key
+
+```
+$ python manage.py add_api_key
+```
+
 ## Running the app
 
 ```

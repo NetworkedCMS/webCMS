@@ -16,3 +16,13 @@ class ContactMessage(db.Model):
     user = db.relationship("User")
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+
+def contact_messages_serializer(contact_messages):
+    return {
+        'id':contact_messages.id,
+        'read': contact_messages.read ,
+        'name': contact_messages.name,
+        'email': contact_messages.email,
+        'text': contact_messages.text,
+        'created_at': contact_messages.created_at,
+        }

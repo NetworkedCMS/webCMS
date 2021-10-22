@@ -47,3 +47,4 @@ flask_ckeditor
 python-dotenv
 wtforms_alchemy
 flask_uploads
+Flask-JWT-Extended
