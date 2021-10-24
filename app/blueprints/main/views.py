@@ -25,9 +25,8 @@ images = UploadSet('images', IMAGES)
 
 
 @main.route("/", methods=["GET", "POST"])
-@login_required
 def index():
-    """Home page."""
+    """Home page for the website"""
 
     landing_page = TemplateSetting.query.filter_by(choice=True).first_or_404()
     landing_page_name = landing_page.template_name#.lower()
@@ -73,11 +72,8 @@ def index():
     pricing_html = PricingHtml.query.all()
     testimonials_html = TestimonialsHtml.query.all()
     contact_html = ContactHtml.query.first()
-    page_content = Page.query.filter_by(name=page_name).first_or_404()
-    pages = Page.query.all()
     
-    item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
-    return render_template(f"{ item.template_name }/inner-page.html", footer_image=footer_image, icons=media_icons,
+    return render_template(f"{ landing_page_name }/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -90,8 +86,7 @@ def index():
                            album_html = album_html, carousel_html = carousel_html, header_script = header_script,
                            footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
                            footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
-                           testimonials_html= testimonials_html, contact_html = contact_html, page_name=page_name,
-                           page_content = page_content, pages=pages)
+                           testimonials_html= testimonials_html, contact_html = contact_html)
 
 
 @main.route('/<page_name>', methods=['GET', 'POST'])
