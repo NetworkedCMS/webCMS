@@ -43,3 +43,8 @@ urllib3==1.25.8
 webassets==0.12.1
 Werkzeug==0.15.5
 WTForms==2.2.1
+flask_ckeditor
+python-dotenv
+wtforms_alchemy
+flask_uploads
+Flask-JWT-Extended

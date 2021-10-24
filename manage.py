@@ -8,10 +8,13 @@ from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User
+from app.models import Role, User, ApiKey
 from config import Config
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+from dotenv import load_dotenv
+load_dotenv('.env')
+
+app = create_app(os.environ.get('FLASK_CONFIG'))# or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
@@ -24,6 +27,12 @@ manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 manager.add_command('runserver', Server(host="0.0.0.0"))
 
+@manager.command
+def add_api_key():
+    """
+    Adds Api key to the database.
+    """
+    ApiKey.insert_key()
 
 @manager.command
 def test():
@@ -41,6 +50,15 @@ def recreate_db():
     production.
     """
     db.drop_all()
+    db.create_all()
+    db.session.commit()
+
+
+@manager.command
+def create_tables():
+    """
+    Recreates a local database's tables without dropping the database.
+    """
     db.create_all()
     db.session.commit()
 

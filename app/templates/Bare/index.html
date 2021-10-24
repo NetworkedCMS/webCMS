@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		   {% if metatags_html %}
+		   {% for data in metatags_html %}
+			{{ data.html | safe }}
+			 {% endfor %}
+	   	   {% else %}
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+		{% endif %}
+		   {% if title_html %}
+			{{ title_html.html | safe }}
+	   	   {% else %}
+        <title>Bare - Start Bootstrap Template</title>
+	   	   {% endif %}
+		   {% if link_html %}
+		   {% for data in link_html %}
+			{{ data.html | safe }}
+			 {% endfor %}
+	   	   {% else %}
+        <!-- Favicon-->
+		 <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Bare/assets/favicon.ico')}}">
+		{% endif %}
+		
+	   {% if css %}
+	   {{ css.css_url | safe}}
+	   	   {% else %}
+        <!-- Core theme CSS (includes Bootstrap)-->
+		<link rel="stylesheet" href="{{ url_for('static', filename='Bare/css/styles.css')}}">
+		{% endif %}
+
+    </head>
+    <body>
+		   {% if navbar_html %}
+			{{ navbar.html | safe }}
+	   	   {% else %}
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+			    {% if logo %}
+				{% else %}
+                <a class="navbar-brand" href="/home">{{ brand.text }}</a>
+				{% endif %}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/home">Home</a></li>
+						{% if pages %}
+						{% for page in pages %}
+                        <li class="nav-item"><a class="nav-link" href="/{{ page.name }}">{{ page.name }}</a></li>
+						{% endfor %}
+						{% endif %}
+						{% if about %}
+						<li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+						{% endif %}
+						{% if services %}
+						<li class="nav-item"><a class="nav-link" href="/services">Services</a></li>
+						{% endif %}
+
+						{% if portfolio %}
+						<li class="nav-item"><a class="nav-link" href="/portfolio">Portfolio</a></li>
+						{% endif %}
+						{% if testimonial %}
+						<li class="nav-item"><a class="nav-link" href="/testimonials">Testimonials</a></li>
+						{% endif %}
+						{% if faq %}
+						<li class="nav-item"><a class="nav-link" href="/faq">Faq</a></li>
+						{% endif %}
+						{% if team %}		  
+						<li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+						{% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+		{% endif %}
+		   {% if header_html %}
+			{{ header.html | safe }}
+	   	   {% else %}
+        <!-- Page content-->
+        <div class="container">
+            <div class="text-center mt-5">
+                <h1>A Bootstrap 5 Starter Template</h1>
+                <p class="lead">A complete project boilerplate built with Bootstrap</p>
+                <p>Bootstrap v5.1.0</p>
+            </div>
+        </div>
+		{% endif %}
+		   {% if footer_script %}
+			{{ footer_script.html | safe }}
+	   	   {% else %}
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{ url_for('static', filename='js/scripts.js')}}"></script>
+		{% endif %}
+    </body>
+</html>
