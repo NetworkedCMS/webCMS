@@ -22,6 +22,7 @@ from app import db
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import *
+from app.models.content_manager import Headline
 from app.blueprints.content_manager.forms import *
 
 content_manager = Blueprint('content_manager', __name__)
@@ -32,6 +33,10 @@ def index():
     return render_template('content_manager/index.html')
 
 ####################Content Management System Start #################
+
+
+
+
 @content_manager.route('/slideshows-list')
 @login_required
 
@@ -69,6 +74,62 @@ def delete_slideshow(slideshow_id):
     flash('Successfully deleted ' , 'success')
     return redirect(url_for('content_manager.added_slideshows'))
 
+
+# Added Headline
+@content_manager.route('/headline-list')
+@login_required
+def added_headline():
+    """View all added headline content."""
+    data = Headline.query.all()
+    if data is None:
+        return redirect(url_for('content_manager.add_headline'))
+    return render_template(
+        'content_manager/headline/added_headline.html', data=data)
+
+# Add Headline 
+@content_manager.route('/headline/headline', methods=['POST', 'GET'])
+@login_required
+def add_headline():
+    form = HeadlineForm()
+    if form.validate_on_submit():
+        data = Headline(
+            headline = form.headline.data,
+            description = form.description.data,
+            image = images.save(request.files['image'])
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Headline Text Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_headline'))
+    return render_template('content_manager/headline/add_headline.html', form=form)
+
+# Edit Headline
+@content_manager.route('/headline/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_headline(id):
+    data = Headline.query.filter_by(id=id).first()
+    form = HeadlineForm(obj=data)
+    if form.validate_on_submit():
+        data.headline = form.headline.data,
+        data.description = form.description.data,
+        data.image = images.save(request.files['image']),
+        db.session.add(data)
+        db.session.commit()
+        flash("Headline Text Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_headline'))
+    else:
+        flash('ERROR! Content was not edited.', 'error')
+    return render_template('content_manager/headline/add_headline.html', form=form)
+
+@content_manager.route('/headline/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_headline(id):
+    """Delete the item """
+    data = Headline.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_headline'))
 
 @content_manager.route('/images-list')
 @login_required
@@ -169,26 +230,52 @@ def delete_client(id):
 
 def added_calltoaction():
     """View all added call to actin text."""
-    data = CallToAction.query.first()
+    data = CallToAction.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_call_to_action'))
     return render_template(
         'content_manager/calltoaction/added_calltoaction.html', data=data)
 
 # Add CallToAction 
-@content_manager.route('/calltaction/call_to_action', methods=['POST', 'GET'])
+@content_manager.route('/calltoaction/call_to_action', methods=['POST', 'GET'])
 
 def add_call_to_action():
     form = CallToActionForm()
     if form.validate_on_submit():
         data = CallToAction(
             text=form.text.data,
-            url=form.url.data
+            url=form.url.data,
+            button_type = form.button_type.data,
+            show_on_navbar=form.show_on_navbar.data,
+            is_login=form.is_login.data,
+            is_signup=form.is_signup.data,
             )
         db.session.add(data)
         db.session.commit()
         flash("Call To Action Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_calltoaction'))
+    return render_template('content_manager/calltoaction/add_call_to_action.html', form=form)
+
+# Edit CallToAction
+@content_manager.route('/calltaction/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+
+def edit_calltoaction(id):
+    data = CallToAction.query.filter_by(id=id).first()
+    form = CallToActionForm(obj=data)
+    if form.validate_on_submit():
+        data.text=form.text.data
+        data.url=form.url.data
+        data.button_type = form.button_type.data
+        data.show_on_navbar=form.show_on_navbar.data
+        data.is_login=form.is_login.data
+        data.is_signup=form.is_signup.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Call To Action Text Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_calltoaction'))
+    else:
+        flash('ERROR! Content was not edited.', 'error')
     return render_template('content_manager/calltoaction/add_call_to_action.html', form=form)
 
 @content_manager.route('/calltoaction/<int:id>/_delete', methods=['GET', 'POST'])
@@ -546,7 +633,7 @@ def added_portfolio():
 
 
 @content_manager.route('/portfolio/add', methods=['POST', 'GET'])
-
+@login_required
 def add_portfolio():
     form = PortfolioForm()
     if form.validate_on_submit():

@@ -3,11 +3,11 @@
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
-            <a class="ui basic compact button" href="{{ url_for('admin.event_index') }}">
+            <a class="ui basic compact button" href="{{ url_for('content_manager.event_index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
-             <a class="ui blue right floated button" target="_blank" href="{{ url_for('admin.event_preview',_external=True) }}">Preview Event Page</a>
+             <a class="ui blue right floated button" target="_blank" href="{{ url_for('content_manager.event_preview',_external=True) }}">Preview Event Page</a>
             <h2 class="ui header">
                 Added Homepage Headline Texts
                 <div class="sub header">
@@ -34,7 +34,7 @@
                             <td>{{ data.firstext }}</td>
                             <td>{{ data.secondtext }}</td>
                             <td> <a class="ui red left floated button" style="margin-top: 1px"
-                                   href="{{ url_for('admin.delete_hometext', id=data.id) }}" onclick="return confirmDeleteHomeText('{{ data.id }}');" data-content="{{ data.id }}">Delete</a></td>
+                                   href="{{ url_for('content_manager.delete_hometext', id=data.id) }}" onclick="return confirmDeleteHomeText('{{ data.id }}');" data-content="{{ data.id }}">Delete</a></td>
                         </tr>
                     {% endif %}
                     </tbody>
@@ -55,7 +55,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         let form = $("#delete-hometext-form");
-                        form.attr('action', "{{ url_for('admin.delete_hometext', id=0) }}".replace('0',id));
+                        form.attr('action', "{{ url_for('content_manager.delete_hometext', id=0) }}".replace('0',id));
                         form.submit();
                     } else {
                         return false;

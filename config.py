@@ -39,9 +39,9 @@ class Config:
 
     #Uploads & Images
 
-    UPLOADED_IMAGES_DEST = '.././app/static/images/' if \
-        not os.environ.get('UPLOADED_IMAGES_DEST') else os.path.dirname(os.path.realpath(__file__)) + os.environ.get(
-        'UPLOADED_IMAGES_DEST')
+    UPLOADED_IMAGES_DEST = 'C:/Users/oem/Documents/GitHub/webCMS/webCMS/app/static/images' #if \
+        #not os.environ.get('UPLOADED_IMAGES_DEST') else os.path.dirname(os.path.realpath(__file__)) + os.environ.get(
+        #'UPLOADED_IMAGES_DEST')
     UPLOADED_DOCS_DEST = '.././app/static/docs/' if \
         not os.environ.get('UPLOADED_DOCS_DEST') else os.path.dirname(os.path.realpath(__file__)) + os.environ.get(
         'UPLOADED_DOCS_DEST')

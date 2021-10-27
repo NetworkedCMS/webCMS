@@ -7,11 +7,11 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            <a class="ui basic compact button" href="{{ url_for('admin.event_index') }}">
+            <a class="ui basic compact button" href="{{ url_for('content_manager.event_index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
-             <a class="ui blue right floated button" target="_blank" href="{{ url_for('admin.event_preview',_external=True) }}">Preview Event Page</a>
+             <a class="ui blue right floated button" target="_blank" href="{{ url_for('content_manager.event_preview',_external=True) }}">Preview Event Page</a>
             <h2 class="ui header">
                 Add Main Headline text and One line descriptions to the landing page
                 <div class="sub header">Add a headline text and descriptions for the landing page</div>

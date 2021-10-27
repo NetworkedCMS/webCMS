@@ -86,6 +86,29 @@ def hometext_serializer(hometext):
         'secondtext': hometext.secondtext,
         }
 
+class Headline(db.Model):
+    __tablename__ = "headline"
+    id = db.Column(db.Integer, primary_key=True)
+    headline = db.Column(db.String(80), nullable=True)
+    description = db.Column(db.Text)
+    image = db.Column(db.String(256), nullable=True)
+
+    @property
+    def image_url(self):
+        return url_for('_uploads.uploaded_file', setname='images',filename=self.image, external=True)
+
+    @property
+    def image_path(self):
+        from flask import current_app
+        return os.path.join(current_app.config['UPLOADED_IMAGES_DEST'], self.image)
+
+def headline_serializer(headline):
+    return {
+        'id':headline.id,
+        'headline': headline.headline ,
+        'description': headline.description,
+        'image': headline.image,
+        }
 
 class TrackingScript(db.Model):
     __tablename__ = "tracking_script"
@@ -245,12 +268,20 @@ class CallToAction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(80), nullable=True)
     url = db.Column(db.String(80), nullable=True)
+    button_type = db.Column(db.String(80), nullable=True)
+    is_login = db.Column(db.Boolean, default=False)
+    is_signup = db.Column(db.Boolean, default=False)
+    show_on_navbar = db.Column(db.Boolean, default=False)
 
 def call_to_action_serializer(call_to_action):
     return {
         'id':call_to_action.id,
         'text':call_to_action.text ,
-        'url':testimonial.url ,
+        'url':call_to_action.url ,
+        'button_type':call_to_action.button_type ,
+        'is_login':call_to_action.is_login ,
+        'is_signup':call_to_action.is_signup ,
+        'show_on_navbar':testimonial.show_on_navbar ,
         }
 
 class NavMenu(db.Model):

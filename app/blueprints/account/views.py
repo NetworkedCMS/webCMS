@@ -26,9 +26,11 @@ from app.blueprints.account.forms import (
 )
 from app.email import send_email
 from app.models import User
-
+import os
 account = Blueprint('account', __name__)
 
+
+print(os.environ.get('DEV_DATABASE_URL'))
 
 @account.route('/login', methods=['GET', 'POST'])
 def login():

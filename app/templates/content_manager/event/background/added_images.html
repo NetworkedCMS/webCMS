@@ -3,7 +3,7 @@
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
-            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+            <a class="ui basic compact button" href="{{ url_for('content_manager.index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
@@ -31,7 +31,7 @@
                             <td>{{ data.id }}</td>
                             <td>{{ data.background_image }}</td>
                             <td> <a class="ui red left floated button" style="margin-top: 1px"
-                                   href="{{ url_for('admin.delete_background_image', background_image_id=data.id) }}" onclick="return confirmDeleteData('{{ data.id }}');" data-content="{{ data.id }}">Delete</a></td>
+                                   href="{{ url_for('content_manager.delete_background_image', background_image_id=data.id) }}" onclick="return confirmDeleteData('{{ data.id }}');" data-content="{{ data.id }}">Delete</a></td>
                         </tr>
                     {% endif %}
                     </tbody>
@@ -52,7 +52,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         let form = $("#delete-data-form");
-                        form.attr('action', "{{ url_for('admin.delete_background_image', background_image_id=0) }}".replace('0',data_id));
+                        form.attr('action', "{{ url_for('content_manager.delete_background_image', background_image_id=0) }}".replace('0',data_id));
                         form.submit();
                     } else {
                         return false;

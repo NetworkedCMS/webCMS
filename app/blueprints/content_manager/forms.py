@@ -80,6 +80,12 @@ class CounterForm(BaseModelForm):
     count = StringField("Integers only e.g 1000", validators=[DataRequired(), Length(min=1, max=25)])
     submit = SubmitField('Submit')
 
+class HeadlineForm(BaseModelForm):
+    headline = StringField("Headline Title Text")
+    description = CKEditorField("Description")
+    image = FileField('Images Only')#, FileAllowed(images, 'Images only allowed!'))
+    submit = SubmitField('Submit')
+
 class TeamForm(BaseModelForm):
     full_name = StringField("Full Name", validators=[DataRequired(), Length(min=2, max=80)])
     job_title = StringField("Job Title", validators=[DataRequired(), Length(min=2, max=80)])
@@ -128,6 +134,13 @@ class NavMenuForm(FlaskForm):
 class CallToActionForm(FlaskForm):
     text = StringField("Call to action text")
     url = StringField("Call to action url e.g /account/login ")
+    show_on_navbar = BooleanField("Should it appear on the navigation bar?")
+    is_login = BooleanField("Is this a login button?")
+    is_signup = BooleanField("Is this a signup button?")
+    button_type = SelectField(u'Choose button type to display', choices=[('primary','primary'),('secondary','secondary'),('success','success'),
+                                                 ('danger','danger'), ('warning','warning'),
+                                                 ('info','info'), ('light','light'),
+                                                 ('dark','dark'), ('link','link')] ,validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class TechnologiesForm(FlaskForm):

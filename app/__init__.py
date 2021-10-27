@@ -44,9 +44,15 @@ def create_app(config):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # not using sqlalchemy event system, hence disabling it
 
-    Config[config_name].init_app(app)
-    app.config['UPLOADED_IMAGES_DEST'] = os.environ.get('UPLOADED_IMAGES_DEST')
-    app.config['UPLOADED_DOCS_DEST'] = os.environ.get('UPLOADED_DOCS_DEST')
+    Config[config_name].init_app(app) 
+    app.config['UPLOADED_IMAGES_DEST'] = 'C:/Users/oem/Documents/GitHub/webCMS/webCMS/app/static/images'# if \
+        #not os.environ.get('UPLOADED_IMAGES_DEST') else os.path.dirname(os.path.realpath(__file__)) + os.environ.get(
+        #'UPLOADED_IMAGES_DEST')
+    # take out the commented out code and also change the directory link when in production. Point the right folder
+    app.config['UPLOADED_DOCS_DEST'] = '.././app/static/docs/' if \
+        not os.environ.get('UPLOADED_DOCS_DEST') else os.path.dirname(os.path.realpath(__file__)) + os.environ.get(
+        'UPLOADED_DOCS_DEST')
+
     app.config['docs'] = app.config['UPLOADED_DOCS_DEST']
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this "super secret" with something else!
     jwt = JWTManager(app)

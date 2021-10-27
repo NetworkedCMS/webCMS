@@ -102,7 +102,7 @@ def preview(template_name):
     nav_menu = NavMenu.query.all()
     slideshows = SlideShowImage.query.all()
     hometext = HomeText.query.first()
-    call_to_action = CallToAction.query.first()
+    call_to_action = CallToAction.query.all()
     logo = Logo.query.first()
     techno_img = TechnologiesImage.query.all()
     text_techno = TechnologiesText.query.first()
@@ -140,7 +140,9 @@ def preview(template_name):
     pricing_html = PricingHtml.query.all()
     testimonials_html = TestimonialsHtml.query.all()
     contact_html = ContactHtml.query.first()
+    #page_content = Page.query.filter_by(name=page_name).first_or_404()
     pages = Page.query.all()
+    headline = Headline.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
     return render_template(f"{ item.template_name }/index.html", footer_image=footer_image, icons=media_icons,
@@ -156,7 +158,8 @@ def preview(template_name):
                            album_html = album_html, carousel_html = carousel_html, header_script = header_script,
                            footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
                            footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
-                           testimonials_html= testimonials_html, contact_html = contact_html, pages=pages)
+                           testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline)
+                        
     
     if item == 'Presento':
         return render_template("Presento/index.html", footer_image=footer_image, icons=media_icons,
@@ -243,6 +246,7 @@ def page(page_name):
     contact_html = ContactHtml.query.first()
     page_content = Page.query.filter_by(name=page_name).first_or_404()
     pages = Page.query.all()
+    headline = Headline.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
     return render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
@@ -259,7 +263,7 @@ def page(page_name):
                            footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
                            footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
                            testimonials_html= testimonials_html, contact_html = contact_html, page_name=page_name,
-                           page_content = page_content, pages=pages)
+                           page_content = page_content, pages=pages, headline=headline)
 
 @template_manager.route('/default/<int:id>/<template_name>', methods=['GET', 'POST'])
 @login_required
