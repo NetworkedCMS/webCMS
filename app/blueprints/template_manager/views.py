@@ -143,6 +143,8 @@ def preview(template_name):
     #page_content = Page.query.filter_by(name=page_name).first_or_404()
     pages = Page.query.all()
     headline = Headline.query.all()
+    process_title = ProcessTitle.query.first()
+    process = Process.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
     return render_template(f"{ item.template_name }/index.html", footer_image=footer_image, icons=media_icons,
@@ -158,7 +160,8 @@ def preview(template_name):
                            album_html = album_html, carousel_html = carousel_html, header_script = header_script,
                            footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
                            footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
-                           testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline)
+                           testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline,
+                           process_title=process_title, process=process)
                         
     
     if item == 'Presento':

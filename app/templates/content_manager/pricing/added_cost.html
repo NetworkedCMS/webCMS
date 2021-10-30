@@ -47,9 +47,9 @@
                             <td>{{ data.currency }}</td>
                             <td>{{ data.currency_icon }}</td>
                             <td>{{ data.figure }}</td>
-							<td><a class="ui blue left floated button" href="{{ url_for('admin.edit_cost', id=data.id) }}">Edit</a></td>
+							<td><a class="ui blue left floated button" href="{{ url_for('content_manager.edit_cost', id=data.id) }}">Edit</a></td>
                             <td> <a class="ui red left floated button" style="margin-top: 1px"
-                                   href="{{ url_for('admin.delete_cost', id=data.id) }}" onclick="return confirmDeleteCost('{{ data.id }}');" u-content="{{ data.id }}">Delete</a></td>
+                                   href="{{ url_for('content_manager.delete_cost', id=data.id) }}" onclick="return confirmDeleteCost('{{ data.id }}');" u-content="{{ data.id }}">Delete</a></td>
                         </tr>
                     {% endif %}
                     </tbody>
@@ -70,7 +70,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         let form = $("#delete-cost-form");
-                        form.attr('action', "{{ url_for('admin.delete_cost', id=0) }}".replace('0',id));
+                        form.attr('action', "{{ url_for('content_manager.delete_cost', id=0) }}".replace('0',id));
                         form.submit();
                     } else {
                         return false;

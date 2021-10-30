@@ -106,10 +106,11 @@
     <!-- /section -->
     <section class="wrapper bg-light">
       <div class="container pb-14 pb-md-16 mb-lg-22 mb-xl-24">
-        {% if background_image %}
         <div class="row gx-0 mb-16 mb-mb-20">
           <div class="col-9 col-sm-10 col-lg-9 mx-auto mt-n15 mt-md-n20" data-cues data-group="images" data-delay="1500">
+            {% if background_image %}
             <img class="img-fluid mx-auto rounded shadow-lg"  src="{{ background_image.image_url }}" srcset="{{ background_image.image_url }} 2x" alt="" />
+            {% endif %}
             <!--<img class="img-fluid mx-auto rounded shadow-lg" data-cue="slideInUp" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa1.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa1@2x.jpg')}} 2x" alt="" />
             <img class="position-absolute rounded shadow-lg" data-cue="slideInRight" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa2.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa2@2x.jpg')}} 2x" style="top: 20%; right:-10%; max-width:30%; height: auto;" alt="" />
             <img class="position-absolute rounded shadow-lg" data-cue="slideInLeft" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa3.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa3@2x.jpg')}} 2x" style="top: 10%; left:-10%; max-width:30%; height: auto;" alt="" />
@@ -118,7 +119,6 @@
           <!-- /column -->
         </div>
         <!-- /.row -->
-        {% endif %}
         {% if headline %}
         {% for h in headline %}
         
@@ -167,88 +167,6 @@
           <!--/column -->
         </div>
         <!--/.row -->
-        <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center mb-14 mb-md-18">
-          <div class="col-lg-6 position-relative order-lg-2">
-            <div class="shape rounded bg-pale-green rellax d-block" data-rellax-speed="0" style="top: 50%; left: 50%; width: 50%; height: 60%; transform: translate(-50%,-50%);z-index:0"></div>
-            <div class="row gx-md-5 gy-5 position-relative">
-              <div class="col-5">
-                <img class="img-fluid rounded shadow-lg my-5 d-flex ms-auto" data-cue="fadeIn" data-delay="300" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa9.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa9@2x.jpg')}} 2x" alt="" />
-                <img class="img-fluid rounded shadow-lg d-flex col-10 ms-auto" data-cue="fadeIn" data-delay="600" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa10.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa10@2x.jpg')}} 2x" alt="" />
-              </div>
-              <!-- /column -->
-              <div class="col-7">
-                <img class="img-fluid rounded shadow-lg mb-5" data-cue="fadeIn" data-delay="900" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa11.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa11@2x.jpg')}} 2x" alt="" />
-                <img class="img-fluid rounded shadow-lg d-flex col-11" data-cue="fadeIn" data-delay="1200" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa12.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa12@2x.jpg')}} 2x" alt="" />
-              </div>
-              <!-- /column -->
-            </div>
-            <!-- /.row -->
-          </div>
-          <!--/column -->
-          <div class="col-lg-6">
-            <h3 class="display-4 mb-5">We make spending stress free so you have the perfect control.</h3>
-            <p class="mb-5">Etiam porta sem malesuada magna mollis euismod. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Fusce dapibus, tellus ac cursus commodo.</p>
-            <div class="row gy-3">
-              <div class="col-xl-6">
-                <ul class="icon-list bullet-bg bullet-soft-green mb-0">
-                  <li><span><i class="uil uil-check"></i></span><span>Aenean quam ornare curabitur blandit consectetur.</span></li>
-                  <li class="mt-3"><span><i class="uil uil-check"></i></span><span>Nullam quis risus eget urna mollis ornare aenean leo.</span></li>
-                </ul>
-              </div>
-              <!--/column -->
-              <div class="col-xl-6">
-                <ul class="icon-list bullet-bg bullet-soft-green mb-0">
-                  <li><span><i class="uil uil-check"></i></span><span>Etiam porta euismod malesuada mollis nisl ornare.</span></li>
-                  <li class="mt-3"><span><i class="uil uil-check"></i></span><span>Vivamus sagittis lacus augue rutrum maecenas odio.</span></li>
-                </ul>
-              </div>
-              <!--/column -->
-            </div>
-            <!--/.row -->
-          </div>
-          <!--/column -->
-        </div>
-        <!--/.row -->
-        <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
-          <div class="col-lg-6 position-relative">
-            <div class="shape rounded bg-pale-yellow rellax d-block" data-rellax-speed="0" style="top: 50%; left: 50%; width: 50%; height: 60%; transform: translate(-50%,-50%);z-index:0"></div>
-            <div class="row gx-md-5 gy-5 position-relative align-items-center">
-              <div class="col-6">
-                <img class="img-fluid rounded shadow-lg d-flex ms-auto" data-cue="fadeIn" data-delay="300" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa13.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa13@2x.jpg')}} 2x" alt="" />
-              </div>
-              <!-- /column -->
-              <div class="col-6">
-                <img class="img-fluid rounded shadow-lg mb-5" data-cue="fadeIn" data-delay="900" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa14.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa14@2x.jpg')}} 2x" alt="" />
-                <img class="img-fluid rounded shadow-lg d-flex col-10" data-cue="fadeIn" data-delay="1200" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa15.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa15@2x.jpg')}} 2x" alt="" />
-              </div>
-              <!-- /column -->
-            </div>
-            <!-- /.row -->
-          </div>
-          <!--/column -->
-          <div class="col-lg-6">
-            <h3 class="display-4 mb-5">We bring solutions to manage your finance the way works best.</h3>
-            <p class="mb-5">Etiam porta sem malesuada magna mollis euismod. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Fusce dapibus, tellus ac cursus commodo.</p>
-            <div class="row gy-3">
-              <div class="col-xl-6">
-                <ul class="icon-list bullet-bg bullet-soft-yellow mb-0">
-                  <li><span><i class="uil uil-check"></i></span><span>Aenean quam ornare curabitur blandit consectetur.</span></li>
-                  <li class="mt-3"><span><i class="uil uil-check"></i></span><span>Nullam quis risus eget urna mollis ornare aenean leo.</span></li>
-                </ul>
-              </div>
-              <!--/column -->
-              <div class="col-xl-6">
-                <ul class="icon-list bullet-bg bullet-soft-yellow mb-0">
-                  <li><span><i class="uil uil-check"></i></span><span>Etiam porta euismod malesuada mollis nisl ornare.</span></li>
-                  <li class="mt-3"><span><i class="uil uil-check"></i></span><span>Vivamus sagittis lacus augue rutrum maecenas odio.</span></li>
-                </ul>
-              </div>
-              <!--/column -->
-            </div>
-            <!--/.row -->
-          </div>
-          <!--/column -->
-        </div>
         {% endfor %}
         {% endif %}
         <!--/.row -->
@@ -301,6 +219,39 @@
       <!-- /.container -->
     </section>
     <!-- /section -->
+    {% if process %}
+    <section class="wrapper bg-light">
+      <div class="container py-14 py-md-16">
+        <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
+          {% if process_title %}
+          <div class="col-lg-7">
+            <figure><img class="w-auto" src="{{ process_title.image_url }}" srcset="{{ process_title.image_url }} 2x" alt="" /></figure>
+          </div>
+          <!--/column -->
+          <div class="col-lg-5">
+            <h2 class="fs-15 text-uppercase text-line text-primary mb-3">{{ process_title.title }}</h2>
+            <h3 class="display-5 mb-7 pe-xxl-5">{{ process_title.description }}</h3>
+            {% endif %}
+            {% for p in process %}
+            <div class="d-flex flex-row mb-4">
+              <div>
+                <span class="icon btn btn-circle btn-primary disabled me-5"><span class="number fs-18">{{ p.id }}</span></span>
+              </div>
+              <div>
+                <h4 class="mb-1">{{ p.steps }}</h4>
+                <p class="mb-1">{{ p.description }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <!--/column -->
+        </div>
+        <!--/.row -->
+      </div>
+      <!-- /.container -->
+    </section>
+    <!-- /section -->
+    {% endif %}
     <section class="wrapper bg-light">
       <div class="container py-14 py-md-17">
         <div class="row gx-lg-8 gx-xl-12 gy-6 mb-14 align-items-center">
@@ -539,6 +490,212 @@
       <!-- /.container -->
     </section>
     <!-- /section -->
+  </section>
+  {% if faq %} 
+  <!-- /section -->
+  <section class="wrapper bg-soft-primary">
+    <div class="container py-14 py-md-17">
+      <div class="row">
+        <div class="col-lg-11 col-xxl-10 mx-auto text-center">
+          <h2 class="fs-15 text-uppercase text-muted mb-3">FAQ</h2>
+          <h3 class="display-4 mb-10 px-lg-12 px-xl-10 px-xxl-15">Frequently Asked Questions.</h3>
+        </div>
+        <!--/column -->
+      </div>
+      <!--/.row -->
+      <div class="row">
+        <div class="col-lg-7 mx-auto">
+          <div id="accordion-3" class="accordion-wrapper">
+            {% for f in faq %}
+            {% if f.id == 1 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-1">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-1" aria-expanded="false" aria-controls="accordion-collapse-3-1">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-1" class="collapse" aria-labelledby="accordion-heading-3-1" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+            {% for f in faq %}
+            {% if f.id == 2 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-2">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-2" aria-expanded="false" aria-controls="accordion-collapse-3-2">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-2" class="collapse" aria-labelledby="accordion-heading-3-2" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+            {% for f in faq %}
+            {% if f.id == 3 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-3">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-3" aria-expanded="false" aria-controls="accordion-collapse-3-3">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-3" class="collapse" aria-labelledby="accordion-heading-3-3" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+            {% for f in faq %}
+            {% if f.id == 4 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-4">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-4" aria-expanded="false" aria-controls="accordion-collapse-3-4">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-4" class="collapse" aria-labelledby="accordion-heading-3-4" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+            {% for f in faq %}
+            {% if f.id == 5 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-5">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-5" aria-expanded="false" aria-controls="accordion-collapse-3-5">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-5" class="collapse" aria-labelledby="accordion-heading-3-5" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+            {% for f in faq %}
+            {% if f.id == 6 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-6">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-6" aria-expanded="false" aria-controls="accordion-collapse-3-6">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-6" class="collapse" aria-labelledby="accordion-heading-3-6" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            {% for f in faq %}
+            {% if f.id == 7 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-7">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-7" aria-expanded="false" aria-controls="accordion-collapse-3-7">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-7" class="collapse" aria-labelledby="accordion-heading-3-7" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+			
+            {% for f in faq %}
+            {% if f.id == 8 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-8">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-8" aria-expanded="false" aria-controls="accordion-collapse-3-8">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-8" class="collapse" aria-labelledby="accordion-heading-3-8" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+            {% for f in faq %}
+            {% if f.id == 9 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-9">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-9" aria-expanded="false" aria-controls="accordion-collapse-3-9">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-9" class="collapse" aria-labelledby="accordion-heading-3-9" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+            {% for f in faq %}
+            {% if f.id == 10 %} 
+            <div class="card shadow-lg">
+              <div class="card-header" id="accordion-heading-3-10">
+                <button class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-collapse-3-10" aria-expanded="false" aria-controls="accordion-collapse-3-10">{{ f.question }}</button>
+              </div>
+              <!-- /.card-header -->
+              <div id="accordion-collapse-3-10" class="collapse" aria-labelledby="accordion-heading-3-10" data-bs-target="#accordion-3">
+                <div class="card-body">
+                  <p>{{ f.answer | safe }}</p>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.collapse -->
+            </div>
+            {%  endif %}
+            {% endfor %}
+            <!-- /.card -->
+          </div>
+          <!-- /.accordion-wrapper -->
+        </div>
+        <!-- /column -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container -->
+  </section>
+  <!-- /section -->
+  {% endif %}
   </div>
   <!-- /.content-wrapper -->
   <footer class="bg-dark text-inverse mt-5 mt-md-16">
@@ -546,8 +703,10 @@
       <div class="row gy-6 gy-lg-0">
         <div class="col-md-4 col-lg-3">
           <div class="widget">
-            <img class="mb-4" src="{{ url_for('static', filename='Sandbox/assets/img/logo-light.png')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/logo-light@2x.png')}} 2x" alt="" />
-            <p class="mb-4">© 2021 Sandbox. <br class="d-none d-lg-block" />All rights reserved.</p>
+            {% if logo %}
+            <img class="mb-4" src="{{ logo.image_url }}" srcset="{{ logo.image_url }} 2x" alt="" />
+            {% endif %}
+            <p class="mb-4">© 2021 {% if copyright_text %} {{ copyright_text.text}} {% endif %}. <br class="d-none d-lg-block" />All rights reserved.</p>
             <nav class="nav social social-white">
               <a href="#"><i class="uil uil-twitter"></i></a>
               <a href="#"><i class="uil uil-facebook-f"></i></a>
@@ -563,8 +722,7 @@
         <div class="col-md-4 col-lg-3">
           <div class="widget">
             <h4 class="widget-title text-white mb-3">Get in Touch</h4>
-            <address class="pe-xl-15 pe-xxl-17">Moonshine St. 14/05 Light City, London, United Kingdom</address>
-            <a href="mailto:#">info@email.com</a><br /> +00 (123) 456 78 90
+            <address class="pe-xl-15 pe-xxl-17">{% if footer_text %} {{ footer_text.title | safe }} {% endif %} </address>
           </div>
           <!-- /.widget -->
         </div>

@@ -12,8 +12,8 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Add Social Media Icons & Url link
-                <div class="sub header">Add social media icons and links</div>
+                Add Process Steps
+                <div class="sub header">Use this to add steps you want people to take</div>
             </h2>
 
             {% set flashes = {
@@ -26,9 +26,11 @@
             {{ f.begin_form(form, flashes) }}
 
 
-                <div class="two fields">
-                    {{ f.render_form_field(form.icon) }}
-                    {{ f.render_form_field(form.url_link) }}
+                <div class="field">
+                    {{ f.render_form_field(form.steps) }}
+                </div>
+                <div class="field">
+                    {{ f.render_form_field(form.description) }}
                 </div>
 
                 {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}

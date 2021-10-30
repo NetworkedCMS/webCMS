@@ -12,8 +12,8 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Add Social Media Icons & Url link
-                <div class="sub header">Add social media icons and links</div>
+                Add Process Title & Description
+                <div class="sub header">Use this to add a title and description for the process steps.</div>
             </h2>
 
             {% set flashes = {
@@ -26,11 +26,15 @@
             {{ f.begin_form(form, flashes) }}
 
 
-                <div class="two fields">
-                    {{ f.render_form_field(form.icon) }}
-                    {{ f.render_form_field(form.url_link) }}
+                <div class="field">
+                    {{ f.render_form_field(form.title) }}
                 </div>
-
+                <div class="field">
+                    {{ f.render_form_field(form.description) }}
+                </div>
+                <div class="field">
+                    {{ f.render_form_field(form.image) }}
+                </div>
                 {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
                 {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
                 {{ f.form_message(flashes['info'], header='Information', class='info') }}

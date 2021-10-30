@@ -184,7 +184,7 @@ class AppleTouchIconForm(FlaskForm):
     
 # Footer Text Form
 class FooterTextForm(BaseModelForm):
-    title = TextAreaField("Long Description", validators=[DataRequired(), Length(min=5)])
+    title = CKEditorField("Description and or address", validators=[DataRequired(), Length(min=5)])
     submit = SubmitField('Submit')
 
 # Footer Text Form
@@ -220,5 +220,17 @@ class ResourcesForm(BaseModelForm):
     role_title = StringField("Role Add ...", validators=[DataRequired(), Length(min=3, max=20)])
 
 
+# Process Form Model
+class ProcessForm(FlaskForm):
+    steps = StringField("Step to take ", validators=[DataRequired(), Length(min=1, max=120)])
+    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    #process_icon = StringField("Flaticon or fontawesome icons or leave blank")
+    submit = SubmitField('Submit')
 
 
+# Process Form Model
+class ProcessTitleForm(FlaskForm):
+    title = StringField("Process Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    image = FileField('Process Area Image 650 by 874px', validators=[FileRequired(), FileAllowed(images, "Image Allowed Only !")])
+    submit = SubmitField('Submit')

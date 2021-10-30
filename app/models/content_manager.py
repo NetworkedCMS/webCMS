@@ -613,3 +613,45 @@ def cost_serializer(cost):
         'currency_icon':cost.currency_icon,
         'pricing_id':cost.pricing_id,
         }
+
+class Process(db.Model):
+    __tablename__ = "process"
+    id = db.Column(db.Integer, primary_key=True)
+    steps = db.Column(db.String(120), nullable=True)
+    #process_icon_image = db.Column(db.String(256), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
+
+
+
+def process_serializer(process):
+    return {
+        'id':process.id,
+        'steps':process.steps,
+        #'process_icon':process.process_icon,
+        'description':process.description,
+        }
+
+class ProcessTitle(db.Model):
+    __tablename__ = "process_title"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
+    image = db.Column(db.String(256), nullable=True)
+
+    @property
+    def image_url(self):
+        return url_for('_uploads.uploaded_file', setname='images', filename=self.image, external=True)
+
+    @property
+    def image_path(self):
+        from flask import current_app
+        return os.path.join(current_app.config['UPLOADED_IMAGES_DEST'], self.image)
+
+
+def process_title_serializer(process_title):
+    return {
+        'id':process.id,
+        'title':process.title,
+        'description':process.description,
+        'image':process.image
+        }

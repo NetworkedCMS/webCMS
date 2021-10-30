@@ -29,6 +29,7 @@ content_manager = Blueprint('content_manager', __name__)
 
 
 @content_manager.route('/content/setting')
+@login_required
 def index():
     return render_template('content_manager/index.html')
 
@@ -39,7 +40,6 @@ def index():
 
 @content_manager.route('/slideshows-list')
 @login_required
-
 def added_slideshows():
     """View all registered users."""
     slideshow = SlideShowImage.query.all()
@@ -49,7 +49,7 @@ def added_slideshows():
         'content_manager/slideshows/added_slideshows.html', slideshow=slideshow)
 
 @content_manager.route('/slideshows/add_slideshow', methods=['GET', 'POST'])
-
+@login_required
 def add_slideshow():
     form = SlideShowCrudForm()
     if request.method == 'POST':
@@ -65,7 +65,7 @@ def add_slideshow():
     return render_template("content_manager/slideshows/add_slideshow.html", form=form)
 
 @content_manager.route('/slideshows/<int:slideshow_id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_slideshow(slideshow_id):
     """Delete the item """
     slideshows = SlideShowImage.query.filter_by(id=slideshow_id).first()
@@ -133,7 +133,6 @@ def delete_headline(id):
 
 @content_manager.route('/images-list')
 @login_required
-
 def added_images():
     """View all added images to the public area under the Information/Tech area."""
     images = TechnologiesImage.query.all()
@@ -143,7 +142,7 @@ def added_images():
         'content_manager/images/added_images.html', slideshow=images)
 
 @content_manager.route('/images/add_image', methods=['GET', 'POST'])
-
+@login_required
 def add_image():
     form = ImageTechnologyForm()
     if request.method == 'POST':
@@ -179,7 +178,7 @@ def edit_image(image_id):
 '''
 # delete image 
 @content_manager.route('/images/delete/<int:image_id>', methods=['GET', 'POST'])
-
+@login_required
 def delete_image(image_id):
     data = TechnologiesImage.query.get(image_id)
     db.session.delete(data)
@@ -190,7 +189,6 @@ def delete_image(image_id):
 # Add Client
 @content_manager.route('/clients')
 @login_required
-
 def added_client():
     """View all added client logos to the landing page"""
     data = Client.query.all()
@@ -200,7 +198,7 @@ def added_client():
         'content_manager/client/added_client.html', data=data)
 
 @content_manager.route('/clients/add_client', methods=['GET', 'POST'])
-
+@login_required
 def add_client():
     form = ClientForm()
     if request.method == 'POST':
@@ -215,7 +213,7 @@ def add_client():
 
 # delete client 
 @content_manager.route('/clients/delete/<int:id>', methods=['GET', 'POST'])
-
+@login_required
 def delete_client(id):
     data = Client.query.get(id)
     db.session.delete(data)
@@ -227,7 +225,6 @@ def delete_client(id):
 
 @content_manager.route('/calltoaction-list')
 @login_required
-
 def added_calltoaction():
     """View all added call to actin text."""
     data = CallToAction.query.all()
@@ -238,7 +235,7 @@ def added_calltoaction():
 
 # Add CallToAction 
 @content_manager.route('/calltoaction/call_to_action', methods=['POST', 'GET'])
-
+@login_required
 def add_call_to_action():
     form = CallToActionForm()
     if form.validate_on_submit():
@@ -259,7 +256,6 @@ def add_call_to_action():
 # Edit CallToAction
 @content_manager.route('/calltaction/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
-
 def edit_calltoaction(id):
     data = CallToAction.query.filter_by(id=id).first()
     form = CallToActionForm(obj=data)
@@ -279,7 +275,7 @@ def edit_calltoaction(id):
     return render_template('content_manager/calltoaction/add_call_to_action.html', form=form)
 
 @content_manager.route('/calltoaction/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_calltoaction(id):
     """Delete the item """
     data = CallToAction.query.filter_by(id=id).first()
@@ -292,7 +288,7 @@ def delete_calltoaction(id):
 
 # Add Navbar items 
 @content_manager.route('/navigation/menu', methods=['POST', 'GET'])
-
+@login_required
 def add_navmenu():
     form = NavMenuForm()
     if form.validate_on_submit():
@@ -310,7 +306,6 @@ def add_navmenu():
 
 @content_manager.route('/navmenu-list')
 @login_required
-
 def added_navmenu():
     """View all added navigations."""
     data = NavMenu.query.all()
@@ -318,7 +313,7 @@ def added_navmenu():
         'content_manager/added_navmenu.html', data=data)
 
 @content_manager.route('/navmenu/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_navmenu(id):
     """Delete the item """
     data = NavMenu.query.filter_by(id=id).first()
@@ -332,7 +327,6 @@ def delete_navmenu(id):
 
 @content_manager.route('/hometext', methods=['GET', 'POST'])
 @login_required
-
 def home_text():
     """Create a new text for the home page."""
     item = HomeText.query.first()
@@ -353,7 +347,6 @@ def home_text():
 
 @content_manager.route('/hometext-list')
 @login_required
-
 def added_hometext():
     """View all added texts."""
     data = HomeText.query.first()
@@ -373,7 +366,6 @@ def delete_hometext(id):
 
 @content_manager.route('/information-list')
 @login_required
-
 def added_information():
     """View all added call to actin text."""
     data = TechnologiesText.query.all()
@@ -384,7 +376,7 @@ def added_information():
 
 # Add Information to Public Page
 @content_manager.route('/information/add', methods=['POST', 'GET'])
-
+@login_required
 def add_information():
     form = TechnologiesForm()
     if form.validate_on_submit():
@@ -399,7 +391,7 @@ def add_information():
     return render_template('content_manager/information/add_information.html', form=form)
 
 @content_manager.route('/information/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_information(id):
     """Delete the information added """
     data = TechnologiesText.query.filter_by(id=id).first()
@@ -416,7 +408,6 @@ def delete_information(id):
 
 @content_manager.route('/counter')
 @login_required
-
 def added_count():
     """View all added counts."""
     data = Counter.query.all()
@@ -441,7 +432,7 @@ def add_count():
     return render_template('content_manager/counter/add_count.html', form=form)
 
 @content_manager.route('/count/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_count(id):
     """Delete the count added """
     data = Counter.query.filter_by(id=id).first()
@@ -455,7 +446,6 @@ def delete_count(id):
 # Add Service
 @content_manager.route('/services')
 @login_required
-
 def added_services():
     """View all added services."""
     data = Service.query.all()
@@ -466,7 +456,7 @@ def added_services():
 
 
 @content_manager.route('/service/add', methods=['POST', 'GET'])
-
+@login_required
 def add_service():
     form = ServiceForm()
     if form.validate_on_submit():
@@ -481,7 +471,7 @@ def add_service():
     return render_template('content_manager/service/add_service.html', form=form)
 
 @content_manager.route('/service/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_service(id):
     """Delete the information added """
     data = Service.query.filter_by(id=id).first()
@@ -495,7 +485,6 @@ def delete_service(id):
 # Add Faq
 @content_manager.route('/faq')
 @login_required
-
 def added_faq():
     """View all added faq."""
     data = Faq.query.all()
@@ -506,7 +495,7 @@ def added_faq():
 
 
 @content_manager.route('/faq/add', methods=['POST', 'GET'])
-
+@login_required
 def add_faq():
     form = FaqForm()
     if form.validate_on_submit():
@@ -522,7 +511,7 @@ def add_faq():
 
 
 @content_manager.route('/faq/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_faq(id):
     """Delete the information added """
     data = Faq.query.filter_by(id=id).first()
@@ -537,7 +526,6 @@ def delete_faq(id):
 # Add Team Members
 @content_manager.route('/members')
 @login_required
-
 def added_members():
     """View all added team members."""
     data = Team.query.all()
@@ -548,7 +536,7 @@ def added_members():
 
 
 @content_manager.route('/member/add', methods=['POST', 'GET'])
-
+@login_required
 def add_member():
     form = TeamForm()
     if form.validate_on_submit():
@@ -564,7 +552,7 @@ def add_member():
     return render_template('content_manager/team/add_member.html', form=form)
 
 @content_manager.route('/member/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_member(id):
     """Delete the information added """
     data = Team.query.filter_by(id=id).first()
@@ -579,7 +567,6 @@ def delete_member(id):
 # Add Video
 @content_manager.route('/video')
 @login_required
-
 def added_video():
     """View added video."""
     data = Video.query.first()
@@ -590,7 +577,7 @@ def added_video():
 
 
 @content_manager.route('/video/add', methods=['POST', 'GET'])
-
+@login_required
 def add_video():
     form = VideoForm()
     if form.validate_on_submit():
@@ -607,7 +594,7 @@ def add_video():
     return render_template('content_manager/video/add_video.html', form=form)
 
 @content_manager.route('/video/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_video(id):
     """Delete the video added """
     data = Video.query.filter_by(id=id).first()
@@ -622,7 +609,6 @@ def delete_video(id):
 # Add Portfolio
 @content_manager.route('/portfolio')
 @login_required
-
 def added_portfolio():
     """View added portfolio."""
     data = Portfolio.query.all()
@@ -649,7 +635,7 @@ def add_portfolio():
     return render_template('content_manager/portfolio/add_portfolio.html', form=form)
 
 @content_manager.route('/portfolio/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_portfolio(id):
     """Delete the portfolio added """
     data = Portfolio.query.filter_by(id=id).first()
@@ -663,7 +649,6 @@ def delete_portfolio(id):
 # Add Testimonial
 @content_manager.route('/testimonial')
 @login_required
-
 def added_testimonial():
     """View added testimonial."""
     data = Testimonial.query.all()
@@ -674,7 +659,7 @@ def added_testimonial():
 
 
 @content_manager.route('/testimonial/add', methods=['POST', 'GET'])
-
+@login_required
 def add_testimonial():
     form = TestimonialForm()
     if form.validate_on_submit():
@@ -691,7 +676,7 @@ def add_testimonial():
     return render_template('content_manager/testimonial/add_testimonial.html', form=form)
 
 @content_manager.route('/testimonial/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_testimonial(id):
     """Delete the testimonial added """
     data = Testimonial.query.filter_by(id=id).first()
@@ -706,7 +691,6 @@ def delete_testimonial(id):
 
 @content_manager.route('/background-image')
 @login_required
-
 def added_background_image():
     """View available background image"""
     data = BackgroundImage.query.first()
@@ -741,7 +725,6 @@ def delete_background_image(background_image_id):
 
 @content_manager.route('/logo')
 @login_required
-
 def added_logo():
     """View available logo image"""
     data = Logo.query.first()
@@ -752,7 +735,7 @@ def added_logo():
 
 # Logo add method
 @content_manager.route('/logo/add', methods=['POST', 'GET'])
-
+@login_required
 def add_logo():
     form = WebsiteLogoForm(request.form)
     if request.method == 'POST':
@@ -766,7 +749,7 @@ def add_logo():
 
 # Logo Delete Method 
 @content_manager.route('/logo/delete/<int:logo_id>', methods=['POST', 'GET'])
-
+@login_required
 def delete_logo(logo_id):
     logo_data = Logo.query.get(logo_id)
     db.session.delete(logo_data)
@@ -776,7 +759,6 @@ def delete_logo(logo_id):
 
 @content_manager.route('/brandname', methods=['GET', 'POST'])
 @login_required
-
 def add_brand_name():
     """Add a new brand name."""
     item = BrandName.query.first()
@@ -797,7 +779,6 @@ def add_brand_name():
 
 @content_manager.route('/brandname-list')
 @login_required
-
 def added_brandname():
     """View added brand name."""
     data = BrandName.query.first()
@@ -805,7 +786,7 @@ def added_brandname():
         'content_manager/brandname/added_brandname.html', data=data)
 
 @content_manager.route('/brandname/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_brandname(id):
     """Delete the brand name """
     data = BrandName.query.filter_by(id=id).first()
@@ -827,7 +808,6 @@ def added_seo():
 
 # Add SEO 
 @content_manager.route('/seo/add', methods=['POST', 'GET'])
-
 def add_seo():
     form = SeoForm()
     if form.validate_on_submit():
@@ -844,7 +824,6 @@ def add_seo():
 # Edit SEO 
 @content_manager.route('/seo/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
-
 def edit_seo(id):
     data = Seo.query.filter_by(id=id).first()
     form = SeoForm(obj=data)
@@ -860,7 +839,6 @@ def edit_seo(id):
     return render_template('content_manager/seo/add_seo.html', form=form)
 
 @content_manager.route('/seo/<int:id>/_delete', methods=['GET', 'POST'])
-
 def delete_seo(id):
     """Delete the seo texts """
     data = Seo.query.filter_by(id=id).first()
@@ -874,7 +852,6 @@ def delete_seo(id):
 
 @content_manager.route('/footertext-list')
 @login_required
-
 def added_footertext():
     """View added footer text."""
     data = FooterText.query.first()
@@ -899,10 +876,9 @@ def add_footertext():
     return render_template('content_manager/footertext/add_footertext.html', form=form)
 
 
-# Edit SEO 
+# Edit Footer 
 @content_manager.route('/footertext/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
-
 def edit_footertext(id):
     data = FooterText.query.filter_by(id=id).first()
     form = FooterTextForm(obj=data)
@@ -917,7 +893,7 @@ def edit_footertext(id):
     return render_template('content_manager/footertext/add_footertext.html', form=form)
 
 @content_manager.route('/footer/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_footertext(id):
     """Delete the item """
     data = FooterText.query.filter_by(id=id).first()
@@ -928,7 +904,6 @@ def delete_footertext(id):
 
 @content_manager.route('/icon-list')
 @login_required
-
 def added_icons():
     """View all added icons."""
     data = SocialMediaIcon.query.all()
@@ -956,7 +931,6 @@ def add_icon():
 # Edit Icon 
 @content_manager.route('/icon/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
-
 def edit_icon(id):
     data = SocialMediaIcon.query.filter_by(id=id).first()
     form = SocialMediaIconForm(obj=data)
@@ -984,7 +958,6 @@ def delete_icon(id):
 # Add About us
 @content_manager.route('/about')
 @login_required
-
 def added_about():
     """View added about us text."""
     data = About.query.first()
@@ -995,7 +968,7 @@ def added_about():
 
  
 @content_manager.route('/about/add', methods=['POST', 'GET'])
-
+@login_required
 def add_about():
     form = AboutForm()
     if form.validate_on_submit():
@@ -1013,7 +986,6 @@ def add_about():
 # Edit About
 @content_manager.route('/about/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
-
 def edit_about(id):
     data = About.query.filter_by(id=id).first()
     form = AboutForm(obj=data)
@@ -1042,7 +1014,6 @@ def delete_about(id):
 # Add CopyRight 
 @content_manager.route('/copyright-list')
 @login_required
-
 def added_copyright():
     """View added copyright text."""
     data = CopyRight.query.first()
@@ -1053,7 +1024,7 @@ def added_copyright():
 
 
 @content_manager.route('/copyright/add', methods=['POST', 'GET'])
-
+@login_required
 def add_copyright():
     form = CopyRightForm()
     if form.validate_on_submit():
@@ -1070,7 +1041,6 @@ def add_copyright():
 # Edit Copyright
 @content_manager.route('/copyright/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
-
 def edit_copyright(id):
     data = CopyRight.query.filter_by(id=id).first()
     form = CopyRightForm(obj=data)
@@ -1085,7 +1055,7 @@ def edit_copyright(id):
     return render_template('content_manager/copyright/add_copyright.html', form=form)
 
 @content_manager.route('/copyright/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_copyright(id):
     """Delete the item """
     data = CopyRight.query.filter_by(id=id).first()
@@ -1098,7 +1068,6 @@ def delete_copyright(id):
 
 @content_manager.route('/favicon-image')
 @login_required
-
 def added_favicon_image():
     """View available favicon image"""
     data = FaviconImage.query.first()
@@ -1109,7 +1078,7 @@ def added_favicon_image():
 
 # Favicon Image add method
 @content_manager.route('/favicon_image/add', methods=['POST', 'GET'])
-
+@login_required
 def add_favicon_image():
     form = FaviconImageForm(request.form)
     if request.method == 'POST':
@@ -1123,7 +1092,7 @@ def add_favicon_image():
 
 # Favicon Image Delete Method 
 @content_manager.route('/favicon_image/delete/<int:favicon_image_id>', methods=['POST', 'GET'])
-
+@login_required
 def delete_favicon_image(favicon_image_id):
     favicon_image_data = FaviconImage.query.get(favicon_image_id)
     db.session.delete(favicon_image_data)
@@ -1135,7 +1104,6 @@ def delete_favicon_image(favicon_image_id):
 
 @content_manager.route('/apple_touch_icon')
 @login_required
-
 def added_apple_touch_icon():
     """View available favicon image"""
     data = AppleTouchIcon.query.first()
@@ -1146,7 +1114,7 @@ def added_apple_touch_icon():
 
 # Favicon Image add method
 @content_manager.route('/apple_touch_icon/add', methods=['POST', 'GET'])
-
+@login_required
 def add_apple_touch_icon():
     form = AppleTouchIconForm(request.form)
     if request.method == 'POST':
@@ -1160,7 +1128,7 @@ def add_apple_touch_icon():
 
 # Favicon Image Delete Method 
 @content_manager.route('/apple_touch_icon/delete/<int:apple_touch_icon_id>', methods=['POST', 'GET'])
-
+@login_required
 def delete_apple_touch_icon(apple_touch_icon_id):
     apple_touch_icon_data = AppleTouchIcon.query.get(apple_touch_icon_id)
     db.session.delete(apple_touch_icon_data)
@@ -1171,7 +1139,6 @@ def delete_apple_touch_icon(apple_touch_icon_id):
 
 @content_manager.route('/trackingscript-list')
 @login_required
-
 def added_trackingscript():
     """View added tracking script."""
     data = TrackingScript.query.all()
@@ -1182,7 +1149,7 @@ def added_trackingscript():
 
 # Add TrackingScript 
 @content_manager.route('/trackingscript/add', methods=['POST', 'GET'])
-
+@login_required
 def add_trackingscript():
     form = TrackingScriptForm()
     if form.validate_on_submit():
@@ -1200,7 +1167,6 @@ def add_trackingscript():
 # Edit SEO 
 @content_manager.route('/trackingscript/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
-
 def edit_trackingscript(id):
     data = TrackingScript.query.filter_by(id=id).first()
     form = TrackingScriptForm(obj=data)
@@ -1216,7 +1182,7 @@ def edit_trackingscript(id):
     return render_template('content_manager/trackingscript/add_trackingscript.html', form=form)
 
 @content_manager.route('/trackingscript/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_trackingscript(id):
     """Delete the item """
     data = TrackingScript.query.filter_by(id=id).first()
@@ -1230,7 +1196,7 @@ def delete_trackingscript(id):
 
 # Add Location 
 @content_manager.route('/location/add', methods=['POST', 'GET'])
-
+@login_required
 def add_location():
     form = LocationForm()
     if form.validate_on_submit():
@@ -1247,7 +1213,6 @@ def add_location():
 
 @content_manager.route('/location')
 @login_required
-
 def added_location():
     """View added location."""
     data = Location.query.all()
@@ -1275,7 +1240,7 @@ def edit_location(id):
     return render_template('content_manager/location/add_location.html', form=form)
 
 @content_manager.route('/location/<int:id>/_delete', methods=['GET', 'POST'])
-
+@login_required
 def delete_location(id):
     """Delete the item """
     data = Location.query.filter_by(id=id).first()
@@ -1463,3 +1428,122 @@ def delete_cost(id):
     if data is None:
         return redirect(url_for('content_manager.add_cost'))
     return redirect(url_for('content_manager.added_cost'))
+
+
+
+# Added Process Steps
+@content_manager.route('/process')
+@login_required
+def added_process():
+    """View added process steps."""
+    data = Process.query.all()
+    if data is None:
+        return redirect(url_for('content_manager.add_process'))
+    return render_template(
+        'content_manager/process/added_process.html', data=data)
+
+# Add Process 
+@content_manager.route('/process/add', methods=['POST', 'GET'])
+@login_required
+def add_process():
+    form = ProcessForm()
+    if form.validate_on_submit():
+        data = Process(
+            steps=form.steps.data,
+            description=form.description.data,
+            #process_icon = form.process_icon.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_process'))
+    return render_template('content_manager/process/add_process.html', form=form)
+
+# Edit Process
+@content_manager.route('/process/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+
+def edit_process(id):
+    data = Process.query.filter_by(id=id).first()
+    form = ProcessForm(obj=data)
+    if form.validate_on_submit():
+        data.steps=form.steps.data,
+        data.description=form.description.data,
+        #data.process_icon = form.process_icon.data,
+        data.description=form.description.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_process'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/process/add_process.html', form=form)
+
+@content_manager.route('/process/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_process(id):
+    """Delete the item """
+    data = Process.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_process'))
+
+
+# Added ProcessTitle Steps
+@content_manager.route('/process_title')
+@login_required
+def added_process_title():
+    """View added process_title and description."""
+    data = ProcessTitle.query.first()
+    if data is None:
+        return redirect(url_for('content_manager.add_process_title'))
+    return render_template(
+        'content_manager/process_title/added_process_title.html', data=data)
+
+# Add ProcessTitle 
+@content_manager.route('/process_title/add', methods=['POST', 'GET'])
+@login_required
+def add_process_title():
+    form = ProcessTitleForm()
+    if form.validate_on_submit():
+        data = ProcessTitle(
+            title=form.title.data,
+            description=form.description.data,
+            image = images.save(request.files['image'])
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_process_title'))
+    return render_template('content_manager/process_title/add_process_title.html', form=form)
+
+# Edit ProcessTitle
+@content_manager.route('/process_title/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+
+def edit_process_title(id):
+    data = ProcessTitle.query.filter_by(id=id).first()
+    form = ProcessTitleForm(obj=data)
+    if form.validate_on_submit():
+        data.title=form.title.data
+        data.description=form.description.data
+        data.image=images.save(request.files['image'])
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_process_title'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/process_title/add_process_title.html', form=form)
+
+@content_manager.route('/process_title/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_process_title(id):
+    """Delete the item """
+    data = ProcessTitle.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_process_title'))
+

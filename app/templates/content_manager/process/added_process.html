@@ -8,13 +8,13 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Added Images
+                Added Process
                 <div class="sub header">
-                    View and manage current shown on the landing page. Please make sure your image is 128x128 so that they fit well. Adding images are optional!
+                    View and manage process steps which are meant to give your website's visitors guidiance and on steps to take.
                 </div>
             </h2>
             <div class="ui header" style="width: 100%; height: 50px">
-                <a class="ui teal right floated button" href="{{ url_for('content_manager.add_image') }}">Add New</a>
+                <a class="ui teal right floated button" href="{{ url_for('content_manager.add_process') }}">Add New</a>
 			</div>
             {# Use overflow-x: scroll so that mobile views don't freak out
              # when the table is too wide #}
@@ -23,18 +23,22 @@
                     <thead>
                         <tr>
 					        <th>ID</th>
-                            <th>Image filename</th>
+                            <th>Steps</th>
+                            <th>Description</th>
+                            <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for u in slideshow  %}
+                    {% for u in data %}
                         <tr>
 
                             <td>{{ u.id }}</td>
-                            <td>{{ u.image }}</td>
+                            <td>{{ u.steps }}</td>
+                            <td>{{ u.description }}</td>
+							<td><a class="ui blue left floated button" href="{{ url_for('content_manager.edit_process', id=u.id) }}">Edit</a></td>
                             <td> <a class="ui red left floated button" style="margin-top: 1px"
-                                   href="{{ url_for('content_manager.delete_image', image_id=u.id) }}" onclick="return confirmDeleteSlideshow('{{ slideshow.id }}');" data-content="{{ slideshow.id }}">Delete</a></td>
+                                   href="{{ url_for('content_manager.delete_process', id=u.id) }}" onclick="return confirmDeleteProcess('{{ u.id }}');" data-content="{{ u.id }}">Delete</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -44,18 +48,18 @@
     </div>
 
     <script>
-        function confirmDeleteSlideshow(slideshow_id){
+        function confirmDeleteProcess(id){
             swal({
                 title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this slideshow",
+                text: "Once deleted, you will not be able to recover this process",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                        let form = $("#delete-slideshow-form");
-                        form.attr('action', "{{ url_for('content_manager.delete_slideshow', slideshow_id=0) }}".replace('0',slideshow_id));
+                        let form = $("#delete-process-form");
+                        form.attr('action', "{{ url_for('content_manager.delete_process', id=0) }}".replace('0',id));
                         form.submit();
                     } else {
                         return false;

@@ -36,7 +36,7 @@
                             <td>{{ u.id }}</td>
                             <td>{{ u.headline }}</td>
                             <td>{{ u.description }}</td>
-                            <td>{{ u.image_filename }}</td>
+                            <td>{{ u.image_url }}</td>
                             <td> <a class="ui red left floated button" style="margin-top: 1px"
                                    href="{{ url_for('content_manager.delete_headline', id=u.id) }}" onclick="return confirmDeleteHeadline('{{ u.id }}');" data-content="{{ u.id }}">Delete</a></td>
                         </tr>
