@@ -337,6 +337,20 @@ def client_serializer(client):
         'image':client.image ,
         }
 
+class ClientTitle(db.Model):
+    __tablename__ = "client_title"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
+
+
+def client_title_serializer(client_title):
+    return {
+        'id':client_title.id,
+        'title':client_title.title,
+        'description':client_title.description
+        }
+
 
 class AppleTouchIcon(db.Model):
     __tablename__ = "apple_touch_icon"

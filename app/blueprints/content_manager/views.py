@@ -1546,4 +1546,59 @@ def delete_process_title(id):
     db.session.delete(data)
     flash('Successfully deleted ' , 'success')
     return redirect(url_for('content_manager.added_process_title'))
+# Added ClientTitle Steps
+@content_manager.route('/client_title')
+@login_required
+def added_client_title():
+    """View added client_title and description."""
+    data = ClientTitle.query.first()
+    if data is None:
+        return redirect(url_for('content_manager.add_client_title'))
+    return render_template(
+        'content_manager/client_title/added_client_title.html', data=data)
+
+# Add ClientTitle 
+@content_manager.route('/client_title/add', methods=['POST', 'GET'])
+@login_required
+def add_client_title():
+    form = ClientTitleForm()
+    if form.validate_on_submit():
+        data = ClientTitle(
+            title=form.title.data,
+            description=form.description.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_client_title'))
+    return render_template('content_manager/client_title/add_client_title.html', form=form)
+
+# Edit ClientTitle
+@content_manager.route('/client_title/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+
+def edit_client_title(id):
+    data = ClientTitle.query.filter_by(id=id).first()
+    form = ClientTitleForm(obj=data)
+    if form.validate_on_submit():
+        data.title=form.title.data
+        data.description=form.description.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_client_title'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/client_title/add_client_title.html', form=form)
+
+@content_manager.route('/client_title/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_client_title(id):
+    """Delete the item """
+    data = ClientTitle.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_client_title'))
+
 

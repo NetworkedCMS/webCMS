@@ -144,6 +144,7 @@ def preview(template_name):
     pages = Page.query.all()
     headline = Headline.query.all()
     process_title = ProcessTitle.query.first()
+    client_title = ClientTitle.query.first()
     process = Process.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
@@ -161,7 +162,7 @@ def preview(template_name):
                            footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
                            footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
                            testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline,
-                           process_title=process_title, process=process)
+                           process_title=process_title, process=process, client_title=client_title)
                         
     
     if item == 'Presento':

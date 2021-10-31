@@ -234,3 +234,9 @@ class ProcessTitleForm(FlaskForm):
     description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
     image = FileField('Process Area Image 650 by 874px', validators=[FileRequired(), FileAllowed(images, "Image Allowed Only !")])
     submit = SubmitField('Submit')
+
+# ClientTitle Form Model
+class ClientTitleForm(FlaskForm):
+    title = StringField("Client Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    submit = SubmitField('Submit')
