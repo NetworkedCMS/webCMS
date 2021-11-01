@@ -8,21 +8,13 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Added '{{ title }}' features
+                Added Landing page feature
                 <div class="sub header">
-                    View and manage pricing details for '{{ title }}'
+                    View and manage feature.
                 </div>
             </h2>
             <div class="ui header" style="width: 100%; height: 50px">
-                <td><a class="ui pink right floated button" href="{{ url_for('content_manager.add_pricing_attribute', id=id, title=title) }}">Add Features</a></td>
-                <a class="ui teal right floated button" href="{{ url_for('content_manager.add_pricing') }}">Add Pricing</a>
-                <a class="ui brown right floated button" href="{{ url_for('content_manager.add_cost', id=id, title=title) }}">Add Cost</a>
-                <a class="ui basic compact button" href="{{ url_for('content_manager.added_pricing') }}">
-				                <i class="caret left icon"></i>
-                Back to pricing model
-				</a>
-
-
+                <a class="ui teal right floated button" href="{{ url_for('content_manager.add_feature') }}">Add New </a>
 			</div>
             {# Use overflow-x: scroll so that mobile views don't freak out
              # when the table is too wide #}
@@ -30,21 +22,23 @@
                 <table class="ui searchable sortable unstackable selectable celled table">
                     <thead>
                         <tr>
-
-					        <th>Features</th>
-					        <th>edit</th>
+					        <th>ID</th>
+                            <th>Title</th>
+                            <th>Description</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for d in data  %}
+                    {% for u in data  %}
                         <tr>
-                            <td>{{ d.description }}</td>
-							<td><a class="ui blue left floated button" href="{{ url_for('content_manager.edit_pricing_attribute', id=d.id) }}">Edit</a></td>
+
+                            <td>{{ u.id }}</td>
+                            <td>{{ u.title }}</td>
+                            <td>{{ u.description }}</td>
                             <td> <a class="ui red left floated button" style="margin-top: 1px"
-                                   href="{{ url_for('content_manager.delete_pricing_attribute', id=d.id) }}" onclick="return confirmDeletePricingAttribute('{{ d.id }}');" u-content="{{ d.id }}">Delete</a></td>
+                                   href="{{ url_for('content_manager.delete_feature', id=u.id) }}" onclick="return confirmDeleteService('{{ u.id }}');" data-content="{{ u.id }}">Delete</a></td>
                         </tr>
-		                   {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -52,18 +46,18 @@
     </div>
 
     <script>
-        function confirmDeletePricingAttribute(id){
+        function confirmDeleteFeature(id){
             swal({
                 title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this pricing attribute",
+                text: "Once deleted, you will not be able to recover this feature",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                        let form = $("#delete-pricing-attribute-form");
-                        form.attr('action', "{{ url_for('content_manager.delete_pricing_attribute', id=0) }}".replace('0',id));
+                        let form = $("#delete-feature-form");
+                        form.attr('action', "{{ url_for('content_manager.delete_feature', id=0) }}".replace('0',id));
                         form.submit();
                     } else {
                         return false;

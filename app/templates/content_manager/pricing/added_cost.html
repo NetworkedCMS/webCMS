@@ -3,7 +3,7 @@
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
-            <a class="ui basic compact button" href="{{ url_for('admin.cms') }}">
+            <a class="ui basic compact button" href="{{ url_for('content_manager.index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
@@ -14,13 +14,13 @@
                 </div>
             </h2>
             <div class="ui header" style="width: 100%; height: 50px">
-                <td><a class="ui pink right floated button" href="{{ url_for('admin.add_pricing_attribute', id=data.id) }}">Add Attributes</a></td>
-                <a class="ui teal right floated button" href="{{ url_for('admin.add_pricing') }}">Add Pricing</a>
+                <td><a class="ui pink right floated button" href="{{ url_for('content_manager.add_pricing_attribute', id=data.id) }}">Add Attributes</a></td>
+                <a class="ui teal right floated button" href="{{ url_for('content_manager.add_pricing') }}">Add Pricing</a>
 				{% if data %}
 				{% else %}
-                <a class="ui brown right floated button" href="{{ url_for('admin.add_cost') }}">Add Cost</a>
+                <a class="ui brown right floated button" href="{{ url_for('content_manager.add_cost') }}">Add Cost</a>
                 {% endif %}
-                <a class="ui basic compact button" href="{{ url_for('admin.added_pricing') }}">
+                <a class="ui basic compact button" href="{{ url_for('content_manager.added_pricing') }}">
 				                <i class="caret left icon"></i>
                 Back to pricing model
 				</a>

@@ -12,8 +12,8 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Add pricing 
-                <div class="sub header">Please make sure you stay within character limits. </div>
+                Add Feature
+                <div class="sub header">Add a new feature to the landing page</div>
             </h2>
 
             {% set flashes = {
@@ -30,20 +30,11 @@
                     {{ f.render_form_field(form.title) }}
                 </div>
                 <div class="field">
-                    {{ f.render_form_field(form.is_popular) }}
-                </div>
-                <div class="field">
                     {{ f.render_form_field(form.description) }}
                 </div>
                 <div class="field">
-                    {{ f.render_form_field(form.button_text) }}
-                </div>
-                <div class="field">
-                    {{ f.render_form_field(form.button_url) }}
-                </div>
-                <div class="field">
-                    {{ f.render_form_field(form.button_type) }}
-                </div>
+                    {{ f.render_form_field(form.icon) }}
+                </div>				
                 {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
                 {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
                 {{ f.form_message(flashes['info'], header='Information', class='info') }}

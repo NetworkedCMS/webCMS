@@ -116,6 +116,7 @@ def preview(template_name):
     brand = BrandName.query.first()
     seo = Seo.query.first()
     services = Service.query.all()
+    features = Feature.query.all()
     about = About.query.first()
     team = Team.query.all()
     video = Video.query.first()
@@ -124,6 +125,9 @@ def preview(template_name):
     faq = Faq.query.all()
     testimonial = Testimonial.query.all()
     client = Client.query.all()
+    pricing = Pricing.query.all()
+    pricing_attribute = PricingAttribute.query.all()
+    cost = Cost.query.all()
     apple_touch_icon = AppleTouchIcon.query.first()
     jumbotron_html = JumbotronHtml.query.first()
     form_html = FormHtml.query.first()
@@ -144,7 +148,9 @@ def preview(template_name):
     pages = Page.query.all()
     headline = Headline.query.all()
     process_title = ProcessTitle.query.first()
+    pricing_title = PricingTitle.query.first()
     client_title = ClientTitle.query.first()
+    feature_title = FeatureTitle.query.first()
     process = Process.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
@@ -162,7 +168,9 @@ def preview(template_name):
                            footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
                            footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
                            testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline,
-                           process_title=process_title, process=process, client_title=client_title)
+                           process_title=process_title, process=process, client_title=client_title,
+                           pricing=pricing, pricing_attribute=pricing_attribute, cost=cost, pricing_title=pricing_title,
+                           feature_title=feature_title, features=features)
                         
     
     if item == 'Presento':

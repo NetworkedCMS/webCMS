@@ -39,11 +39,19 @@ BaseModelForm = model_form_factory(FlaskForm)
 
 class PricingForm(FlaskForm):
     title = StringField(" Title e.g 'Free' or 'Premium'")
+    is_popular = BooleanField("Is it the popular plan?")
     description = StringField(" Description (Max 250 characters) ")
+    button_text = StringField("Button text e.g 'Buy' ")
+    button_url = StringField("Call to action url e.g /login ")
+    button_type = SelectField(u'Choose button type to display', choices=[('primary','primary'),('secondary','secondary'),('success','success'),
+                                                 ('danger','danger'), ('warning','warning'),
+                                                 ('info','info'), ('light','light'),
+                                                 ('dark','dark'), ('link','link')] ,validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class PricingAttributeForm(FlaskForm):
     description = StringField(" Description (Max 120 characters) ")
+    is_available = BooleanField("Is the feature available under this plan?")
     submit = SubmitField('Submit')
 
 class CostForm(FlaskForm):
@@ -149,8 +157,16 @@ class TechnologiesForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class ServiceForm(FlaskForm):
-    title = StringField("Service Name", validators=[DataRequired(), Length(min=5, max=80)])
-    description = StringField("Service Description", validators=[DataRequired(), Length(min=10, max=180)])
+    title = StringField("Service Name", validators=[DataRequired(), Length(min=2, max=80)])
+    description = StringField("Service Description . Max 250 characters", validators=[DataRequired(), Length(min=10, max=250)])
+    action_text = StringField("Service call to action text e.g learn more")
+    url = StringField("Call to action url e.g /account/login ")
+    icon = StringField("Icon from Flaticons or Font Awesome only e.g shopping-basket", validators=[DataRequired()])
+    colour = SelectField(u'Choose colour to display', choices=[('yellow','yellow'),('orange','orange'),('red','red'),
+                                                 ('pink','pink'), ('violet','violet'),
+                                                 ('purple','purple'), ('blue','blue'),
+                                                 ('aqua','aqua'), ('green','green'),('leaf','leaf'),('navy','navy'),
+                                                  ('ash','ash'),('white','white')] ,validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class TrackingScriptForm(FlaskForm):
@@ -228,15 +244,45 @@ class ProcessForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-# Process Form Model
+# ProcessTitle Area Form Model
 class ProcessTitleForm(FlaskForm):
     title = StringField("Process Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
     description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
     image = FileField('Process Area Image 650 by 874px', validators=[FileRequired(), FileAllowed(images, "Image Allowed Only !")])
     submit = SubmitField('Submit')
 
-# ClientTitle Form Model
+# ClientTitle Area Form Model
 class ClientTitleForm(FlaskForm):
     title = StringField("Client Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    submit = SubmitField('Submit')
+
+# PricingTitle Area Form Model
+class PricingTitleForm(FlaskForm):
+    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    submit = SubmitField('Submit')
+
+# TestimonialTitle Area Form Model
+class TestimonialTitleForm(FlaskForm):
+    title = StringField("Testimonial Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    submit = SubmitField('Submit')
+
+#FeatureForm
+class FeatureForm(FlaskForm):
+    title = StringField("Title or Name", validators=[DataRequired(), Length(min=5, max=80)])
+    description = StringField("Description", validators=[DataRequired(), Length(min=10, max=180)])
+    icon = StringField("Icon from Flaticons or Font Awesome only e.g shopping-basket", validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+# FeatureTitle Area Form Model
+class FeatureTitleForm(FlaskForm):
+    title = StringField("Feature Area Title. Max 250. ", validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    submit = SubmitField('Submit')
+
+# ServiceTitle Area Form Model
+class ServiceTitleForm(FlaskForm):
+    title = StringField("Service Area Title. Max 250. ", validators=[DataRequired(), Length(min=1, max=250)])
     description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
     submit = SubmitField('Submit')

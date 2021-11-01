@@ -105,120 +105,98 @@
     </section>
     <!-- /section -->
     <section class="wrapper bg-light">
-      <div class="container pb-14 pb-md-16 mb-lg-22 mb-xl-24">
+      <div class="container py-14 py-md-16">
         <div class="row gx-0 mb-16 mb-mb-20">
           <div class="col-9 col-sm-10 col-lg-9 mx-auto mt-n15 mt-md-n20" data-cues data-group="images" data-delay="1500">
-            {% if background_image %}
-            <img class="img-fluid mx-auto rounded shadow-lg"  src="{{ background_image.image_url }}" srcset="{{ background_image.image_url }} 2x" alt="" />
-            {% endif %}
-            <!--<img class="img-fluid mx-auto rounded shadow-lg" data-cue="slideInUp" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa1.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa1@2x.jpg')}} 2x" alt="" />
-            <img class="position-absolute rounded shadow-lg" data-cue="slideInRight" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa2.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa2@2x.jpg')}} 2x" style="top: 20%; right:-10%; max-width:30%; height: auto;" alt="" />
-            <img class="position-absolute rounded shadow-lg" data-cue="slideInLeft" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa3.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa3@2x.jpg')}} 2x" style="top: 10%; left:-10%; max-width:30%; height: auto;" alt="" />
-            <img class="position-absolute rounded shadow-lg" data-cue="slideInLeft" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa4.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa4@2x.jpg')}} 2x" style="bottom: 10%; left:-13%; max-width:30%; height: auto;" alt="" />---->
+            <img class="img-fluid mx-auto rounded shadow-lg" data-cue="slideInUp" src="{{ url_for('static', filename='Sandbox/')}}/assets/img/photos/sa1.jpg" srcset="./assets/img/photos/sa1@2x.jpg 2x" alt="" />
+            <img class="position-absolute rounded shadow-lg" data-cue="slideInRight" src="{{ url_for('static', filename='Sandbox/')}}/assets/img/photos/sa2.jpg" srcset="./assets/img/photos/sa2@2x.jpg 2x" style="top: 20%; right:-10%; max-width:30%; height: auto;" alt="" />
+            <img class="position-absolute rounded shadow-lg" data-cue="slideInLeft" src="{{ url_for('static', filename='Sandbox/')}}/assets/img/photos/sa3.jpg" srcset="./assets/img/photos/sa3@2x.jpg 2x" style="top: 10%; left:-10%; max-width:30%; height: auto;" alt="" />
+            <img class="position-absolute rounded shadow-lg" data-cue="slideInLeft" src="{{ url_for('static', filename='Sandbox/')}}/assets/img/photos/sa4.jpg" srcset="./assets/img/photos/sa4@2x.jpg 2x" style="bottom: 10%; left:-13%; max-width:30%; height: auto;" alt="" />
           </div>
           <!-- /column -->
         </div>
-        <!-- /.row -->
-        {% if headline %}
-        {% for h in headline %}
-        
-        <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center mb-14 mb-md-18">
-          <div class="col-lg-6 position-relative">
-            <div class="shape rounded bg-pale-red rellax d-block" data-rellax-speed="0" ></div>
-            <div class="row gx-md-5 gy-5 position-relative">
-              <div class="col-6">
-                <img class="img-fluid rounded shadow-lg mb-5" data-cue="fadeIn" data-delay="300" src="{{h.image_url}}" srcset="{{h.image_url}} 2x" alt="" />
-                <img class="img-fluid rounded shadow-lg d-flex col-10 ms-auto" data-cue="fadeIn" data-delay="600" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa6.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa6@2x.jpg')}} 2x" alt="" />
-              </div>
-              <!-- /column -->
-              <div class="col-6">
-                <img class="img-fluid rounded shadow-lg my-5" data-cue="fadeIn" data-delay="900" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa7.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa7@2x.jpg')}} 2x" alt="" />
-                <img class="img-fluid rounded shadow-lg d-flex col-10" data-cue="fadeIn" data-delay="1200" src="{{ url_for('static', filename='Sandbox/assets/img/photos/sa8.jpg')}}" srcset="{{ url_for('static', filename='Sandbox/assets/img/photos/sa8@2x.jpg')}} 2x" alt="" />
-              </div>
-              <!-- /column -->
-            </div>
-            <!-- /.row -->
-          </div>
-          <!--/column -->
-          <div class="col-lg-6">
-            {% if h.id == 1 %}
-            <h3 class="display-4 mb-5">{{h.headline}}</h3>
-            <p class="mb-5">{{ h.description|safe }}</p>
-            {% endif %}
-            <!---<div class="row gy-3">
-              <div class="col-xl-6">
-                <ul class="icon-list bullet-bg bullet-soft-red mb-0">
-                  <li><span><i class="uil uil-check"></i></span><span>Aenean quam ornare curabitur blandit consectetur.</span></li>
-                  <li class="mt-3"><span><i class="uil uil-check"></i></span><span>Nullam quis risus eget urna mollis ornare aenean leo.</span></li>
-                </ul>
-              </div>
-              <!--/column -->
-              <!---<div class="col-xl-6">
-                <ul class="icon-list bullet-bg bullet-soft-red mb-0">
-                  <li><span><i class="uil uil-check"></i></span><span>Etiam porta euismod malesuada mollis nisl ornare.</span></li>
-                  <li class="mt-3"><span><i class="uil uil-check"></i></span><span>Vivamus sagittis lacus augue rutrum maecenas odio.</span></li>
-                </ul>
-              </div>--->
-              <!--/column -->
-            </div>
-            <!--/.row -->
-          </div>
-          
-          <!--/column -->
-        </div>
-        <!--/.row -->
-        {% endfor %}
-        {% endif %}
         <!--/.row -->
       </div>
       <!-- /.container -->
     </section>
     <!-- /section -->
+    {% if features %}
     <section class="wrapper bg-soft-primary">
-      <div class="container py-14 pt-md-16 pt-lg-0 pb-md-16">
-        <div class="row text-center" data-cue="slideInUp">
-          <div class="col-lg-10 mx-auto">
-            <div class="mt-lg-n20 mt-xl-n22 position-relative">
-              <div class="shape bg-dot red rellax w-16 h-18" data-rellax-speed="1" style="top: 1rem; left: -3.9rem;"></div>
-              <div class="shape rounded-circle bg-line primary rellax w-18 h-18" data-rellax-speed="1" style="bottom: 2rem; right: -3rem;"></div>
-              <video poster="{{ url_for('static', filename='Sandbox/assets/img/photos/movie.jpg')}}" class="player" playsinline controls preload="none">
-                <source src="{{ url_for('static', filename='Sandbox/assets/media/movie.mp4')}}" type="video/mp4">
-                <source src="{{ url_for('static', filename='Sandbox/assets/media/movie.webm')}}" type="video/webm">
-              </video>
-            </div>
-          </div>
-          <!--/column -->
-        </div>
-        <!--/.row -->
-        <div class="row text-center mt-12">
-          <div class="col-lg-9 mx-auto">
-            <h3 class="display-4 mb-0 text-center px-xl-10 px-xxl-15">Find out everything you need to know about creating a business process model</h3>
-            <div class="row gx-lg-8 gx-xl-12 process-wrapper text-center mt-9" data-cues="slideInUp" data-group="process">
-              <div class="col-md-4"> <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/shield.svg')}}" class="svg-inject icon-svg icon-svg-md text-red mb-3" alt="" />
-                <h4 class="mb-1">1. Secured Transactions</h4>
-                <p>Etiam porta malesuada magna mollis euismod sem.</p>
-              </div>
-              <!--/column -->
-              <div class="col-md-4"> <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/savings.svg')}}" class="svg-inject icon-svg icon-svg-md text-green mb-3" alt="" />
-                <h4 class="mb-1">2. Budget Planning</h4>
-                <p>Etiam porta malesuada magna mollis euismod sem.</p>
-              </div>
-              <!--/column -->
-              <div class="col-md-4"> <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/loading.svg')}}" class="svg-inject icon-svg icon-svg-md text-yellow mb-3" alt="" />
-                <h4 class="mb-1">3. Up to Date</h4>
-                <p>Etiam porta malesuada magna mollis euismod sem.</p>
-              </div>
-              <!--/column -->
-            </div>
-            <!--/.row -->
+      <div class="container py-14 py-md-16">
+        {% if feature_title %}
+        <div class="row text-center">
+          <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <h2 class="fs-15 text-uppercase text-muted mb-3">{{ feature_title.title }}</h2>
+            <h3 class="display-4 mb-9 px-xl-11">{{ feature_title.description }}</h3>
           </div>
           <!-- /column -->
         </div>
+        {% endif %}
         <!-- /.row -->
+        <div class="row gx-lg-8 gx-xl-12 gy-8">
+          {% for f in features %}
+          <div class="col-md-6 col-lg-4">
+            <div class="d-flex flex-row">
+              <div>
+                <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/')}}{{f.icon }}.svg" class="svg-inject icon-svg icon-svg-sm text-aqua me-4" alt="" />
+              </div>
+              <div>
+                <h4 class="mb-1">{{ f.title }}</h4>
+                <p class="mb-0">{{ f.description }}</p>
+              </div>
+            </div>
+          </div>
+          <!--/column -->
+          {% endfor %}
+        </div>
+        <!--/.row -->
       </div>
       <!-- /.container -->
     </section>
     <!-- /section -->
+    {% endif %}
+    {% if services %}
+    <section class="wrapper bg-light">
+      <div class="container py-14 py-md-16 text-center">
+        {% if services_title %}
+        <div class="row">
+          <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <h2 class="fs-15 text-uppercase text-muted mb-3">{{services_title.title}}</h2>
+            <h3 class="display-4 mb-10 px-xl-10">{{services_title.description }}</h3>
+          </div>
+          <!-- /column -->
+        </div>
+        {% endif %}
+        <!-- /.row -->
+        <div class="position-relative">
+          <div class="shape rounded-circle bg-soft-blue rellax w-16 h-16" data-rellax-speed="1" style="bottom: -0.5rem; right: -2.2rem; z-index: 0;"></div>
+          <div class="shape bg-dot yellow rellax w-16 h-17" data-rellax-speed="1" style="top: -0.5rem; left: -2.5rem; z-index: 0;"></div>
+          <div class="row gx-md-5 gy-5 text-center">
+            {% for service in services %}
+            <div class="col-md-6 col-xl-3">
+              <div class="card shadow-lg">
+                <div class="card-body">
+                  <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/')}}{{service.icon }}.svg" class="svg-inject icon-svg icon-svg-md text-yellow mb-3" alt="" />
+                  <h4>{{ service.title }}</h4>
+                  <p class="mb-2">{{ service.description }}</p>
+                  <a href="{{ service.url }}" class="more hover link-{{ service.colour }}">{{ service.action_text }}</a>
+                </div>
+                <!--/.card-body -->
+              </div>
+              <!--/.card -->
+            </div>
+            <!--/column -->
+            {% endfor %}
+          </div>
+          <!--/.row -->
+        </div>
+        <!-- /.position-relative -->
+      </div>
+      <!-- /.container -->
+    </section>
+    <!-- /section -->
+    {% else %}
+    {% endif %}
     {% if process %}
     <section class="wrapper bg-light">
       <div class="container py-14 py-md-16">
@@ -252,11 +230,12 @@
     </section>
     <!-- /section -->
     {% endif %}
+    {% if pricing_title %}
     <section class="wrapper bg-soft-primary">
       <div class="container pt-14 pb-18 pt-md-17 pb-md-22 text-center">
         <div class="row">
           <div class="col-lg-10 col-xl-9 col-xxl-8 mx-auto">
-            <h3 class="display-4 mb-15 mb-md-6 px-lg-10">We offer great prices, premium products and quality service for your business.</h3>
+            <h3 class="display-4 mb-15 mb-md-6 px-lg-10">{{ pricing_title.description }}</h3>
           </div>
           <!--/column -->
         </div>
@@ -265,6 +244,8 @@
       <!-- /.container -->
     </section>
     <!-- /section -->
+    {% endif %}
+    {% if pricing and  pricing_attribute and cost %}
     <section class="wrapper bg-light">
       <div class="container py-14 py-md-16">
         <div class="pricing-wrapper position-relative mt-n22 mt-md-n24">
@@ -280,78 +261,38 @@
             <p class="mb-0 ps-3">Yearly</p>
           </div>
           <div class="row gy-6 mt-3 mt-md-5">
+            {% for p in pricing %}
+            {% if p.is_popular is true %}
+            <div class="col-md-6 col-lg-4 popular">
+              {% else %}
             <div class="col-md-6 col-lg-4">
+              {% endif %}
               <div class="pricing card shadow-lg text-center">
                 <div class="card-body">
                   <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/shopping-basket.svg')}}" class="svg-inject icon-svg icon-svg-md text-primary mb-3" alt="" />
-                  <h4 class="card-title">Basic Plan</h4>
+                  <h4 class="card-title">{{ p.title }}</h4>
                   <div class="prices text-dark">
-                    <div class="price price-show"><span class="price-currency">$</span><span class="price-value">9</span> <span class="price-duration">month</span></div>
-                    <div class="price price-hide price-hidden"><span class="price-currency">$</span><span class="price-value">99</span> <span class="price-duration">year</span></div>
+                    {%  for price in p.costs %}
+                    <div class="price price-show"><span class="price-currency">{{price.currency_icon}}</span><span class="price-value">{{price.figure}}</span> <span class="price-duration">month</span></div>
+                    <div class="price price-hide price-hidden"><span class="price-currency">{{ price.currency_icon}}</span><span class="price-value">{{ price.figure * 12}}</span> <span class="price-duration">year</span></div>
+                    {% endfor %}
                   </div>
                   <!--/.prices -->
                   <ul class="icon-list bullet-bg bullet-soft-primary mt-8 mb-9 text-start">
-                    <li><i class="uil uil-check"></i><span><strong>1</strong> Project </span></li>
-                    <li><i class="uil uil-check"></i><span><strong>100K</strong> API Access </span></li>
-                    <li><i class="uil uil-check"></i><span><strong>100MB</strong> Storage </span></li>
-                    <li><i class="uil uil-times bullet-soft-red"></i><span> Weekly <strong>Reports</strong> </span></li>
-                    <li><i class="uil uil-times bullet-soft-red"></i><span> 7/24 <strong>Support</strong></span></li>
+                    {%  for feature in p.pricing_attributes %}
+                    <li><i class="uil uil-check"></i><span><strong>1</strong> {{ feature.description}} </span></li>
+                    {% endfor %}
                   </ul>
-                  <a href="#" class="btn btn-primary rounded">Choose Plan</a>
+                  <a href="{{ p.button_url }}" class="btn btn-{{ p.button_type }} rounded">{{ p.button_text }}</a>
                 </div>
                 <!--/.card-body -->
               </div>
               <!--/.pricing -->
             </div>
             <!--/column -->
-            <div class="col-md-6 col-lg-4 popular">
-              <div class="pricing card shadow-lg text-center">
-                <div class="card-body">
-                  <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/home.svg')}}" class="svg-inject icon-svg icon-svg-md text-primary mb-3" alt="" />
-                  <h4 class="card-title">Premium Plan</h4>
-                  <div class="prices text-dark">
-                    <div class="price price-show"><span class="price-currency">$</span><span class="price-value">19</span> <span class="price-duration">month</span></div>
-                    <div class="price price-hide price-hidden"><span class="price-currency">$</span><span class="price-value">199</span> <span class="price-duration">year</span></div>
-                  </div>
-                  <!--/.prices -->
-                  <ul class="icon-list bullet-bg bullet-soft-primary mt-8 mb-9 text-start">
-                    <li><i class="uil uil-check"></i><span><strong>5</strong> Projects </span></li>
-                    <li><i class="uil uil-check"></i><span><strong>100K</strong> API Access </span></li>
-                    <li><i class="uil uil-check"></i><span><strong>200MB</strong> Storage </span></li>
-                    <li><i class="uil uil-check"></i><span> Weekly <strong>Reports</strong></span></li>
-                    <li><i class="uil uil-times bullet-soft-red"></i><span> 7/24 <strong>Support</strong></span></li>
-                  </ul>
-                  <a href="#" class="btn btn-primary rounded">Choose Plan</a>
-                </div>
-                <!--/.card-body -->
-              </div>
-              <!--/.pricing -->
-            </div>
-            <!--/column -->
-            <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-0">
-              <div class="pricing card shadow-lg text-center">
-                <div class="card-body">
-                  <img src="{{ url_for('static', filename='Sandbox/assets/img/icons/briefcase-2.svg')}}" class="svg-inject icon-svg icon-svg-md text-primary mb-3" alt="" />
-                  <h4 class="card-title">Corporate Plan</h4>
-                  <div class="prices text-dark">
-                    <div class="price price-show"><span class="price-currency">$</span><span class="price-value">49</span> <span class="price-duration">month</span></div>
-                    <div class="price price-hide price-hidden"><span class="price-currency">$</span><span class="price-value">499</span> <span class="price-duration">year</span></div>
-                  </div>
-                  <!--/.prices -->
-                  <ul class="icon-list bullet-bg bullet-soft-primary mt-8 mb-9 text-start">
-                    <li><i class="uil uil-check"></i><span><strong>20</strong> Projects </span></li>
-                    <li><i class="uil uil-check"></i><span><strong>300K</strong> API Access </span></li>
-                    <li><i class="uil uil-check"></i><span><strong>500MB</strong> Storage </span></li>
-                    <li><i class="uil uil-check"></i><span> Weekly <strong>Reports</strong></span></li>
-                    <li><i class="uil uil-check"></i><span> 7/24 <strong>Support</strong></span></li>
-                  </ul>
-                  <a href="#" class="btn btn-primary rounded">Choose Plan</a>
-                </div>
-                <!--/.card-body -->
-              </div>
-              <!--/.pricing -->
-            </div>
-            <!--/column -->
+            {% endfor %}
+            {% endif %}
+
           </div>
           <!--/.row -->
         </div>
@@ -618,6 +559,52 @@
   </section>
   <!-- /section -->
   {% endif %}
+  {% if testimonial %}
+  <section class="wrapper bg-soft-primary">
+    <div class="container py-14 py-md-16">
+      {% if testimonial_title %}
+      <div class="row">
+        <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2 mx-auto text-center">
+          <h2 class="fs-15 text-uppercase text-muted mb-3">{{testimonial_title.title}}</h2>
+          <h3 class="display-4 mb-10 px-xl-10 px-xxl-15">{{testimonial_title.description}}</h3>
+        </div>
+        <!-- /column -->
+      </div>
+      {% endif %}
+      <!-- /.row -->
+      <div class="grid">
+        <div class="row isotope gy-6">
+          {% for t in testimonial %}
+          <div class="item col-md-6 col-xl-4">
+            <div class="card">
+              <div class="card-body">
+                <!---<span class="ratings five mb-3"></span>--->
+                <blockquote class="icon mb-0">
+                  <p>“{{t.comment}}”</p>
+                  <div class="blockquote-details">
+                    <img class="rounded-circle w-12" src="{{t.image_url}}" srcset="{{t.image_url}} 2x" alt="" />
+                    <div class="info">
+                      <h5 class="mb-1">{{t.full_name}}</h5>
+                      <p class="mb-0">{{t.job_title}}</p>
+                    </div>
+                  </div>
+                </blockquote>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!--/column -->
+          {% endfor %}
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.grid-view -->
+    </div>
+    <!-- /.container -->
+  </section>
+  <!-- /section -->
+  {% endif %}
   <!-- /.content-wrapper -->
   <footer class="bg-dark text-inverse mt-5 mt-md-16">
     <div class="container py-13 py-md-15">
@@ -652,42 +639,12 @@
           <div class="widget">
             <h4 class="widget-title text-white mb-3">Learn More</h4>
             <ul class="list-unstyled  mb-0">
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Our Story</a></li>
-              <li><a href="#">Projects</a></li>
-              <li><a href="#">Terms of Use</a></li>
-              <li><a href="#">Privacy Policy</a></li>
+              {% if pages %}
+              {% for page in pages %}
+              <li><a href="/{{ page.name }}">{{ page.name }}</a></li>
+              {% endfor %}
+              {% endif %}
             </ul>
-          </div>
-          <!-- /.widget -->
-        </div>
-        <!-- /column -->
-        <div class="col-md-12 col-lg-3">
-          <div class="widget">
-            <h4 class="widget-title text-white mb-3">Our Newsletter</h4>
-            <p class="mb-5">Subscribe to our newsletter to get our news & deals delivered to you.</p>
-            <div class="newsletter-wrapper">
-              <!-- Begin Mailchimp Signup Form -->
-              <div id="mc_embed_signup2">
-                <form action="https://elemisfreebies.us20.list-manage.com/subscribe/post?u=aa4947f70a475ce162057838d&amp;id=b49ef47a9a" method="post" id="mc-embedded-subscribe-form2" name="mc-embedded-subscribe-form" class="validate dark-fields" target="_blank" novalidate>
-                  <div id="mc_embed_signup_scroll2">
-                    <div class="mc-field-group input-group form-floating">
-                      <input type="email" value="" name="EMAIL" class="required email form-control" placeholder="Email Address" id="mce-EMAIL2">
-                      <label for="mce-EMAIL2">Email Address</label>
-                      <input type="submit" value="Join" name="subscribe" id="mc-embedded-subscribe2" class="btn btn-primary">
-                    </div>
-                    <div id="mce-responses2" class="clear">
-                      <div class="response" id="mce-error-response2" style="display:none"></div>
-                      <div class="response" id="mce-success-response2" style="display:none"></div>
-                    </div> <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ddc180777a163e0f9f66ee014_4b1bcfa0bc" tabindex="-1" value=""></div>
-                    <div class="clear"></div>
-                  </div>
-                </form>
-              </div>
-              <!--End mc_embed_signup-->
-            </div>
-            <!-- /.newsletter-wrapper -->
           </div>
           <!-- /.widget -->
         </div>

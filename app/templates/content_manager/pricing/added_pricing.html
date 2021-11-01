@@ -3,12 +3,12 @@
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
-            <a class="ui basic compact button" href="{{ url_for('admin.cms') }}">
+            <a class="ui basic compact button" href="{{ url_for('content_manager.index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Added pricing html
+                Added pricing
                 <div class="sub header">
                     View and manage pricing details
                 </div>
@@ -24,6 +24,10 @@
                         <tr>
 					        <th>Type</th>
 					        <th>Description</th>
+					        <th>button_text</th>
+					        <th>button_url</th>
+					        <th>button_type</th>
+					        <th>Is Popular</th>
 					        <th>Features</th>
 					        <th>Cost</th>
 					        <th>edit</th>
@@ -38,7 +42,11 @@
 
                             <td>{{ u.title }}</td>
                             <td>{{ u.description }}</td>
-                            <td><a class="ui yellow button" href="{{ url_for('content_manager.add_pricing_attribute', id=u.id) }}">Add</a></td>
+                            <td>{{ u.button_text }}</td>
+                            <td>{{ u.button_url }}</td>
+                            <td>{{ u.button_type }}</td>
+                            <td>{{ u.is_popular }}</td>
+                            <td><a class="ui yellow button" href="{{ url_for('content_manager.add_pricing_attribute', id=u.id, title=u.title) }}">Add</a></td>
 							 <td><a class="ui orange button" href="{{ url_for('content_manager.add_cost', id=u.id) }}">Add</a></td>
                             
 							<td><a class="ui brown left floated button" href="{{ url_for('content_manager.edit_pricing', id=u.id) }}">Edit</a></td>

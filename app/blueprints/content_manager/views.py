@@ -222,6 +222,62 @@ def delete_client(id):
     return redirect(url_for('content_manager.added_client'))
 
 
+# Added Features
+@content_manager.route('/feature')
+@login_required
+def added_feature():
+    """View added feature and description."""
+    data = Feature.query.all()
+    if data is None:
+        return redirect(url_for('content_manager.add_feature'))
+    return render_template(
+        'content_manager/feature/added_feature.html', data=data)
+
+# Add Feature Area
+@content_manager.route('/feature/add', methods=['POST', 'GET'])
+@login_required
+def add_feature():
+    form = FeatureForm()
+    if form.validate_on_submit():
+        data = Feature(
+            title=form.title.data,
+            description=form.description.data,
+            icon=form.icon.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_feature'))
+    return render_template('content_manager/feature/add_feature.html', form=form)
+
+# Edit Feature Area
+@content_manager.route('/feature/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_feature(id):
+    data = Feature.query.filter_by(id=id).first()
+    form = FeatureForm(obj=data)
+    if form.validate_on_submit():
+        data.title=form.title.data
+        data.description=form.description.data
+        data.icon=form.icon.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_feature'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/feature/add_feature.html', form=form)
+
+@content_manager.route('/feature/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_feature(id):
+    """Delete the item """
+    data = Feature.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_feature'))
+
 
 @content_manager.route('/calltoaction-list')
 @login_required
@@ -462,12 +518,37 @@ def add_service():
     if form.validate_on_submit():
         data = Service(
             title = form.title.data,
-            description = form.description.data
+            description = form.description.data,
+             action_text = form.action_text.data,
+             url = form.url.data,
+             icon = form.icon.data,
+             color = form.colour.data
             )
         db.session.add(data)
         db.session.commit()
         flash("Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_services'))
+    return render_template('content_manager/service/add_service.html', form=form)
+
+# Edit Service Area
+@content_manager.route('/service/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_service(id):
+    data = Service.query.filter_by(id=id).first()
+    form = ServiceForm(obj=data)
+    if form.validate_on_submit():
+        data.title=form.title.data
+        data.description=form.description.data
+        data.action_text = form.action_text.data,
+        data.url = form.url.data
+        data.icon = form.icon.data
+        data.colour = form.colour.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_services'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
     return render_template('content_manager/service/add_service.html', form=form)
 
 @content_manager.route('/service/<int:id>/_delete', methods=['GET', 'POST'])
@@ -1257,13 +1338,13 @@ def delete_location(id):
 def added_pricing():
     """View added Pricing setting."""
     data = Pricing.query.all()
-    cost_data = Cost.query.all()
+    #cost_data = Cost.query.all()
     pricing_attributes = PricingAttribute.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_pricing'))
     return render_template(
-        'content_manager/pricing/added_pricing.html', data=data, cost_data = Cost.query.all(),
-        pricing_attributes = PricingAttribute.query.all())
+        'content_manager/pricing/added_pricing.html', data=data)#, cost_data = Cost.query.all(),
+        #pricing_attributes = PricingAttribute.query.all())
 
 @content_manager.route('/pricing/setting/add', methods=['POST', 'GET'])
 @login_required
@@ -1272,7 +1353,11 @@ def add_pricing():
     if form.validate_on_submit():
         data = Pricing(
             title = form.title.data,
-            description = form.description.data
+            description = form.description.data,
+            button_text=form.button_text.data,
+            button_url=form.button_url.data,
+            button_type=form.button_type.data,
+            is_popular=form.is_popular.data
             )
         db.session.add(data)
         db.session.commit()
@@ -1289,6 +1374,10 @@ def edit_pricing(id):
     form = PricingForm(obj=data)
     if form.validate_on_submit():
         data.title=form.title.data
+        data.button_text=form.button_text.data
+        data.button_url=form.button_url.data
+        data.button_type=form.button_type.data
+        data.is_popular=form.is_popular.data
         data.description=form.description.data
         db.session.add(data)
         db.session.commit()
@@ -1311,45 +1400,49 @@ def delete_pricing(id):
     return redirect(url_for('content_manager.added_pricing'))
 
 #Add Pricing Attribute
-@content_manager.route('/pricing_attribute/<int:id>/add', methods=['POST', 'GET'])
+@content_manager.route('/pricing/<title>/feature/<int:id>/add', methods=['POST', 'GET'])
 @login_required
-def add_pricing_attribute(id):
+def add_pricing_attribute(id, title):
     pricing_id = Pricing.query.filter_by(id=id).first()
     form = PricingAttributeForm()
     if form.validate_on_submit():
         data = PricingAttribute(
             description = form.description.data,
+            is_available = form.is_available.data,
             pricing_id=id
             )
         db.session.add(data)
         db.session.commit()
         flash("Settings Added Successfully.", "success")
-        return redirect(url_for('content_manager.added_pricing_attribute', id=id, title=pricing_id.title))
+        return redirect(url_for('content_manager.added_pricing_attribute', id=pricing_id.id, title=pricing_id.title))
     return render_template('content_manager/pricing/add_pricing_attribute.html', form=form)
 
-@content_manager.route('/pricing/<int:id>/<title>', methods=['POST', 'GET'])
+@content_manager.route('/pricing/<title>/<int:id>/', methods=['POST', 'GET'])
 @login_required
 def added_pricing_attribute(id, title):
     """View added Pricing Attribute setting."""
-    data = PricingAttribute.query.filter_by(pricing_id=id).first()
+    data = PricingAttribute.query.filter_by(pricing_id=id).all()
+    pricing_data = PricingAttribute.query.filter_by(pricing_id=id).first()
     if data is None:
         return redirect(url_for('content_manager.add_pricing_attribute', id=id))
     return render_template(
-        'content_manager/pricing/added_pricing_attribute.html', data=data, title=title)
+        'content_manager/pricing/added_pricing_attribute.html', data=data, title=title, id=id, pricing_data = pricing_data)
 
 
 # Edit PricingAttribute
 @content_manager.route('/pricing_attribute/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
 def edit_pricing_attribute(id):
+    pricing_id = Pricing.query.filter_by(id=id).first()
     data = PricingAttribute.query.filter_by(id=id).first()
     form = PricingAttributeForm(obj=data)
     if form.validate_on_submit():
         data.description=form.description.data
+        data.is_available=form.is_available.data
         db.session.add(data)
         db.session.commit()
         flash("PricingAttribute Added Successfully.", "success")
-        return redirect(url_for('content_manager.added_pricing_attribute'))
+        return redirect(url_for('content_manager.added_pricing_attribute', id=id, title=pricing_id.title))
     else:
         flash('ERROR! PricingAttribute was not edited.', 'error')
     return render_template('content_manager/pricing/add_pricing_attribute.html', form=form)
@@ -1429,7 +1522,57 @@ def delete_cost(id):
         return redirect(url_for('content_manager.add_cost'))
     return redirect(url_for('content_manager.added_cost'))
 
+# Added PricingTitle Area
+@content_manager.route('/pricing_title')
+@login_required
+def added_pricing_title():
+    """View added pricing_title and description."""
+    data = PricingTitle.query.first()
+    if data is None:
+        return redirect(url_for('content_manager.add_pricing_title'))
+    return render_template(
+        'content_manager/pricing_title/added_pricing_title.html', data=data)
 
+# Add PricingTitle Area
+@content_manager.route('/pricing_title/add', methods=['POST', 'GET'])
+@login_required
+def add_pricing_title():
+    form = PricingTitleForm()
+    if form.validate_on_submit():
+        data = PricingTitle(
+            description=form.description.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_pricing_title'))
+    return render_template('content_manager/pricing_title/add_pricing_title.html', form=form)
+
+# Edit PricingTitle Area
+@content_manager.route('/pricing_title/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_pricing_title(id):
+    data = PricingTitle.query.filter_by(id=id).first()
+    form = PricingTitleForm(obj=data)
+    if form.validate_on_submit():
+        data.description=form.description.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_pricing_title'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/pricing_title/add_pricing_title.html', form=form)
+
+@content_manager.route('/pricing_title/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_pricing_title(id):
+    """Delete the item """
+    data = PricingTitle.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_pricing_title'))
 
 # Added Process Steps
 @content_manager.route('/process')
@@ -1501,7 +1644,7 @@ def added_process_title():
     return render_template(
         'content_manager/process_title/added_process_title.html', data=data)
 
-# Add ProcessTitle 
+# Add ProcessTitle Area
 @content_manager.route('/process_title/add', methods=['POST', 'GET'])
 @login_required
 def add_process_title():
@@ -1518,7 +1661,7 @@ def add_process_title():
         return redirect(url_for('content_manager.added_process_title'))
     return render_template('content_manager/process_title/add_process_title.html', form=form)
 
-# Edit ProcessTitle
+# Edit ProcessTitle Area
 @content_manager.route('/process_title/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
 
@@ -1546,6 +1689,7 @@ def delete_process_title(id):
     db.session.delete(data)
     flash('Successfully deleted ' , 'success')
     return redirect(url_for('content_manager.added_process_title'))
+
 # Added ClientTitle Steps
 @content_manager.route('/client_title')
 @login_required
@@ -1602,3 +1746,168 @@ def delete_client_title(id):
     return redirect(url_for('content_manager.added_client_title'))
 
 
+# Added TestimonialTitle Area
+@content_manager.route('/testimonial_title')
+@login_required
+def added_testimonial_title():
+    """View added testimonial_title and description."""
+    data = TestimonialTitle.query.first()
+    if data is None:
+        return redirect(url_for('content_manager.add_testimonial_title'))
+    return render_template(
+        'content_manager/testimonial_title/added_testimonial_title.html', data=data)
+
+# Add TestimonialTitle Area
+@content_manager.route('/testimonial_title/add', methods=['POST', 'GET'])
+@login_required
+def add_testimonial_title():
+    form = TestimonialTitleForm()
+    if form.validate_on_submit():
+        data = TestimonialTitle(
+            description=form.description.data,
+            title=form.title.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_testimonial_title'))
+    return render_template('content_manager/testimonial_title/add_testimonial_title.html', form=form)
+
+# Edit TestimonialTitle Area
+@content_manager.route('/testimonial_title/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_testimonial_title(id):
+    data = TestimonialTitle.query.filter_by(id=id).first()
+    form = TestimonialTitleForm(obj=data)
+    if form.validate_on_submit():
+        data.description=form.description.data
+        data.title=form.title.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_testimonial_title'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/testimonial_title/add_testimonial_title.html', form=form)
+
+@content_manager.route('/testimonial_title/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_testimonial_title(id):
+    """Delete the item """
+    data = TestimonialTitle.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_testimonial_title'))
+
+
+
+
+# Added FeatureTitle Area
+@content_manager.route('/feature_title')
+@login_required
+def added_feature_title():
+    """View added feature_title and description."""
+    data = FeatureTitle.query.first()
+    if data is None:
+        return redirect(url_for('content_manager.add_feature_title'))
+    return render_template(
+        'content_manager/feature_title/added_feature_title.html', data=data)
+
+# Add FeatureTitle Area
+@content_manager.route('/feature_title/add', methods=['POST', 'GET'])
+@login_required
+def add_feature_title():
+    form = FeatureTitleForm()
+    if form.validate_on_submit():
+        data = FeatureTitle(
+            title=form.title.data,
+            description=form.description.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_feature_title'))
+    return render_template('content_manager/feature_title/add_feature_title.html', form=form)
+
+# Edit FeatureTitle Area
+@content_manager.route('/feature_title/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_feature_title(id):
+    data = FeatureTitle.query.filter_by(id=id).first()
+    form = FeatureTitleForm(obj=data)
+    if form.validate_on_submit():
+        data.title=form.title.data
+        data.description=form.description.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_feature_title'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/feature_title/add_feature_title.html', form=form)
+
+@content_manager.route('/feature_title/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_feature_title(id):
+    """Delete the item """
+    data = FeatureTitle.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_feature_title'))
+
+
+# Added ServiceTitle Area
+@content_manager.route('/service_title')
+@login_required
+def added_service_title():
+    """View added service_title and description."""
+    data = ServiceTitle.query.first()
+    if data is None:
+        return redirect(url_for('content_manager.add_service_title'))
+    return render_template(
+        'content_manager/service_title/added_service_title.html', data=data)
+
+# Add ServiceTitle Area
+@content_manager.route('/service_title/add', methods=['POST', 'GET'])
+@login_required
+def add_service_title():
+    form = ServiceTitleForm()
+    if form.validate_on_submit():
+        data = ServiceTitle(
+            title=form.title.data,
+            description=form.description.data
+            )
+        db.session.add(data)
+        db.session.commit()
+        flash("Added Successfully.", "success")
+        return redirect(url_for('content_manager.added_service_title'))
+    return render_template('content_manager/service_title/add_service_title.html', form=form)
+
+# Edit ServiceTitle Area
+@content_manager.route('/service_title/<int:id>/edit', methods=['POST', 'GET'])
+@login_required
+def edit_service_title(id):
+    data = ServiceTitle.query.filter_by(id=id).first()
+    form = ServiceTitleForm(obj=data)
+    if form.validate_on_submit():
+        data.title=form.title.data
+        data.description=form.description.data
+        db.session.add(data)
+        db.session.commit()
+        flash("Edited Successfully.", "success")
+        return redirect(url_for('content_manager.added_service_title'))
+    else:
+        flash('ERROR! Data was not edited.', 'error')
+    return render_template('content_manager/service_title/add_service_title.html', form=form)
+
+@content_manager.route('/service_title/<int:id>/_delete', methods=['GET', 'POST'])
+@login_required
+def delete_service_title(id):
+    """Delete the item """
+    data = ServiceTitle.query.filter_by(id=id).first()
+    db.session.commit()
+    db.session.delete(data)
+    flash('Successfully deleted ' , 'success')
+    return redirect(url_for('content_manager.added_service_title'))

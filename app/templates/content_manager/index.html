@@ -52,6 +52,15 @@
                 {{ dashboard_option('Manage Services', 'content_manager.added_services',
                                     description='Manage landingpage services', icon='car icon') }}	
 
+                {{ dashboard_option('Manage Services Area Description', 'content_manager.added_service_title',
+                                    description='Manage Services Area Description', icon='edit icon') }}
+
+                {{ dashboard_option('Manage Features Area Description', 'content_manager.added_feature_title',
+                                    description='Manage Feature Area Description', icon='edit icon') }}
+									
+                {{ dashboard_option('Manage Features', 'content_manager.added_feature',
+                                    description='Manage features displayed', icon='edit icon') }}
+
                 {{ dashboard_option('Manage Team', 'content_manager.added_members',
                                     description='Manage landingpage team', icon='users icon') }}										
 
@@ -66,9 +75,13 @@
 									
                 {{ dashboard_option('Manage Portfolio', 'content_manager.added_portfolio',
                                     description='Manage Portfolio Images', icon='images outline icon') }}
-		<! Testimonials had a bug. Fix it before enabling ----->
-                {# dashboard_option('Manage Testimonials', 'content_manager.added_testimonial',
-                                    description='Manage testimonials', icon='id card outline icon') #}	
+									
+                {{ dashboard_option('Manage Testimonial Area Description', 'content_manager.added_testimonial_title',
+                                    description='Manage Testimonial Area Description', icon='edit icon') }}
+									
+		<! Testimonials had a bug. Fix it before enabling on some templates----->
+                {{ dashboard_option('Manage Testimonials', 'content_manager.added_testimonial',
+                                    description='Manage testimonials', icon='id card outline icon') }}	
 									
                 {{ dashboard_option('Manage Frequently Asked Questions', 'content_manager.added_faq',
                                     description='Manage frequently asked questions', icon='question circle outline icon') }}	
@@ -111,6 +124,9 @@
 
                 {{ dashboard_option('Manage Pricing', 'content_manager.added_pricing',
                                     description='Manage pricing', icon='money bill alternate outline icon') }}
+									
+                {{ dashboard_option('Manage Pricing Area Description', 'content_manager.added_pricing_title',
+                                    description='Manage Pricing Area Description', icon='edit icon') }}									
 
                 {{ dashboard_option('Manage Social Media Icons', 'content_manager.added_icons',
                                     description='Manage social media icons and links', icon='facebook square icon') }}									

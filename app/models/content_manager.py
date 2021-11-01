@@ -136,12 +136,58 @@ def technologies_text_serializer(technologies_text):
         'secondtext': technologies_text.secondtext,
         }
 
+class Feature(db.Model):
+    __tablename__ = "feature"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
+    icon = db.Column(db.String(50), nullable=True)
+
+def feature_serializer(feature):
+    return {
+        'id':feature.id,
+        'title': feature.title ,
+        'description': feature.description,
+        'icon': feature.icon,
+        }
+
+class FeatureTitle(db.Model):
+    __tablename__ = "feature_title"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
+
+
+def feature_title_serializer(feature_title):
+    return {
+        'id':feature_title.id,
+        'title':feature_title.title,
+        'description':feature_title.description
+        }
+
+class ServiceTitle(db.Model):
+    __tablename__ = "service_title"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
+
+
+def service_title_serializer(service_title):
+    return {
+        'id':service_title.id,
+        'title':service_title.title,
+        'description':service_title.description
+        }
+
 class Service(db.Model):
     __tablename__ = "services"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=True)
-    description = db.Column(db.String(80), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
     icon = db.Column(db.String(50), nullable=True)
+    action_text = db.Column(db.String(25), nullable=True)
+    url = db.Column(db.String(80), nullable=True)
+    colour = db.Column(db.String(80), nullable=True)
 
 def services_serializer(services):
     return {
@@ -149,6 +195,9 @@ def services_serializer(services):
         'title': services.title ,
         'description': services.description,
         'icon': services.icon,
+        'action_text': services.action_text,
+        'url': services.url,
+        'colour': services.colour,
         }
 
 class About(db.Model):
@@ -580,6 +629,10 @@ class Pricing(db.Model):
     __tablename__ = "pricing"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=True)
+    button_text = db.Column(db.String(80), nullable=True)
+    button_url = db.Column(db.String(80), nullable=True)
+    button_type = db.Column(db.String(80), nullable=True)
+    is_popular = db.Column(db.Boolean, default=False)
     description = db.Column(db.String(250), nullable=True)
     pricing_attributes = db.relationship('PricingAttribute', backref='pricing', lazy=True)
     costs = db.relationship('Cost', backref='pricing', lazy=True)
@@ -589,6 +642,9 @@ def pricing_serializer(pricing):
         'id':pricing.id,
         'title':pricing.title,
         'description':pricing.description,
+        'button_text':pricing.button_text,
+        'button_url':pricing.button_url,
+        'button_type':pricing.button_type,
         'pricing_attributes':pricing.pricing_attributes,
         'costs':pricing.costs,
         }
@@ -598,6 +654,7 @@ class PricingAttribute(db.Model):
     __tablename__ = "pricing_attribute"
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(120), nullable=True)
+    is_available = db.Column(db.Boolean, default=False)
     pricing_id = db.Column(db.Integer, db.ForeignKey('pricing.id'),
         nullable=True)
 
@@ -605,6 +662,7 @@ def pricing_attribute_serializer(pricing_attribute):
     return {
         'id':pricing_attribute.id,
         'description':pricing_attribute.description,
+        'is_available':pricing_attribute.is_available,
         'pricing_id':pricing_attribute.pricing_id,
         }
 
@@ -626,6 +684,17 @@ def cost_serializer(cost):
         'currency':cost.currency,
         'currency_icon':cost.currency_icon,
         'pricing_id':cost.pricing_id,
+        }
+
+class PricingTitle(db.Model):
+    __tablename__ = "pricing_title"
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(250), nullable=True)
+
+def pricing_title_serializer(pricing_title):
+    return {
+        'id':pricing_title.id,
+        'description':pricing_title.description,
         }
 
 class Process(db.Model):
@@ -664,8 +733,22 @@ class ProcessTitle(db.Model):
 
 def process_title_serializer(process_title):
     return {
-        'id':process.id,
-        'title':process.title,
-        'description':process.description,
-        'image':process.image
+        'id':process_title.id,
+        'title':process_title.title,
+        'description':process_title.description,
+        'image':process_title.image
+        }
+
+class TestimonialTitle(db.Model):
+    __tablename__ = "testimonial_title"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), nullable=True)
+    description = db.Column(db.String(250), nullable=True)
+
+
+def testimonial_title_serializer(testimonial_title):
+    return {
+        'id':testimonial_title.id,
+        'title':testimonial_title.title,
+        'description':testimonial_title.description
         }
