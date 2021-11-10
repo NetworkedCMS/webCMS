@@ -35,7 +35,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@template_manager.route('/template/setting')
+@template_manager.route('/template/setting', subdomain ='templates')
 @login_required
 def index():
     """Template manager page."""
@@ -106,7 +106,7 @@ def preview(template_name):
     logo = Logo.query.first()
     techno_img = TechnologiesImage.query.all()
     text_techno = TechnologiesText.query.first()
-    footer_text = FooterText.query.all()
+    footer_text = FooterText.query.first()
     tracking_script = TrackingScript.query.all()
     media_icons = SocialMediaIcon.query.all()
     footer_image = FooterImage.query.first()
@@ -151,10 +151,11 @@ def preview(template_name):
     pricing_title = PricingTitle.query.first()
     client_title = ClientTitle.query.first()
     feature_title = FeatureTitle.query.first()
+    testimonial_title = TestimonialTitle.query.first()
     process = Process.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
-    return render_template(f"{ item.template_name }/index.html", footer_image=footer_image, icons=media_icons,
+    return render_template(f"{ item.template_name }/preview/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -170,7 +171,7 @@ def preview(template_name):
                            testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline,
                            process_title=process_title, process=process, client_title=client_title,
                            pricing=pricing, pricing_attribute=pricing_attribute, cost=cost, pricing_title=pricing_title,
-                           feature_title=feature_title, features=features)
+                           feature_title=feature_title, features=features, template_name=template_name)
                         
     
     if item == 'Presento':
@@ -207,75 +208,6 @@ def preview(template_name):
     else:
         return redirect(url_for('template_manager.index'))
 
-@template_manager.route('/preview/Bare/<page_name>', methods=['GET', 'POST'])
-def page(page_name):
-    """ Pages Added """
-
-
-    landing_page = TemplateSetting.query.filter_by(choice=True).first_or_404()
-    template_name = landing_page.template_name#.lower()
-    
-    nav_menu = NavMenu.query.all()
-    slideshows = SlideShowImage.query.all()
-    hometext = HomeText.query.first()
-    call_to_action = CallToAction.query.first()
-    logo = Logo.query.first()
-    techno_img = TechnologiesImage.query.all()
-    text_techno = TechnologiesText.query.first()
-    footer_text = FooterText.query.all()
-    tracking_script = TrackingScript.query.all()
-    media_icons = SocialMediaIcon.query.all()
-    footer_image = FooterImage.query.first()
-    copyright_text = CopyRight.query.first()
-    background_image = BackgroundImage.query.first()
-    favicon_image = FaviconImage.query.first()
-    brand = BrandName.query.first()
-    seo = Seo.query.first()
-    services = Service.query.all()
-    about = About.query.first()
-    team = Team.query.all()
-    video = Video.query.first()
-    counts = Counter.query.all()
-    portfolio = Portfolio.query.all()
-    faq = Faq.query.all()
-    testimonial = Testimonial.query.all()
-    client = Client.query.all()
-    apple_touch_icon = AppleTouchIcon.query.first()
-    jumbotron_html = JumbotronHtml.query.first()
-    form_html = FormHtml.query.first()
-    blank_html = FormHtml.query.all()
-    album_html = AlbumHtml.query.first()
-    carousel_html = CarouselHtml.query.first()
-    header_script = HeaderScript.query.all()
-    footer_script = FooterScript.query.all()
-    header_html = HeaderHtml.query.first()
-    navbar_html = NavbarHtml.query.first()
-    footer_html = FooterHtml.query.first()
-    features_html = FeaturesHtml.query.all()
-    css = Css.query.first()
-    pricing_html = PricingHtml.query.all()
-    testimonials_html = TestimonialsHtml.query.all()
-    contact_html = ContactHtml.query.first()
-    page_content = Page.query.filter_by(name=page_name).first_or_404()
-    pages = Page.query.all()
-    headline = Headline.query.all()
-    
-    item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
-    return render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
-                           footer_text=footer_text, slideshows=slideshows,
-                           home_title=hometext, logo=logo, techno_img=techno_img,
-                           text_techno=text_techno, copyright_text=copyright_text,
-                           background_image=background_image, call_to_action=call_to_action,
-                           nav_menu=nav_menu, brand=brand, seo=seo,
-                           favicon_image=favicon_image, tracking_script=tracking_script, services=services,
-                           about=about, team=team, video=video, counts=counts, media_icons = media_icons,
-                           portfolio=portfolio, faq=faq, testimonial=testimonial, client=client, apple_touch_icon=apple_touch_icon,
-                           jumbotron_html = jumbotron_html, form_html = form_html, blank_html = blank_html,
-                           album_html = album_html, carousel_html = carousel_html, header_script = header_script,
-                           footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
-                           footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
-                           testimonials_html= testimonials_html, contact_html = contact_html, page_name=page_name,
-                           page_content = page_content, pages=pages, headline=headline)
 
 @template_manager.route('/default/<int:id>/<template_name>', methods=['GET', 'POST'])
 @login_required
@@ -295,4 +227,85 @@ def add_default(id, template_name):
     flash("Default Template Chosen Successfully.", "success")
     return redirect(url_for('main.index'))
     
+@template_manager.route('/preview/<template_name>/<page_name>', methods=['GET', 'POST'])
+def page(template_name, page_name):
+    """ Pages Added """
 
+
+    landing_page = TemplateSetting.query.filter_by(choice=True).first_or_404()
+    template_name = template_name
+    page_name = page_name
+
+    nav_menu = NavMenu.query.all()
+    slideshows = SlideShowImage.query.all()
+    hometext = HomeText.query.first()
+    call_to_action = CallToAction.query.all()
+    logo = Logo.query.first()
+    techno_img = TechnologiesImage.query.all()
+    text_techno = TechnologiesText.query.first()
+    footer_text = FooterText.query.first()
+    tracking_script = TrackingScript.query.all()
+    media_icons = SocialMediaIcon.query.all()
+    footer_image = FooterImage.query.first()
+    copyright_text = CopyRight.query.first()
+    background_image = BackgroundImage.query.first()
+    favicon_image = FaviconImage.query.first()
+    brand = BrandName.query.first()
+    seo = Seo.query.first()
+    services = Service.query.all()
+    features = Feature.query.all()
+    about = About.query.first()
+    team = Team.query.all()
+    video = Video.query.first()
+    counts = Counter.query.all()
+    portfolio = Portfolio.query.all()
+    faq = Faq.query.all()
+    testimonial = Testimonial.query.all()
+    client = Client.query.all()
+    pricing = Pricing.query.all()
+    pricing_attribute = PricingAttribute.query.all()
+    cost = Cost.query.all()
+    apple_touch_icon = AppleTouchIcon.query.first()
+    jumbotron_html = JumbotronHtml.query.first()
+    form_html = FormHtml.query.first()
+    blank_html = FormHtml.query.all()
+    album_html = AlbumHtml.query.first()
+    carousel_html = CarouselHtml.query.first()
+    header_script = HeaderScript.query.all()
+    footer_script = FooterScript.query.all()
+    header_html = HeaderHtml.query.first()
+    navbar_html = NavbarHtml.query.first()
+    footer_html = FooterHtml.query.first()
+    features_html = FeaturesHtml.query.all()
+    css = Css.query.first()
+    pricing_html = PricingHtml.query.all()
+    testimonials_html = TestimonialsHtml.query.all()
+    contact_html = ContactHtml.query.first()
+    page_content = Page.query.filter_by(name=page_name).first_or_404()
+    pages = Page.query.all()
+    headline = Headline.query.all()
+    process_title = ProcessTitle.query.first()
+    pricing_title = PricingTitle.query.first()
+    client_title = ClientTitle.query.first()
+    feature_title = FeatureTitle.query.first()
+    testimonial_title = TestimonialTitle.query.first()
+    process = Process.query.all()
+    
+    item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
+    return render_template(f"{ item.template_name }/preview/inner-page.html", footer_image=footer_image, icons=media_icons,
+                           footer_text=footer_text, slideshows=slideshows,
+                           home_title=hometext, logo=logo, techno_img=techno_img,
+                           text_techno=text_techno, copyright_text=copyright_text,
+                           background_image=background_image, call_to_action=call_to_action,
+                           nav_menu=nav_menu, brand=brand, seo=seo,
+                           favicon_image=favicon_image, tracking_script=tracking_script, services=services,
+                           about=about, team=team, video=video, counts=counts, media_icons = media_icons,
+                           portfolio=portfolio, faq=faq, testimonial=testimonial, client=client, apple_touch_icon=apple_touch_icon,
+                           jumbotron_html = jumbotron_html, form_html = form_html, blank_html = blank_html,
+                           album_html = album_html, carousel_html = carousel_html, header_script = header_script,
+                           footer_script = footer_script, header_html = header_html, navbar_html = navbar_html,
+                           footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
+                           testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline,
+                           process_title=process_title, process=process, client_title=client_title,
+                           pricing=pricing, pricing_attribute=pricing_attribute, cost=cost, pricing_title=pricing_title,
+                           feature_title=feature_title, features=features, template_name=template_name, page_content=page_content)

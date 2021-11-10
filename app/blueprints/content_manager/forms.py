@@ -69,7 +69,7 @@ class SlideShowCrudForm(FlaskForm):
 class SeoForm(FlaskForm):
     #meta_tag = SelectField(u'Meta Tag',choices=[('name','name'),('property','property')] ,validators=[DataRequired()])
     title = StringField("Title", validators=[DataRequired(), Length(min=5, max=80)])
-    content = StringField("Meta Description, 180 words maximum", validators=[DataRequired(), Length(min=5, max=181)])
+    content = StringField("Meta Description, 180 characters maximum", validators=[DataRequired(), Length(min=5, max=181)])
     submit = SubmitField('Submit')
 
 #############################################################
@@ -116,8 +116,8 @@ class PortfolioForm(BaseModelForm):
 class TestimonialForm(BaseModelForm):
     full_name = StringField("Full Name", validators=[DataRequired(), Length(min=2, max=80)])
     job_title = StringField("Job Title ", validators=[DataRequired(), Length(min=2, max=80)])
-    comment = StringField("Comment. 140 words max", validators=[DataRequired(), Length(min=2, max=180)])
-    image = FileField('Image size (400 × 400 px)', validators=[FileRequired(), FileAllowed(images, 'Images only allowed!')])
+    comment = StringField("Comment. 250 characters max", validators=[DataRequired(), Length(min=2, max=250)])
+    image = FileField('Image size (400 × 400 px) but some templates adjust them automatically.', validators=[FileRequired(), FileAllowed(images, 'Images only allowed!')])
     submit = SubmitField('Submit')
 
 class TemplateSettingForm(BaseModelForm):
@@ -212,8 +212,8 @@ class FaqForm(BaseModelForm):
 # Social Media Form 
 class SocialMediaIconForm(FlaskForm):
     # image = FileField('Logo Image (128x128)', validators=[FileRequired(), FileAllowed(images, 'Social Iocn Image Only!')])
-    icon = StringField("Icon Html Code(fab fa-facebook-f)", validators=[DataRequired()])
-    url_link = StringField("Icon Link, e.g https://www.facebook.com/PastorChrisLive ", validators=[DataRequired()])
+    icon = StringField("Icon Names only e.g facebook", validators=[DataRequired()])
+    url_link = StringField("Icon Link, e.g https://www.facebook.com/Networkedng ", validators=[DataRequired()])
     submit = SubmitField('Submit')
     
 # Brand Name Form Model
@@ -239,7 +239,7 @@ class ResourcesForm(BaseModelForm):
 # Process Form Model
 class ProcessForm(FlaskForm):
     steps = StringField("Step to take ", validators=[DataRequired(), Length(min=1, max=120)])
-    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 characters" , validators=[DataRequired(), Length(min=1, max=250)])
     #process_icon = StringField("Flaticon or fontawesome icons or leave blank")
     submit = SubmitField('Submit')
 
@@ -247,42 +247,42 @@ class ProcessForm(FlaskForm):
 # ProcessTitle Area Form Model
 class ProcessTitleForm(FlaskForm):
     title = StringField("Process Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
-    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 characters" , validators=[DataRequired(), Length(min=1, max=250)])
     image = FileField('Process Area Image 650 by 874px', validators=[FileRequired(), FileAllowed(images, "Image Allowed Only !")])
     submit = SubmitField('Submit')
 
 # ClientTitle Area Form Model
 class ClientTitleForm(FlaskForm):
     title = StringField("Client Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
-    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 characters" , validators=[DataRequired(), Length(min=1, max=250)])
     submit = SubmitField('Submit')
 
 # PricingTitle Area Form Model
 class PricingTitleForm(FlaskForm):
-    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 characters" , validators=[DataRequired(), Length(min=1, max=250)])
     submit = SubmitField('Submit')
 
 # TestimonialTitle Area Form Model
 class TestimonialTitleForm(FlaskForm):
     title = StringField("Testimonial Area Title ", validators=[DataRequired(), Length(min=1, max=250)])
-    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 characters" , validators=[DataRequired(), Length(min=1, max=250)])
     submit = SubmitField('Submit')
 
 #FeatureForm
 class FeatureForm(FlaskForm):
     title = StringField("Title or Name", validators=[DataRequired(), Length(min=5, max=80)])
     description = StringField("Description", validators=[DataRequired(), Length(min=10, max=180)])
-    icon = StringField("Icon from Flaticons or Font Awesome only e.g shopping-basket", validators=[DataRequired()])
+    icon = StringField("Icon from Semantic UI or Font Awesome only e.g shopping-basket", validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 # FeatureTitle Area Form Model
 class FeatureTitleForm(FlaskForm):
     title = StringField("Feature Area Title. Max 250. ", validators=[DataRequired(), Length(min=1, max=250)])
-    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 characters" , validators=[DataRequired(), Length(min=1, max=250)])
     submit = SubmitField('Submit')
 
 # ServiceTitle Area Form Model
 class ServiceTitleForm(FlaskForm):
     title = StringField("Service Area Title. Max 250. ", validators=[DataRequired(), Length(min=1, max=250)])
-    description = StringField("Description. Max.250 words" , validators=[DataRequired(), Length(min=1, max=250)])
+    description = StringField("Description. Max.250 characters" , validators=[DataRequired(), Length(min=1, max=250)])
     submit = SubmitField('Submit')

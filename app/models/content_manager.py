@@ -291,7 +291,7 @@ class Testimonial(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(80), nullable=True)
     job_title = db.Column(db.String(80), nullable=True)
-    comment = db.Column(db.String(140), nullable=True)
+    comment = db.Column(db.String(250), nullable=True)
     image = db.Column(db.String(256), nullable=True)
 
     @property

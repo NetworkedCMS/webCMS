@@ -38,7 +38,7 @@
             <ul class="navbar-nav">
               {% if pages %}
               {% for page in pages %}
-              <li class="nav-item"><a class="nav-link" href="/{{ page.name }}">{{ page.name }}</a></li>
+              <li class="nav-item"><a class="nav-link" href="/{{ url_for('template_manager.page', filename='Sandbox/assets/css/fonts/thicccboi.css')}}">{{ page.name }}</a></li>
                 {% endfor %}
                 {% endif %}
                 <!--/.dropdown-menu -->
