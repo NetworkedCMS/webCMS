@@ -42,7 +42,7 @@ def login():
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             flash('You are now logged in. Welcome back!', 'success')
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(request.args.get('next') or url_for('customer_journey.add_brand_name'))
         else:
             flash('Invalid email or password.', 'error')
     return render_template('account/login.html', form=form)
@@ -71,7 +71,7 @@ def register():
             confirm_link=confirm_link)
         flash('A confirmation link has been sent to {}.'.format(user.email),
               'warning')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('customer_journey.add_brand_name'))
     return render_template('account/register.html', form=form)
 
 
@@ -218,12 +218,12 @@ def confirm_request():
 def confirm(token):
     """Confirm new user's account with provided token."""
     if current_user.confirmed:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('customer_journey.add_brand_name'))
     if current_user.confirm_account(token):
         flash('Your account has been confirmed.', 'success')
     else:
         flash('The confirmation link is invalid or has expired.', 'error')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('customer_journey.add_brand_name'))
 
 
 @account.route(

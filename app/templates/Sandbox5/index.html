@@ -37,8 +37,8 @@
             </div>
             <ul class="navbar-nav">
               {% if pages %}
-              {% for page in pages %}
-              <li class="nav-item"><a class="nav-link" href="/{{ page.name }}">{{ page.name }}</a></li>
+              {% for page in pages %}  
+              <li class="nav-item"><a class="nav-link" href="/{{ template_name}}/{{page.name}}">{{ page.name }}</a></li>
                 {% endfor %}
                 {% endif %}
                 <!--/.dropdown-menu -->
@@ -641,7 +641,7 @@
             <ul class="list-unstyled  mb-0">
               {% if pages %}
               {% for page in pages %}
-              <li><a href="/{{ page.name }}">{{ page.name }}</a></li>
+              <li><a href="/{{ template_name}}/{{page.name}}">{{ page.name }}</a></li>
               {% endfor %}
               {% endif %}
             </ul>

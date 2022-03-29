@@ -22,7 +22,7 @@
           <div class="navbar-brand w-100">
             <a href="/">
               {% if logo %}
-              <img src="{{ logo.image_url }}" srcset="{{ logo.image_url }} 2x" alt="" />
+              <img src="{{ logo.image_url }}" alt="{{brand.text}}" />
               {% endif %}
             </a>
           </div>
@@ -30,7 +30,7 @@
             <div class="offcanvas-header d-lg-none d-xl-none">
               <a href="/">
                 {% if logo %}
-                <img src="{{ logo.image_url }}" srcset="{{ logo.image_url }} 2x" alt="" />
+                <img src="{{ logo.image_url }}" alt="{{brand.text}}" />
                 {% endif %}
               </a>
                 <button type="button" class="btn-close btn-close-white offcanvas-close offcanvas-nav-close" aria-label="Close"></button>
@@ -38,7 +38,7 @@
             <ul class="navbar-nav">
               {% if pages %}
               {% for page in pages %}
-              <li class="nav-item"><a class="nav-link" href="/{{ url_for('template_manager.page', template_name=template_name, page_name=page.name)}}">{{ page.name }}</a></li>
+              <li class="nav-item"><a class="nav-link" href="/preview/{{ template_name}}/{{page.name}}">{{ page.name }}</a></li>
                 {% endfor %}
                 {% endif %}
                 <!--/.dropdown-menu -->
@@ -112,7 +112,7 @@
         <div class="col-md-4 col-lg-3">
           <div class="widget">
             {% if logo %}
-            <img class="mb-4" src="{{ logo.image_url }}" srcset="{{ logo.image_url }} 2x" alt="{% if brand %} {{ brand.text }} {% endif %}" />
+            <img class="mb-4" src="{{ logo.image_url }}" alt="{% if brand %} {{ brand.text }} {% endif %}" />
             {% endif %}
             <p class="mb-4">© 2021 {% if copyright_text %} {{ copyright_text.text}} {% endif %}. <br class="d-none d-lg-block" />All rights reserved.</p>
             {% if media_icons %}
@@ -141,7 +141,7 @@
             <ul class="list-unstyled  mb-0">
               {% if pages %}
               {% for page in pages %}
-              <li><a href="/{{ page.name }}">{{ page.name }}</a></li>
+              <li><a href="/preview/{{ template_name}}/{{page.name}}">{{ page.name }}</a></li>
               {% endfor %}
               {% endif %}
             </ul>

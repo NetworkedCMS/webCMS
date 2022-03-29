@@ -4,10 +4,25 @@ from flask import url_for
 from .. import db
 
 
+class HtmlContent(db.Model):
+    __tablename__ = 'html_content'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    #user = db.relationship("User", back_populates="html_contents")
+
+    ''' html_content is the parent of the following '''
+
+    csses = db.relationship("Css", backref="html_content")
+    footer_html = db.relationship("FooterHtml", backref="html_content")
+    header_html = db.relationship("HeaderHtml", backref="html_content")
+    navbar_html = db.relationship("NavbarHtml", backref="html_content")
+    
 class Css(db.Model):
     __tablename__ = "css"
     id = db.Column(db.Integer, primary_key=True)
     css_filename = db.Column(db.String(256), nullable=True)
+    html_content_id = db.Column(db.Integer, db.ForeignKey('html_content.id'))
+    #html_content = db.relationship("HtmlContent", back_populates="csses")
 
     @property
     def css_url(self):
@@ -23,16 +38,22 @@ class FooterHtml(db.Model):
     __tablename__ = "footer_html"
     id = db.Column(db.Integer, primary_key=True)
     html = db.Column(db.Text)
+    html_content_id = db.Column(db.Integer, db.ForeignKey('html_content.id'))
+    #html_content = db.relationship("HtmlContent", back_populates="footer_html")
 
 class HeaderHtml(db.Model):
     __tablename__ = "header_html"
     id = db.Column(db.Integer, primary_key=True)
     html = db.Column(db.Text)
+    html_content_id = db.Column(db.Integer, db.ForeignKey('html_content.id'))
+    #html_content = db.relationship("HtmlContent", back_populates="header_html")
 
 class NavbarHtml(db.Model):
     __tablename__ = "navbar_html"
     id = db.Column(db.Integer, primary_key=True)
     html = db.Column(db.Text)
+    html_content_id = db.Column(db.Integer, db.ForeignKey('html_content.id'))
+    #html_content = db.relationship("HtmlContent", back_populates="navbar_html")
 
 class FooterScript(db.Model):
     __tablename__ = "footer_script"

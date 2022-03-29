@@ -5,6 +5,7 @@ from wtforms.fields import (
     PasswordField,
     StringField,
     SubmitField,
+    BooleanField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -72,3 +73,8 @@ class NewUserForm(InviteUserForm):
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
 
     submit = SubmitField('Create')
+
+class ConfirmAccountForm(FlaskForm):
+    confirmed = BooleanField('True: Tick this checkbox to confirm the users account manually',
+                             validators=[InputRequired()])
+    submit = SubmitField('Confirm')

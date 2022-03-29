@@ -3,6 +3,12 @@ import os
 from flask import url_for
 from .. import db
 
+class Content(db.Model):
+    __tablename__ = 'content'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    #user = db.relationship("User", back_populates="contents")
+
 
 class SlideShowImage(db.Model):
     __tablename__ = "slide_show_images"

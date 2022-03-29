@@ -40,6 +40,7 @@
 					        <th>ID</th>
 					        <th>Name</th>
 					        <th>Content</th>
+							<th>Sub page</th>
 					        <th>edit</th>
                             <th>Delete</th>
                         </tr>
@@ -51,6 +52,7 @@
                             <td>{{ u.id }}</td>
                             <td>{{ u.name }}</td>
                             <td>{{ u.content }}</td>
+                            <td><a class="ui yellow button" href="{{ url_for('page_manager.add_sub_page', page_id=u.id, page=u.name) }}">Add</a></td>
 							<td><a class="ui blue left floated button" href="{{ url_for('page_manager.edit_page', id=u.id) }}">Edit</a></td>
                             <td> <a class="ui red left floated button" style="margin-top: 1px"
                                    href="{{ url_for('page_manager.delete_page', id=u.id) }}" onclick="return confirmDeletePage('{{ u.id }}');" u-content="{{ u.id }}">Delete</a></td>

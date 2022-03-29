@@ -99,6 +99,9 @@ def create_app(config):
     from .blueprints.content_manager import content_manager as content_manager_blueprint
     app.register_blueprint(content_manager_blueprint)
 
+    from .blueprints.customer_journey import customer_journey as customer_journey_blueprint
+    app.register_blueprint(customer_journey_blueprint)
+
     from .blueprints.template_manager import template_manager as template_manager_blueprint
     app.register_blueprint(template_manager_blueprint)
 

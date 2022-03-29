@@ -34,8 +34,10 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+''' wanted to make a sub domain for each user account so that one user can have as many sub domains as they choose '''
 
-@template_manager.route('/template/setting', subdomain ='templates')
+#@template_manager.route('/template/setting', subdomain ='templates')
+@template_manager.route('/template/setting')
 @login_required
 def index():
     """Template manager page."""
@@ -53,16 +55,8 @@ def index():
     return render_template('template_manager/index.html', data=data, form=form)
 
 
-# Add Testimonial
-@template_manager.route('/template/setting', methods=['POST', 'GET'])
-@login_required
-def added_template_setting():
-    """View added template setting."""
-    data = TemplateSetting.query.all()
-    if data is None:
-        return redirect(url_for('template_manager.add_template_setting'))
-    return render_template(
-        'template_manager/template_setting/added_template_setting.html', data=data)
+# Added Templates
+
 
 
 @template_manager.route('/template/setting/add', methods=['POST', 'GET'])
@@ -94,7 +88,7 @@ def delete_template_setting(id):
         return redirect(url_for('template_manager.add_template_setting'))
     return redirect(url_for('template_manager.added_template_setting'))
 
-@template_manager.route('/preview/<template_name>', methods=['GET', 'POST'])
+@template_manager.route('/preview/<template_name>/', methods=['GET', 'POST'])
 @login_required
 def preview(template_name):
     """ Peview Templates Added """
@@ -146,6 +140,12 @@ def preview(template_name):
     contact_html = ContactHtml.query.first()
     #page_content = Page.query.filter_by(name=page_name).first_or_404()
     pages = Page.query.all()
+    for page in pages:
+        page = page
+    sub_pages = SubPage.query.all()
+    for sub_page in sub_pages:
+        sub_page = sub_page
+        print(sub_page.name)
     headline = Headline.query.all()
     process_title = ProcessTitle.query.first()
     pricing_title = PricingTitle.query.first()
@@ -153,6 +153,7 @@ def preview(template_name):
     feature_title = FeatureTitle.query.first()
     testimonial_title = TestimonialTitle.query.first()
     process = Process.query.all()
+    sub_pages = SubPage.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
     return render_template(f"{ item.template_name }/preview/index.html", footer_image=footer_image, icons=media_icons,
@@ -171,7 +172,8 @@ def preview(template_name):
                            testimonials_html= testimonials_html, contact_html = contact_html, pages=pages, headline=headline,
                            process_title=process_title, process=process, client_title=client_title,
                            pricing=pricing, pricing_attribute=pricing_attribute, cost=cost, pricing_title=pricing_title,
-                           feature_title=feature_title, features=features, template_name=template_name)
+                           feature_title=feature_title, features=features, template_name=template_name, sub_pages=sub_pages,
+                           sub_page=sub_page, page=page)
                         
     
     if item == 'Presento':
@@ -209,7 +211,7 @@ def preview(template_name):
         return redirect(url_for('template_manager.index'))
 
 
-@template_manager.route('/default/<int:id>/<template_name>', methods=['GET', 'POST'])
+@template_manager.route('/default/<int:id>/<template_name>/', methods=['GET', 'POST'])
 @login_required
 def add_default(id, template_name):
     """ Default Templates Added """

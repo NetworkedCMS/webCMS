@@ -16,6 +16,7 @@ from app.blueprints.admin.forms import (
     ChangeUserEmailForm,
     InviteUserForm,
     NewUserForm,
+    ConfirmAccountForm
 )
 from app.decorators import admin_required
 from app.email import send_email
@@ -147,6 +148,28 @@ def change_account_type(user_id):
         db.session.commit()
         flash('Role for user {} successfully changed to {}.'.format(
             user.full_name(), user.role.name), 'form-success')
+    return render_template('admin/manage_user.html', user=user, form=form)
+
+@admin.route(
+    '/user/<int:user_id>/change-account-confirmation', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def change_account_confirmation(user_id):
+    """Change a user's account type."""
+    if current_user.id == user_id:
+        flash('You cannot change the type of your own account. Please ask '
+              'another administrator to do this.', 'error')
+        return redirect(url_for('admin.user_info', user_id=user_id))
+
+    user = User.query.get(user_id)
+    if user is None:
+        abort(404)
+    form = ConfirmAccountForm()
+    if form.validate_on_submit():
+        user.confirmed = form.confirmed.data
+        db.session.add(user)
+        db.session.commit()
+        flash('User confirmed', 'form-success')
     return render_template('admin/manage_user.html', user=user, form=form)
 
 

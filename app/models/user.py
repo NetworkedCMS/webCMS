@@ -55,6 +55,20 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
+
+    #content_id = db.Column(db.Integer, db.ForeignKey('content.id'))
+    #contents = db.relationship("Content", back_populates="user")
+    #html_contents = db.relationship("HtmlContent", back_populates="user")
+    #templates = db.relationship("Template", back_populates="user")
+    #pages = db.relationship("Page", back_populates="user")
+
+    contents = db.relationship("Content", backref="user")
+    html_contents = db.relationship("HtmlContent", backref="user")
+    pages = db.relationship("Page", backref="user")
+    templates = db.relationship("Template", backref="user")
+
+    
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
