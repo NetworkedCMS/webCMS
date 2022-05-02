@@ -1,7 +1,7 @@
 import os
 import sys
 
-from raygun4py.middleware import flask as flask_raygun
+
 
 
 PYTHON_VERSION = sys.version_info[0]
@@ -53,9 +53,9 @@ class Config:
     SEGMENT_API_KEY = os.environ.get('SEGMENT_API_KEY', '')
 
     # Admin account
-    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', '')
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'password')
     ADMIN_EMAIL = os.environ.get(
-        'ADMIN_EMAIL', '')
+        'ADMIN_EMAIL', 'admin@networkedcms.com')
     EMAIL_SUBJECT_PREFIX = '[{}]'.format(APP_NAME)
     EMAIL_SENDER = '{app_name} Admin <{email}>'.format(
         app_name=APP_NAME, email=MAIL_USERNAME)
@@ -85,7 +85,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL', 'sqlite:///''data-dev.sqlite')
         #'SQLALCHEMY_DATABASE_URI' + os.path.join(basedir, 'data-dev.sqlite'))
     #'postgresql+psycopg2://postgres:postgres@localhost:5432/webcms')
 
@@ -97,7 +97,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL')#,
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL', 'sqlite:///''data-dev.sqlite')#,
         #'sqlite:///' + os.path.join(basedir, 'data-test.sqlite'))
     WTF_CSRF_ENABLED = False
 
@@ -110,7 +110,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     USE_RELOADER = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')#,
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///''data-dev.sqlite')#,
         #'sqlite:///' + os.path.join(basedir, 'data.sqlite'))
     SSL_DISABLE = (os.environ.get('SSL_DISABLE', 'True') == 'True')
 
@@ -119,7 +119,6 @@ class ProductionConfig(Config):
         Config.init_app(app)
         assert os.environ.get('SECRET_KEY'), 'SECRET_KEY IS NOT SET!'
 
-        flask_raygun.Provider(app, app.config['RAYGUN_APIKEY']).attach()
 
 
 class HerokuConfig(ProductionConfig):

@@ -5,7 +5,6 @@ from flask_assets import Environment
 from flask_compress import Compress
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_rq import RQ
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_uploads import UploadSet, configure_uploads, IMAGES
@@ -45,8 +44,8 @@ def create_app(config):
     # not using sqlalchemy event system, hence disabling it
 
     Config[config_name].init_app(app)
-    app.config['UPLOADED_IMAGES_DEST'] = os.environ.get('UPLOADED_IMAGES_DEST')
-    app.config['UPLOADED_DOCS_DEST'] = os.environ.get('UPLOADED_DOCS_DEST')
+    app.config['UPLOADED_IMAGES_DEST'] = os.environ.get('UPLOADED_IMAGES_DEST') or str(basedir)+"/static/uploads"
+    app.config['UPLOADED_DOCS_DEST'] = os.environ.get('UPLOADED_DOCS_DEST')or str(basedir)+"/static/uploads"
     app.config['docs'] = app.config['UPLOADED_DOCS_DEST']
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this "super secret" with something else!
     jwt = JWTManager(app)
@@ -62,7 +61,7 @@ def create_app(config):
     configure_uploads(app, images)
     configure_uploads(app, docs)
     CKEditor(app)
-    RQ(app)
+
     
 
     # Register Jinja template functions

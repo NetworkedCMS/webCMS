@@ -5,9 +5,7 @@ from wtforms.fields import (
     StringField,
     SubmitField,
     FileField,
-    TextAreaField
-)
-from wtforms.fields.html5 import EmailField
+    TextAreaField, EmailField)
 from wtforms.validators import Email, EqualTo, InputRequired, Length
 
 

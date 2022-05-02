@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """Public forms."""
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.fields.html5 import EmailField
+from wtforms import StringField, TextAreaField, SubmitField, EmailField
 from wtforms.validators import InputRequired, Length, Email
 
 

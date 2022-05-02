@@ -2,7 +2,7 @@
 import os
 import subprocess
 
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate
 from flask_script import Manager, Shell, Server
 from redis import Redis
 from rq import Connection, Queue, Worker
@@ -14,7 +14,7 @@ from config import Config
 from dotenv import load_dotenv
 load_dotenv('.env')
 
-app = create_app(os.environ.get('FLASK_CONFIG'))# or 'default')
+app = create_app(os.environ.get('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
@@ -24,7 +24,6 @@ def make_shell_context():
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
-manager.add_command('db', MigrateCommand)
 manager.add_command('runserver', Server(host="0.0.0.0"))
 
 @manager.command
