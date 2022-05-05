@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+{% if seo %}
+  <title>{{seo.title }}</title>
+  <meta content="{{seo.content }}" name="description">
+ {% endif %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+
+  <!-- Favicons -->
+	{% if favicon_image %}
+  <link rel="shortcut icon" type="image/x-icon" href="{{ favicon_image.image_url }}">
+	{% endif %}
+
+{% if apple_touch_icon %}
+  <link href="{{ apple-touch-icon.image_url }}" rel="apple-touch-icon">
+	{% endif %}
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/bootstrap/css/bootstrap.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/icofont/icofont.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/boxicons/css/boxicons.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/remixicon/remixicon.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/venobox/venobox.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/owl.carousel/assets/owl.carousel.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/aos/aos.css')}}">
+
+
+  <!-- Template Main CSS File -->
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/css/style.css')}}">
+  
+  <!-- Tracking scripts -->
+  
+    {% block styles %}{% endblock %}
+    {% for script in tracking_script %}
+    {{ script.script | safe }}
+    {% endfor %}
+
+{% if background_image %}
+	<style>
+	#hero {
+		width: 100%;
+		height: 100vh;
+		position: relative;
+		background: url({{ background_image.image_url}}) top center;
+		background-size: cover;
+		position: relative;
+		
+	}
+	.owl-carousel {
+	display:flex;
+	}
+	</style>
+{# else #}
+{% endif %}
+  <!-- =======================================================
+  * Template Name: OnePage - v2.1.0
+  * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+			  {% if logo %}
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <a href="#hero" class="logo me-auto"><img src="{{ logo.image_url }}" alt=""></a>
+			  {% else %}
+		<h1 class="logo me-auto"><a href="/">{{ brand.text }}</a></h1>
+			   {% endif %}
+
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="/">Home</a></li>
+		  {% if about %}
+          <li><a href="/#about">About</a></li>
+		  {% endif %}
+		  {% if pages %}
+		  {% for page in pages %}
+          <li><a href="/{{ page.name }}">{{ page.name }}</a></li>
+		  {% endfor %}
+		  {% endif %}
+		  {% if services %}
+          <li><a href="/#services">Services</a></li>
+		  {% endif %}
+		  {% if portfolio %}
+          <li><a href="/#portfolio">Portfolio</a></li>
+		  {% endif %}
+		  {% if testimonial %}
+          <li><a href="/#testimonials">Testimonial</a></li>
+		  {% endif %}
+		  {% if faq %}
+          <li><a href="/#faq">Faq</a></li>
+		  {% endif %}
+		  {% if team %}
+          <li><a href="/#team">Team</a></li>
+		  {% endif %}
+          <!----<li class="drop-down"><a href="">Drop Down</a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li class="drop-down"><a href="#">Deep Drop Down</a>
+                <ul>
+                  <li><a href="#">Deep Drop Down 1</a></li>
+                  <li><a href="#">Deep Drop Down 2</a></li>
+                  <li><a href="#">Deep Drop Down 3</a></li>
+                  <li><a href="#">Deep Drop Down 4</a></li>
+                  <li><a href="#">Deep Drop Down 5</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Drop Down 2</a></li>
+              <li><a href="#">Drop Down 3</a></li>
+              <li><a href="#">Drop Down 4</a></li>
+            </ul>
+          </li>---->
+          <li><a href="/contact">Contact</a></li>
+
+        </ul>
+      </nav><!-- .nav-menu -->
+		  {% if call_to_action %}
+		<a href="{{ call_to_action.url }}" class="get-started-btn scrollto" target="_blank">{{ call_to_action.text }}</a>
+		{% else %}
+		<a href="/contact" class="get-started-btn scrollto" target="_blank">Contact Us</a>
+		  {% endif %}
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>{{ page_name }}</h2>
+          <ol>
+            <li><a href="/home">Home</a></li>
+            <li>{{ page_name }}</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+        <p>
+          {% if page_content %}
+		  {{ page_content.content | safe }}
+		  {% endif %}
+        </p>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h3>{{ brand.text }}</h3>
+			{% if footer_text %}
+            <p>
+             {{ footer_text.title }}
+            </p>
+			{% endif %}
+          </div>
+
+          <div class="col-lg-2 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+			  {% if about %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#about">About us</a></li>
+			  {% endif %}
+
+			{% if pages %}
+			{% for page in pages %}
+              <li><i class="bx bx-chevron-right"></i> <a href="/{{ page.name }}">{{ page.name }}</a></li>
+			{% endfor %}
+			{% endif %}			  
+			  {% if services %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#services">Services</a></li>
+			  {% endif %}
+			  {% if portfoilio %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#portfolio">Portfolio</a></li>
+			  {% endif %}
+			  {% if team %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#team">Team</a></li>
+			  {% endif %}
+			  {% if testimonial %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#testimonials">Testimonials</a></li>
+			  {% endif %}
+			  {% if faq %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#faq">Faq</a></li>
+			  {% endif %}
+            </ul>
+          </div>
+		  
+{% if services %}
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+			 {% for service in services %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#services">{{ service.title }}</a></li>
+			  {% endfor %}
+            </ul>
+          </div>
+{% endif %}
+
+          <!----<div class="col-lg-4 col-md-6 footer-newsletter">
+            <h4>Join Our Newsletter</h4>
+            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+          </div>---->
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container d-md-flex py-4">
+
+      <div class="mr-md-auto text-center text-md-left">
+	  {% if copyright_text %}
+        <div class="copyright">
+          &copy; Copyright <strong><span>{{ copyright_text.text }} </span></strong>. All Rights Reserved
+        </div>
+	  {% endif %}
+      <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/ -->
+        </div>
+      </div>
+	  	  {% if media_icons %}
+      <div class="social-links text-center text-md-right pt-3 pt-md-0">
+       	  	  {% for icons in media_icons %}
+			  {% if icons.icon =='twitter' or 'twitter-square' or 'twitter-f'  %}
+        <a href="{{ media_icons.url_link }}" class="twitter"><i class="bx bxl-twitter"></i></a>
+					  {% endif %}
+			  {% if icons.icon =='facebook' or 'facebook-square' or 'facebook-f'  %}
+        <a href="{{ media_icons.url_link }}" class="facebook"><i class="bx bxl-facebook"></i></a>
+			  {% endif %}
+			  {% if icons.icon =='instagram' or 'instagram-square' or 'instagram-f'  %}
+        <a href="{{ media_icons.url_link }}" class="instagram"><i class="bx bxl-instagram"></i></a>
+			  {% endif %}
+			  {% if icons.icon =='google' or 'google-square' or 'google-f'  %}
+        <a href="{{ media_icons.url_link }}" class="google-plus"><i class="bx bxl-skype"></i></a>
+			  {% endif %}
+			  {% if icons.icon =='linkedin' or 'linkedin-square' or 'linkedin-f'  %}
+        <a href="{{ media_icons.url_link }}" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+			  {% endif %}
+			         	  	  {% endfor %}
+      </div>
+	  	  	  {% endif %}
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top"><i class="ri-arrow-up-line"></i></a>
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/jquery.easing/jquery.easing.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/php-email-form/validate.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/waypoints/jquery.waypoints.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/venobox/venobox.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/owl.carousel/owl.carousel.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/aos/aos.js')}}"></script>
+
+
+  <!-- Template Main JS File -->
+
+  <script src="{{ url_for('static', filename='OnePage/assets/js/main.js')}}"></script>
+
+
+</body>
+
+</html>

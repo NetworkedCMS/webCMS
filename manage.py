@@ -1,17 +1,20 @@
 #!/usr/bin/env python
+import quart.flask_patch
 import os
 import subprocess
 
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate
 from flask_script import Manager, Shell, Server
-from redis import Redis
-from rq import Connection, Queue, Worker
+
 
 from app import create_app, db
-from app.models import Role, User
+from app.models import Role, User, ApiKey
 from config import Config
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+from dotenv import load_dotenv
+load_dotenv('.env')
+
+app = create_app(os.environ.get('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
@@ -21,9 +24,14 @@ def make_shell_context():
 
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
-manager.add_command('db', MigrateCommand)
-manager.add_command('runserver', Server(host="0.0.0.0"))
+manager.add_command('runserver', Server(host="0.0.0.0", use_debugger=True, use_reloader=True))
 
+@manager.command
+def add_api_key():
+    """
+    Adds Api key to the database.
+    """
+    ApiKey.insert_key()
 
 @manager.command
 def test():
@@ -41,6 +49,15 @@ def recreate_db():
     production.
     """
     db.drop_all()
+    db.create_all()
+    db.session.commit()
+
+
+@manager.command
+def create_tables():
+    """
+    Recreates a local database's tables without dropping the database.
+    """
     db.create_all()
     db.session.commit()
 
@@ -89,19 +106,7 @@ def setup_general():
             print('Added administrator {}'.format(user.full_name()))
 
 
-@manager.command
-def run_worker():
-    """Initializes a slim rq task queue."""
-    listen = ['default']
-    conn = Redis(
-        host=app.config['RQ_DEFAULT_HOST'],
-        port=app.config['RQ_DEFAULT_PORT'],
-        db=0,
-        password=app.config['RQ_DEFAULT_PASSWORD'])
 
-    with Connection(conn):
-        worker = Worker(map(Queue, listen))
-        worker.work()
 
 
 @manager.command
@@ -119,3 +124,10 @@ def format():
 
 if __name__ == '__main__':
     manager.run()
+
+
+
+
+
+
+

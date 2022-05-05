@@ -1,6 +1,6 @@
 from flask import current_app
 from flask_login import AnonymousUserMixin, UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import URLSafeTimedSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -63,6 +63,7 @@ class User(UserMixin, db.Model):
                     permissions=Permission.ADMINISTER).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
+
 
     def full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
@@ -194,3 +195,41 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def user_serializer(user):
+    return {
+        'id':user.id,
+        'confirmed': user.confirmed,
+        'first_name': user.first_name ,
+        'last_name': user.last_name,
+        'email': user.email ,
+        'password_hash': user.password_hash ,
+        'role_id': user.role_id,
+        }
+
+class ApiKey(db.Model):
+    __tablename__ = 'api_keys'
+    id = db.Column(db.Integer, primary_key=True)
+    access_token = db.Column(db.String(500))
+    #user_input = db.Column(db.String(500))
+    #is_allowed = db.Column(db.Boolean, default=False)
+
+    @staticmethod
+    def insert_key():
+        import secrets
+        access_token = ApiKey(
+            access_token = secrets.token_hex(),
+            #is_allowed = True
+        )
+        db.session.add(access_token)
+        db.session.commit()
+        print('Created Api Access Key')
+
+class ApiAccess(db.Model):
+    ''' Stores access key provided by the user who is trying to access the API'''
+    __tablename__ = 'api_access'
+    id = db.Column(db.Integer, primary_key=True)
+    user_input = db.Column(db.String(500))
+    is_allowed = db.Column(db.Boolean, default=False)
+    session_id = db.Column(db.String(500))

@@ -1,0 +1,177 @@
+{% extends 'layouts/base.html' %}
+{% macro dashboard_option(title, endpoint, description=None, icon=None) %}
+    <a class="column" href="{{ url_for(endpoint) }}">
+        <div class="ui padded segment">
+            <h3 class="ui header">
+                {% if icon is not none %}
+                    <i class="{{ icon }}"></i>
+                {% endif %}
+                <div class="content">
+                    {{ title }}
+                    {% if description is not none %}
+                        <div class="sub header">
+                            {{ description }}
+                        </div>
+                    {% endif %}
+                </div>
+            </h3>
+        </div>
+    </a>
+{% endmacro %}
+
+{% block content %}
+    <div class="ui stackable grid container">
+        <div class="sixteen wide tablet twelve wide computer centered column">
+            <!--<a class="ui basic compact button" href="{# url_for('page_manager.page') #}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>--->
+            <h2 class="ui header">
+                Api Access Key
+                <div class="sub header">
+                    View Api Key
+                </div>
+            </h2>
+            <div class="ui inverted red segment">
+                <h3 class="sub header">
+                    Information
+                  </h3>
+                <div class="content">
+				    <p>Use this access key to login and view protected APIs.</p>
+                </div>
+              </div>
+
+            {# Use overflow-x: scroll so that mobile views don't freak out
+             # when the table is too wide #}
+            <div style="overflow-x: scroll;">
+                <table class="ui searchable sortable unstackable selectable celled table">
+                    <thead>
+                        <tr>
+					        <th>ID</th>
+					        <th>Access Key</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if data  %}
+                        <tr>
+
+                            <td>{{ data.id }}</td>
+                            <td>{{ data.access_token }}</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <h2 class="ui header">
+                APIs available
+            </h2>
+            <div class="ui two column stackable grid">								
+			
+                {{ dashboard_option('Api for Brand Name', 'api.brandname',
+                                    description='View API endpoint for brand name') }}	
+									
+                {{ dashboard_option('Api for Services', 'api.services',
+                                    description='View API endpoint for landingpage services') }}	
+
+                {{ dashboard_option('Api for Team', 'api.members',
+                                    description='View API endpoint for landingpage team') }}										
+
+                {{ dashboard_option('Api for About Us', 'api.about',
+                                    description='View API endpoint for About Us Info') }}	
+
+                {{ dashboard_option('Api for Marketing Video', 'api.video',
+                                    description='View API endpoint for Video') }}	
+									
+                {{ dashboard_option('Api for Project and Award Counter', 'api.counter',
+                                    description='View API endpoint for Counter') }}	
+									
+                {{ dashboard_option('Api for Portfolio', 'api.portfolio',
+                                    description='View API endpoint for Portfolio Images') }}
+		<! Testimonials had a bug. Fix it before enabling ----->
+                {# dashboard_option('Api for Testimonials', 'api.testimonial',
+                                    description='View API endpoint for testimonials') #}	
+									
+                {{ dashboard_option('Api for Frequently Asked Questions', 'api.faq',
+                                    description='View API endpoint for frequently asked questions') }}	
+
+                {{ dashboard_option('Api for Headlines', 'api.hometext',
+                                    description='View API endpoint for landingpage headline') }}	
+
+                {{ dashboard_option('Api for SEO Information', 'api.seo',
+                                    description='Optimize for search engines like Google') }}										
+
+                {# dashboard_option('Api for Navbar Menu Items', 'api.navmenu',
+                                    description='View API endpoint for items which will appear in your navigation bar') #}
+									
+                {{ dashboard_option('Api for Call to Action', 'api.call_to_action',
+                                    description='View API endpoint for call to action items') }}	
+									
+                {{ dashboard_option('Api for Client Logos', 'api.client',
+                                    description='View API endpoint for client logos') }}									
+									
+                {# dashboard_option('Api for Homepage Texts', 'api.information',
+                                    description='View API endpoint for landingpage texts') #}
+									
+                {{ dashboard_option('Api for Footer Text', 'api.footertext',
+                                    description='View API endpoint for landingpage footer texts') }}		
+									
+                {# dashboard_option('Api for Slideshows', 'api.slideshows',
+                                    description='View API endpoint for slideshows')#}	
+									
+                {{ dashboard_option('Api for Background Image', 'api.background_image',
+                                    description='View API endpoint for background image')}}	
+									
+                {{ dashboard_option('Api for Logo', 'api.logo',
+                                    description='View API endpoint for logo image')}}		
+
+                {# dashboard_option('Api for Landing Page Images', 'api.images',
+                                    description='View API endpoint for images')#}	
+
+                {{ dashboard_option('Api for Pricing', 'api.pricing',
+                                    description='View API endpoint for pricing') }}								
+
+                {{ dashboard_option('Api for Copy Right Text', 'api.copyright',
+                                    description='View API endpoint for copy right text') }}	
+									
+                {{ dashboard_option('Api for Favicon', 'api.favicon_image',
+                                    description='View API endpoint for favicon') }}	
+				
+                {{ dashboard_option('Api for Apple Touch Icon', 'api.apple_touch_icon',
+                                    description='View API endpoint for Apple favicon') }}	
+
+                {{ dashboard_option('Api for Tracking Script', 'api.tracking_script',
+                                    description='View API endpoint for tracking javascripts') }}	
+
+                {{ dashboard_option('Api for Locations', 'api.location',
+                                    description='View API endpoint for locations') }}															
+            </div>
+        </div>
+    </div>
+    <script>
+        function confirmDeleteApiKey(id){
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this features html",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        let form = $("#delete-api_key-form");
+                        form.attr('action', "{{ url_for('api.delete_access_key', id=0) }}".replace('0',id));
+                        form.submit();
+                    } else {
+                        return false;
+                    }
+                });
+            return false;
+        }
+    </script>
+{% endblock %}
+
+

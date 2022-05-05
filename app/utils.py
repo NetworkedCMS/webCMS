@@ -1,7 +1,8 @@
-from flask import url_for
+from quart import url_for
 from wtforms.fields import Field
 from wtforms.widgets import HiddenInput
-from wtforms.compat import text_type
+import aiofiles
+
 
 
 def register_template_utils(app):
@@ -34,7 +35,7 @@ class CustomSelectField(Field):
         self.allow_custom = allow_custom
 
     def _value(self):
-        return text_type(self.data) if self.data is not None else ''
+        return str(self.data) if self.data is not None else ''
 
     def process_formdata(self, valuelist):
         if valuelist:
@@ -42,3 +43,15 @@ class CustomSelectField(Field):
             self.raw_data = [valuelist[1]]
         else:
             self.data = ''
+
+
+
+
+async def create_template(file_name:str, **kwargs):
+    try:
+        async with aiofiles.open(f"{file_name}", 'w') as f:
+            await f.write(**kwargs)
+    except Exception as e:
+        raise Exception
+    
+
