@@ -1,5 +1,5 @@
-import quart.flask_patch, json
-from quart import (
+import json
+from flask import (
     Blueprint,
     abort,
     flash,
@@ -44,7 +44,7 @@ async def contact_messages(mtype, page):
         print(contact_messages_result.items)
     else:
         abort(404)
-    return await render_template('messaging_manager/contact_messages/browse.html', contact_messages=contact_messages_result, mtype=mtype)
+    return render_template('messaging_manager/contact_messages/browse.html', contact_messages=contact_messages_result, mtype=mtype)
 
 
 @messaging_manager.route('/contact_message/<message_id>', methods=['GET'])
@@ -53,7 +53,7 @@ async def view_contact_message(message_id):
     message = ContactMessage.query.filter_by(id=message_id).first_or_404()
     message.read = True
     db.session.commit()
-    return await render_template('messaging_manager/contact_messages/view.html', contact_message=message)
+    return render_template('messaging_manager/contact_messages/view.html', contact_message=message)
 
 
 @messaging_manager.route('/contact_messages/<int:message_id>/_delete', methods=['POST'])
@@ -62,7 +62,7 @@ async def delete_contact_message(message_id):
     message = ContactMessage.query.filter_by(id=message_id).first()
     db.session.delete(message)
     db.session.commit()
-    await flash('Successfully deleted Message.', 'success')
+    flash('Successfully deleted Message.', 'success')
     return redirect(url_for('messaging_manager.contact_messages'))
 
 
@@ -72,7 +72,7 @@ async def toggle_message(message_id):
     message = ContactMessage.query.filter_by(id=message_id).first()
     message.spam = not message.spam
     db.session.commit()
-    await flash('Successfully toggles Message status.', 'success')
+    flash('Successfully toggles Message status.', 'success')
     return redirect(url_for('messaging_manager.contact_messages'))
 
 
@@ -82,7 +82,7 @@ async def batch_toggle():
     try:
         ids = json.loads(request.form.get('items'))
     except:
-        await flash('Something went wrong, pls try again.', 'error')
+        flash('Something went wrong, pls try again.', 'error')
         return redirect(url_for('messaging_manager.contact_messages'))
 
     messages = ContactMessage.query.filter(ContactMessage.id.in_(ids)).all()
@@ -90,7 +90,7 @@ async def batch_toggle():
     for message in messages:
         message.spam = not message.spam
     db.session.commit()
-    await flash('Successfully toggles Messages status.', 'success')
+    flash('Successfully toggles Messages status.', 'success')
     return redirect(url_for('messaging_manager.contact_messages'))
 
 
@@ -100,11 +100,11 @@ async def batch_delete():
     try:
         ids = json.loads(request.form.get('items'))
     except:
-        await flash('Something went wrong, pls try again.', 'error')
+        flash('Something went wrong, pls try again.', 'error')
         return redirect(url_for('messaging_manager.contact_messages'))
 
     messages = ContactMessage.query.filter(ContactMessage.id.in_(ids)).delete(synchronize_session=False)
     # db.session.delete(messages)
     db.session.commit()
-    await flash('Successfully deleted Messages.', 'success')
+    flash('Successfully deleted Messages.', 'success')
     return redirect(url_for('messaging_manager.contact_messages'))

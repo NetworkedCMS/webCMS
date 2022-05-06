@@ -1,4 +1,3 @@
-import quart.flask_patch
 from flask_assets import Bundle
 
 app_css = Bundle('app.scss', filters='scss', output='styles/app.css')

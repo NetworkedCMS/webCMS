@@ -1,4 +1,4 @@
-from quart import (
+from flask import (
     Blueprint,
     flash,
     redirect,
@@ -76,7 +76,7 @@ async def index():
     testimonials_html = TestimonialsHtml.query.all()
     contact_html = ContactHtml.query.first()
     
-    return await render_template("Bare/index.html", footer_image=footer_image, icons=media_icons,
+    return render_template("Bare/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -155,9 +155,9 @@ async def page(page_name):
         )
         db.session.add(data)
         db.session.commit()
-        await flash("Message sent.", "success")
+        flash("Message sent.", "success")
                                
-    return await render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
+    return render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -180,9 +180,9 @@ async def upload():
         filename = photos.save(request.files['photo'])
         rec = Photo(filename=filename, user=g.user.id)
         rec.store()
-        await flash("Photo saved.")
+        flash("Photo saved.")
         return redirect(url_for('show', id=rec.id))
-    return await render_template('main/upload.html')
+    return render_template('main/upload.html')
 
 @main.route('/photo/<id>')
 async def show(id):
@@ -190,7 +190,7 @@ async def show(id):
     if photo is None:
         abort(404)
     url = photos.url(photo.filename)
-    return await render_template('show.html', url=url, photo=photo) """
+    return render_template('show.html', url=url, photo=photo) """
 
 @main.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -199,7 +199,7 @@ async def upload():
     if form.validate_on_submit():
         filename = images.save(form.image.data)
         return f'Filename: {filename}'
-    return await render_template('main/upload.html', form=form)
+    return render_template('main/upload.html', form=form)
 	
 
 
@@ -207,4 +207,4 @@ async def upload():
 @main.route('/test')
 @login_required
 async def test():
-    return await render_template('main/index.html')
+    return render_template('main/index.html')

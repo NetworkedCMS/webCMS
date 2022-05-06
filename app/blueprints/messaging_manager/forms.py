@@ -1,4 +1,4 @@
-import quart.flask_patch
+
 from flask_wtf import FlaskForm
 from flask_ckeditor import CKEditorField
 from flask_wtf.file import FileAllowed, FileRequired

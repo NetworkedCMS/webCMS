@@ -1,4 +1,4 @@
-from quart import url_for
+from flask import url_for
 from wtforms.fields import Field
 from wtforms.widgets import HiddenInput
 import aiofiles

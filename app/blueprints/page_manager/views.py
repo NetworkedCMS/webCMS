@@ -1,5 +1,5 @@
-import quart.flask_patch
-from quart import (
+
+from flask import (
     Blueprint,
     abort,
     flash,
@@ -31,7 +31,7 @@ page_manager = Blueprint('page_manager', __name__)
 @page_manager.route('/page/setting')
 @login_required
 async def index():
-    return await render_template('page_manager/page/index.html')
+    return render_template('page_manager/page/index.html')
 
 # Add Page
 @page_manager.route('/page/setting/added', methods=['POST', 'GET'])
@@ -58,9 +58,9 @@ async def add_page():
             )
         db.session.add(data)
         db.session.commit()
-        await flash("Settings Added Successfully.", "success")
+        flash("Settings Added Successfully.", "success")
         return redirect(url_for('page_manager.added_page'))
-    return await render_template('page_manager/page/add_page.html', form=form)
+    return render_template('page_manager/page/add_page.html', form=form)
 
 
 # Edit Page
@@ -74,11 +74,11 @@ async def edit_page(id):
         data.content=form.content.data
         db.session.add(data)
         db.session.commit()
-        await flash("Link Html Added Successfully.", "success")
+        flash("Link Html Added Successfully.", "success")
         return redirect(url_for('page_manager.added_page'))
     else:
-        await flash('ERROR! Page was not edited.', 'error')
-    return await render_template('page_manager/page/add_page.html', form=form)
+        flash('ERROR! Page was not edited.', 'error')
+    return render_template('page_manager/page/add_page.html', form=form)
 
 @page_manager.route('/page/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -87,7 +87,7 @@ async def delete_page(id):
     data = Page.query.filter_by(id=id).first()
     db.session.commit()
     db.session.delete(data)
-    await flash('Successfully deleted ' , 'success')
+    flash('Successfully deleted ' , 'success')
     if data is None:
         return redirect(url_for('page_manager.add_page'))
     return redirect(url_for('page_manager.added_page'))

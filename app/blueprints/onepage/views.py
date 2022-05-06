@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """onepage section, including homepage and signup."""
-import quart.flask_patch
-from quart import (
+
+from flask import (
     Blueprint,
     flash,
     redirect,
@@ -56,7 +56,7 @@ async def home():
     location = Location.query.all()
     client = Client.query.all()
     apple_touch_icon = AppleTouchIcon.query.first()
-    return await render_template("OnePage/index.html", footer_image=footer_image, icons=media_icons,
+    return render_template("OnePage/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -81,6 +81,6 @@ async def contact():
             )
         db.session.add(data)
         db.session.commit()
-        await flash('Successfully sent contact message.', 'success')
+        flash('Successfully sent contact message.', 'success')
         return redirect(url_for('onepage.contact'))
-    return await render_template('OnePage/contact.html', form=form)
+    return render_template('OnePage/contact.html', form=form)

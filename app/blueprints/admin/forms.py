@@ -1,4 +1,4 @@
-import quart.flask_patch
+
 from flask_wtf import FlaskForm
 from wtforms import ValidationError
 from wtforms_alchemy import QuerySelectField

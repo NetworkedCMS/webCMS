@@ -1,4 +1,4 @@
-from quart import (
+from flask import (
     Blueprint,
     abort,
     flash,
@@ -49,8 +49,8 @@ async def index():
             )
         db.session.add(choice)
         db.session.commit()
-        await flash("Settings Added Successfully.", "success")
-    return await render_template('template_manager/index.html', data=data, form=form)
+        flash("Settings Added Successfully.", "success")
+    return render_template('template_manager/index.html', data=data, form=form)
 
 
 # Add Testimonial
@@ -61,7 +61,7 @@ async def added_template_setting():
     data = TemplateSetting.query.all()
     if data is None:
         return redirect(url_for('template_manager.add_template_setting'))
-    return await render_template(
+    return render_template(
         'template_manager/template_setting/added_template_setting.html', data=data)
 
 
@@ -78,9 +78,9 @@ async def add_template_setting():
             )
         db.session.add(data)
         db.session.commit()
-        await flash("Settings Added Successfully.", "success")
+        flash("Settings Added Successfully.", "success")
         return redirect(url_for('template_manager.added_template_setting'))
-    return await render_template('template_manager/template_setting/add_template_setting.html', form=form)
+    return render_template('template_manager/template_setting/add_template_setting.html', form=form)
 
 @template_manager.route('/template/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -89,7 +89,7 @@ async def delete_template_setting(id):
     data = TemplateSetting.query.filter_by(id=id).first()
     db.session.commit()
     db.session.delete(data)
-    await flash('Successfully deleted ' , 'success')
+    flash('Successfully deleted ' , 'success')
     if data is None:
         return redirect(url_for('template_manager.add_template_setting'))
     return redirect(url_for('template_manager.added_template_setting'))
@@ -143,7 +143,7 @@ async def preview(template_name):
     pages = Page.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
-    return await render_template(f"{ item.template_name }/index.html", footer_image=footer_image, icons=media_icons,
+    return render_template(f"{ item.template_name }/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -159,7 +159,7 @@ async def preview(template_name):
                            testimonials_html= testimonials_html, contact_html = contact_html, pages=pages)
     
     if item == 'Presento':
-        return await render_template("Presento/index.html", footer_image=footer_image, icons=media_icons,
+        return render_template("Presento/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -174,7 +174,7 @@ async def preview(template_name):
                            footer_html = footer_html, css = css, features_html = features_html, pricing_html = pricing_html,
                            testimonials_html= testimonials_html, contact_html = contact_html, pages=pages)
     elif item == 'OnePage':
-        return await render_template("OnePage/index.html", footer_image=footer_image, icons=media_icons,
+        return render_template("OnePage/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -245,7 +245,7 @@ async def page(page_name):
     pages = Page.query.all()
     
     item = TemplateSetting.query.filter_by(template_name=template_name).first_or_404()
-    return await render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
+    return render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -276,7 +276,7 @@ async def add_default(id, template_name):
     default.template_name = template_name
     db.session.add(default)
     db.session.commit()
-    await flash("Default Template Chosen Successfully.", "success")
+    flash("Default Template Chosen Successfully.", "success")
     return redirect(url_for('main.index'))
     
 

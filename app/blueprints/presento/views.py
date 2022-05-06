@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """presento section, including homepage and signup."""
-from quart import (
+from flask import (
     Blueprint,
     flash,
     redirect,
@@ -8,7 +8,6 @@ from quart import (
     request,
     url_for,
 )
-import quart.flask_patch
 from flask_login import (
     current_user,
     login_required,
@@ -57,7 +56,7 @@ async def home():
     client = Client.query.all()
     location = Location.query.all()
     apple_touch_icon = AppleTouchIcon.query.first()
-    return await render_template("Presento/index.html", footer_image=footer_image, icons=media_icons,
+    return render_template("Presento/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -100,7 +99,7 @@ async def portfolio_details(id):
     testimonial = Testimonial.query.all()
     location = Location.query.all()
     client = Client.query.all()
-    return await render_template("Presento/portfolio-details.html", data=data, footer_image=footer_image, icons=media_icons,
+    return render_template("Presento/portfolio-details.html", data=data, footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -126,7 +125,7 @@ async def contact():
             )
         db.session.add(data)
         db.session.commit()
-        await flash('Successfully sent contact message.', 'success')
+        flash('Successfully sent contact message.', 'success')
         return redirect(url_for('onepage.contact'))
-    return await render_template('OnePage/contact.html', form=form)
+    return render_template('OnePage/contact.html', form=form)
 

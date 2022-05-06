@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import quart.flask_patch
 import os
 import subprocess
 

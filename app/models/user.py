@@ -90,19 +90,19 @@ class User(UserMixin, db.Model):
         """Generate a confirmation token to email a new user."""
 
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'confirm': self.id})
+        return s.dumps({'confirm': str(self.id)})
 
     def generate_email_change_token(self, new_email, expiration=3600):
         """Generate an email change token to email an existing user."""
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'change_email': self.id, 'new_email': new_email})
+        return s.dumps({'change_email': str(self.id), 'new_email': new_email})
 
     def generate_password_reset_token(self, expiration=3600):
         """
         Generate a password reset change token to email to an existing user.
         """
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'reset': self.id})
+        return s.dumps({'reset': str(self.id)})
 
     def confirm_account(self, token):
         """Verify that the provided token is for this user's id."""

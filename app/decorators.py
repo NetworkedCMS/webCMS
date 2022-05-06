@@ -1,8 +1,7 @@
 from functools import wraps
 
-from quart import abort, request, render_template, url_for, flash, redirect
-from quart.globals import session
-import quart.flask_patch
+from flask import abort, url_for, redirect
+from flask.globals import session
 from flask_login import current_user
 
 from app.models import Permission, ApiKey, ApiAccess

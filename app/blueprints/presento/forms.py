@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Public forms."""
-import quart.flask_patch
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, EmailField
 from wtforms.validators import InputRequired, Length, Email

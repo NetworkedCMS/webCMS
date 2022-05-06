@@ -1,8 +1,6 @@
 import os
 
-from quart import Quart
-from quart_schema import QuartSchema
-import quart.flask_patch
+from flask import Flask
 from flask_assets import Environment
 from flask_compress import Compress
 from flask_login import LoginManager
@@ -36,7 +34,7 @@ login_manager.login_view = 'account.login'
 
 
 def create_app(config):
-    app = Quart(__name__)
+    app = Flask(__name__)
     config_name = config
 
     if not isinstance(config, str):
@@ -51,8 +49,7 @@ def create_app(config):
     app.config['UPLOADED_DOCS_DEST'] = os.environ.get('UPLOADED_DOCS_DEST')or str(basedir)+"/static/uploads"
     app.config['docs'] = app.config['UPLOADED_DOCS_DEST']
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this "super secret" with something else!
-    #jwt = JWTManager(app)
-    QuartSchema(app)
+    jwt = JWTManager(app)
 
 
 
@@ -73,7 +70,7 @@ def create_app(config):
     register_template_utils(app)
 
     # Set up asset pipeline
-    """assets_env = Environment(app)
+    assets_env = Environment(app)
     dirs = ['assets/styles', 'assets/scripts']
     for path in dirs:
         assets_env.append_path(os.path.join(basedir, path))
@@ -82,7 +79,7 @@ def create_app(config):
     assets_env.register('app_css', app_css)
     assets_env.register('app_js', app_js)
     assets_env.register('vendor_css', vendor_css)
-    assets_env.register('vendor_js', vendor_js)"""
+    assets_env.register('vendor_js', vendor_js)
 
     # Configure SSL if platform supports it
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:

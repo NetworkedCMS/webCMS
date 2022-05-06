@@ -1,5 +1,4 @@
-from quart import url_for
-import quart.flask_patch
+from flask import url_for
 from flask_wtf import FlaskForm
 from wtforms import ValidationError
 from wtforms.fields import (

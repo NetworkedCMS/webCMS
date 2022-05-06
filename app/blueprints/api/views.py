@@ -1,6 +1,5 @@
-from multiprocessing.connection import wait
-import quart.flask_patch
-from quart import (
+
+from flask import (
     Blueprint,
     abort,
     flash,
@@ -45,7 +44,7 @@ def allowed_file(filename):
 async def index():
     """Api page."""
     data = ApiKey.query.filter_by(id=1).first()
-    return await render_template('api/index.html', data=data)
+    return render_template('api/index.html', data=data)
 
 @api.route('/access', methods=['GET', 'POST'])
 async def access():
@@ -53,7 +52,7 @@ async def access():
 
     access_token = ApiKey.query.first()
     if access_token is None:
-        await flash("You don't have any access yet")
+        flash("You don't have any access yet")
         raise Exception
     access_token = access_token.access_token
     form = AccessKeyForm()
@@ -62,7 +61,7 @@ async def access():
         if form.user_input.data == access_token:
             # if the user_input is the same as the expected input, set session
             session['session_id'] = random.uniform(0, 10)
-            await flash('You can now access the API. Welcome!', 'success')
+            flash('You can now access the API. Welcome!', 'success')
             data = ApiAccess(
                 session_id = session['session_id'],
                 #save the id of the session
@@ -73,8 +72,8 @@ async def access():
             return redirect(url_for('api.index'))
             
         else:
-            await flash('Invalid access token.', 'error')
-    return await render_template('api/access.html', form=form)
+            flash('Invalid access token.', 'error')
+    return render_template('api/access.html', form=form)
 
 @api.route('/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -83,7 +82,7 @@ async def delete_access_key(id):
     data = ApiKey.query.filter_by(id=id).first()
     db.session.commit()
     db.session.delete(data)
-    await flash('Successfully deleted ' , 'success')
+    flash('Successfully deleted ' , 'success')
     return redirect(url_for('api.access'))
 
 @api.route('/registered_users/v1/all', methods=['GET'])

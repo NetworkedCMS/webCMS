@@ -1,4 +1,4 @@
-from quart import render_template
+from flask import render_template
 from app.models import *
 
 from app.blueprints.presento.views import presento
@@ -31,7 +31,7 @@ async def forbidden(_):
     faq = Faq.query.all()
     testimonial = Testimonial.query.all()
     client = Client.query.all()
-    return await render_template('Presento/errors/403.html', footer_image=footer_image, icons=media_icons,
+    return render_template('Presento/errors/403.html', footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -70,7 +70,7 @@ async def page_not_found(_):
     faq = Faq.query.all()
     testimonial = Testimonial.query.all()
     client = Client.query.all()
-    return await render_template('Presento/errors/404.html', footer_image=footer_image, icons=media_icons,
+    return render_template('Presento/errors/404.html', footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -111,7 +111,7 @@ async def internal_server_error(_):
     faq = Faq.query.all()
     testimonial = Testimonial.query.all()
     client = Client.query.all()
-    return await render_template('Presento/errors/500.html', footer_image=footer_image, icons=media_icons,
+    return render_template('Presento/errors/500.html', footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,

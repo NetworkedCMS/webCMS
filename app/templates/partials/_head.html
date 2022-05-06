@@ -2,15 +2,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block page_title %}{{ config.APP_NAME }}{% endblock %}</title>
 
-{#{% assets 'vendor_css' %}<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">{% endassets %}
+{% assets 'vendor_css' %}<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">{% endassets %}
 {% assets 'app_css' %}<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">{% endassets %}
 
 {% assets 'vendor_js' %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
 {% assets 'app_js' %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
-#}
-
-<link rel="stylesheet" type="text/css" href="/static/assets/styles/vendor/semantic.min.css">
-<link rel="stylesheet" type="text/css" href="/static/styles/app.css">
 
 
 {% if config.GOOGLE_ANALYTICS_ID %}

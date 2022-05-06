@@ -21,11 +21,11 @@ else:
 import os.path
 import posixpath
 
-from quart import current_app, send_from_directory, abort, url_for
+from flask import current_app, send_from_directory, abort, url_for
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 
-from quart import Blueprint
+from flask import Blueprint
 
 # Extension presets
 
