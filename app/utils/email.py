@@ -3,8 +3,7 @@ import os
 from flask import render_template
 from flask_mail import Message
 
-from app import create_app
-from app import mail
+from app.main import create_app, mail
 
 
 async def send_email(recipient, subject, template, **kwargs):

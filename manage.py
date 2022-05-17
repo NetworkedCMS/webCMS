@@ -1,38 +1,31 @@
 #!/usr/bin/env python
-import os
+import os, asyncio
 import subprocess
-
-from flask_migrate import Migrate
-from flask_script import Manager, Shell, Server
-
-
-from app import create_app, db
-from app.models import Role, User, ApiKey
+import click
+from app.main import create_app
+from app.models.users import Role, User, ApiKey
 from config import Config
 
-from dotenv import load_dotenv
-load_dotenv('.env')
-
 app = create_app(os.environ.get('FLASK_CONFIG') or 'default')
-manager = Manager(app)
-migrate = Migrate(app, db)
 
 
+@app.cli.command("shell_context")
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role)
+    return dict(app=app,User=User, Role=Role)
 
 
-manager.add_command('shell', Shell(make_context=make_shell_context))
-manager.add_command('runserver', Server(host="0.0.0.0", use_debugger=True, use_reloader=True))
+@click.group()
+def cli():
+    pass
 
-@manager.command
+@cli.command()
 def add_api_key():
     """
     Adds Api key to the database.
     """
-    ApiKey.insert_key()
+    asyncio.run(ApiKey.insert_key())
 
-@manager.command
+@cli.command()
 def test():
     """Run the unit tests."""
     import unittest
@@ -40,19 +33,25 @@ def test():
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
+@cli.command()
+def runserver():
+    app.run()
 
-@manager.command
+
+@cli.command
 def recreate_db():
     """
     Recreates a local database. You probably should not use this on
     production.
     """
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        db.session.commit()
+        db.session.flush()
 
 
-@manager.command
+@cli.command()
 def create_tables():
     """
     Recreates a local database's tables without dropping the database.
@@ -61,54 +60,41 @@ def create_tables():
     db.session.commit()
 
 
-@manager.option(
-    '-n',
-    '--number-users',
-    default=10,
-    type=int,
-    help='Number of each model type to create',
-    dest='number_users')
-def add_fake_data(number_users):
-    """
-    Adds fake data to the database.
-    """
-    User.generate_fake(count=number_users)
 
 
-@manager.command
+@cli.command
 def setup_dev():
     """Runs the set-up needed for local development."""
-    setup_general()
+    asyncio.run(setup_general())
 
 
-@manager.command
+@cli.command
 def setup_prod():
     """Runs the set-up needed for production."""
-    setup_general()
+    asyncio.run(setup_general())
 
 
-def setup_general():
+async def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
-    Role.insert_roles()
-    admin_query = Role.query.filter_by(name='Administrator')
-    if admin_query.first() is not None:
-        if User.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
+    await Role.insert_roles()
+    admin_query = await Role.get_or_none(name='Administrator')
+    if admin_query is not None:
+        if await User.get_or_none(email=Config.ADMIN_EMAIL).first() is None:
             user = User(
                 first_name='Admin',
                 last_name='Account',
                 password=Config.ADMIN_PASSWORD,
                 confirmed=True,
                 email=Config.ADMIN_EMAIL)
-            db.session.add(user)
-            db.session.commit()
+            await user.save()
             print('Added administrator {}'.format(user.full_name()))
 
 
 
 
 
-@manager.command
+@cli.command
 def format():
     """Runs the yapf and isort formatters over the project."""
     isort = 'isort -rc *.py app/'
@@ -122,7 +108,7 @@ def format():
 
 
 if __name__ == '__main__':
-    manager.run()
+    cli()
 
 
 

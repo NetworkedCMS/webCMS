@@ -1,7 +1,17 @@
+from flask_tortoise import Tortoise
 from flask import url_for
 from wtforms.fields import Field
 from wtforms.widgets import HiddenInput
-import aiofiles
+from flask_login import LoginManager
+
+
+db:"Tortoise" = Tortoise()
+
+
+# Set up Flask-Login
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'account.login'
 
 
 
@@ -18,6 +28,7 @@ def register_template_utils(app):
         return isinstance(field, HiddenField)
 
     app.add_template_global(index_for_role)
+
 
 
 def index_for_role(role):
@@ -47,11 +58,11 @@ class CustomSelectField(Field):
 
 
 
-async def create_template(file_name:str, **kwargs):
+"""async def create_template(file_name:str, **kwargs):
     try:
         async with aiofiles.open(f"{file_name}", 'w') as f:
             await f.write(**kwargs)
     except Exception as e:
-        raise Exception
+        raise Exception"""
     
 
