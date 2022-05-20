@@ -9,7 +9,6 @@ from rq import Queue
 from config import Config
 
 
-
 redis_conn = Redis(host=Config.RQ_DEFAULT_HOST, 
     port=Config.RQ_DEFAULT_PORT, db=0, 
     password=Config.RQ_DEFAULT_PASSWORD)

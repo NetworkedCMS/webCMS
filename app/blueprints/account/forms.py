@@ -41,8 +41,8 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
     submit = SubmitField('Register')
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+    async def validate_email(self, field):
+        if await User.get_or_none(field.data, 'email').first():
             raise ValidationError('Email already registered. (Did you mean to '
                                   '<a href="{}">log in</a> instead?)'.format(
                                     url_for('account.login')))

@@ -5,8 +5,10 @@ import click, uvicorn
 from app import create_app
 from app.models import Role, User, ApiKey
 from config import Config
-from asgiref.wsgi import WsgiToAsgi
+from app.utils.dep import redis_conn, redis_q
 from app.common.db import db_session, init_models
+from rq import Worker,Connection
+
 
 app = create_app(os.environ.get('FLASK_CONFIG') or 'default')
 
@@ -101,6 +103,15 @@ def format():
 
     print('Running {}'.format(yapf))
     subprocess.call(yapf, shell=True)
+
+
+
+@cli.command()
+def run_worker():
+    """Initializes a slim rq task queue."""
+    with Connection(redis_conn):
+        worker = Worker(redis_q)
+        worker.work()
 
 
 if __name__ == '__main__':

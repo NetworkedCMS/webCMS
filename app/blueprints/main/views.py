@@ -1,4 +1,5 @@
-from flask import (
+from sqlalchemy import select
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -8,7 +9,7 @@ from flask import (
     url_for,
 )
 
-from flask_login import (
+from aioflask.patched.flask_login import (
     current_user,
     login_required,
     login_user,
@@ -18,6 +19,9 @@ from flask_login import (
 from app.models import *
 from .forms import UploadForm, ContactForm
 from app.utils.flask_uploads import configure_uploads, IMAGES, UploadSet
+from app.common.db import db_session as session
+
+
 
 main = Blueprint('main', __name__)
 
@@ -29,54 +33,55 @@ images = UploadSet('images', IMAGES)
 async def index():
     """Home page for the website"""
 
-    landing_page = await TemplateSetting.get_by_field(True, 'choice')
+    landing_page = await TemplateSetting.get_or_none(True, 'choice')
     if landing_page is None:
         flash('Template not found, consider creating one')
         abort(404)
     landing_page = landing_page.template_name#.lower()
-    nav_menu = NavMenu.query.all()
-    slideshows = SlideShowImage.query.all()
-    hometext = HomeText.query.first()
+    nav_menu = await NavMenu.all()
+    slideshows = await SlideShowImage.all()
+    q= await session.execute(select(HomeText))
+    hometext = q.first()
     call_to_action = CallToAction.query.first()
     logo = Logo.query.first()
-    techno_img = TechnologiesImage.query.all()
+    techno_img = TechnologiesImage.all()
     text_techno = TechnologiesText.query.first()
-    footer_text = FooterText.query.all()
-    tracking_script = TrackingScript.query.all()
-    media_icons = SocialMediaIcon.query.all()
+    footer_text = FooterText.all()
+    tracking_script = TrackingScript.all()
+    media_icons = SocialMediaIcon.all()
     footer_image = FooterImage.query.first()
     copyright_text = CopyRight.query.first()
     background_image = BackgroundImage.query.first()
     favicon_image = FaviconImage.query.first()
     brand = BrandName.query.first()
     seo = Seo.query.first()
-    services = Service.query.all()
+    services = Service.all()
     about = About.query.first()
-    team = Team.query.all()
+    team = Team.all()
     video = Video.query.first()
-    counts = Counter.query.all()
-    portfolio = Portfolio.query.all()
-    faq = Faq.query.all()
-    testimonial = Testimonial.query.all()
-    client = Client.query.all()
+    counts = Counter.all()
+    portfolio = Portfolio.all()
+    faq = Faq.all()
+    testimonial = Testimonial.all()
+    client = Client.all()
     apple_touch_icon = AppleTouchIcon.query.first()
     jumbotron_html = JumbotronHtml.query.first()
     form_html = FormHtml.query.first()
-    blank_html = FormHtml.query.all()
+    blank_html = FormHtml.all()
     album_html = AlbumHtml.query.first()
     carousel_html = CarouselHtml.query.first()
-    header_script = HeaderScript.query.all()
-    footer_script = FooterScript.query.all()
+    header_script = HeaderScript.all()
+    footer_script = FooterScript.all()
     header_html = HeaderHtml.query.first()
     navbar_html = NavbarHtml.query.first()
     footer_html = FooterHtml.query.first()
-    features_html = FeaturesHtml.query.all()
+    features_html = FeaturesHtml.all()
     css = Css.query.first()
-    pricing_html = PricingHtml.query.all()
-    testimonials_html = TestimonialsHtml.query.all()
+    pricing_html = PricingHtml.all()
+    testimonials_html = TestimonialsHtml.all()
     contact_html = ContactHtml.query.first()
     
-    return render_template("Bare/index.html", footer_image=footer_image, icons=media_icons,
+    return await render_template("Bare/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,
@@ -94,7 +99,7 @@ async def index():
 
 @main.route('/<page_name>', methods=['GET', 'POST'])
 @login_required
-def page(page_name:str):
+async def page(page_name:str):
     """ Pages Added """
 
     landing_page = TemplateSetting.query.filter_by(choice=True).first()
@@ -102,49 +107,49 @@ def page(page_name:str):
         flash('Template not found, consider creating one')
         abort(404)
     template_name = landing_page.template_name#.lower()   
-    nav_menu = NavMenu.query.all()
-    slideshows = SlideShowImage.query.all()
+    nav_menu = NavMenu.all()
+    slideshows = SlideShowImage.all()
     hometext = HomeText.query.first()
     call_to_action = CallToAction.query.first()
     logo = Logo.query.first()
-    techno_img = TechnologiesImage.query.all()
+    techno_img = TechnologiesImage.all()
     text_techno = TechnologiesText.query.first()
-    footer_text = FooterText.query.all()
-    tracking_script = TrackingScript.query.all()
-    media_icons = SocialMediaIcon.query.all()
+    footer_text = FooterText.all()
+    tracking_script = TrackingScript.all()
+    media_icons = SocialMediaIcon.all()
     footer_image = FooterImage.query.first()
     copyright_text = CopyRight.query.first()
     background_image = BackgroundImage.query.first()
     favicon_image = FaviconImage.query.first()
     brand = BrandName.query.first()
     seo = Seo.query.first()
-    services = Service.query.all()
+    services = Service.all()
     about = About.query.first()
-    team = Team.query.all()
+    team = Team.all()
     video = Video.query.first()
-    counts = Counter.query.all()
-    portfolio = Portfolio.query.all()
-    faq = Faq.query.all()
-    testimonial = Testimonial.query.all()
-    client = Client.query.all()
+    counts = Counter.all()
+    portfolio = Portfolio.all()
+    faq = Faq.all()
+    testimonial = Testimonial.all()
+    client = Client.all()
     apple_touch_icon = AppleTouchIcon.query.first()
     jumbotron_html = JumbotronHtml.query.first()
     form_html = FormHtml.query.first()
-    blank_html = FormHtml.query.all()
+    blank_html = FormHtml.all()
     album_html = AlbumHtml.query.first()
     carousel_html = CarouselHtml.query.first()
-    header_script = HeaderScript.query.all()
-    footer_script = FooterScript.query.all()
+    header_script = HeaderScript.all()
+    footer_script = FooterScript.all()
     header_html = HeaderHtml.query.first()
     navbar_html = NavbarHtml.query.first()
     footer_html = FooterHtml.query.first()
-    features_html = FeaturesHtml.query.all()
+    features_html = FeaturesHtml.all()
     css = Css.query.first()
-    pricing_html = PricingHtml.query.all()
-    testimonials_html = TestimonialsHtml.query.all()
+    pricing_html = PricingHtml.all()
+    testimonials_html = TestimonialsHtml.all()
     contact_html = ContactHtml.query.first()
     page_content = Page.query.filter_by(name=page_name).first()
-    pages = Page.query.all()
+    pages = Page.all()
     
     #item = TemplateSetting.query.filter_by(template_name=template_name).first()
     form = ContactForm()
@@ -154,11 +159,11 @@ def page(page_name:str):
             email = form.email.data,
             text = form.text.data
         )
-        db.session.add(data)
-        db.session.commit()
+        session.add(data)
+        await session.commit()
         flash("Message sent.", "success")
                                
-    return render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
+    return await render_template("Bare/inner-page.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
                            text_techno=text_techno, copyright_text=copyright_text,

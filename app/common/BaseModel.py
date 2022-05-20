@@ -1,7 +1,7 @@
 from math import ceil
 from sqlalchemy.exc import IntegrityError
 from .db import Base
-from flask import abort
+from flask import abort, flash
 from sqlalchemy import select, func, Column, DateTime, Integer
 from .db import db_session  as session
 from config import  Config
@@ -190,7 +190,7 @@ class CRUDMixin(object):
         for attr, value in kwargs.items():
             if value is not None:
                 setattr(self, attr, value)
-        return commit and await self.save(session) or self
+        return commit and await self.save() or self
 
 
 
@@ -202,16 +202,17 @@ class CRUDMixin(object):
         if  many:
             kwargs.pop("many")
             instance = cls(**kwargs)
-            return await instance.save_multiple(session=session)
+            return await instance.save_multiple()
         instance = cls(**kwargs)    
-        return await instance.save(session=session)    
+        return await instance.save()    
 
     async def save_multiple(self, commit=True):
         """Save the record."""
         session.add_all(self)
         if commit:
             try:
-                await session.commit()       
+                await session.commit() 
+                await session.refresh(self)      
             except IntegrityError as ex:
                 await session.rollback()
                 raise abort(403, "The object is already stored")    
@@ -222,10 +223,10 @@ class CRUDMixin(object):
         session.add(self)
         if commit:
             try:
-                await session.commit()       
+                await session.commit()    
             except IntegrityError as ex:
                 await session.rollback()
-                raise DuplicatedEntryError("The object is already stored")    
+                flash(f"The object is already stored, {ex}")    
         return self
 
     async def delete(self, commit=True):

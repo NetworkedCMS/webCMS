@@ -8,7 +8,7 @@ from aioflask import (
     session,
     url_for,
 )
-from flask_login import (
+from aioflask.patched.flask_login import (
     current_user,
     login_required,
     login_user,
@@ -69,12 +69,12 @@ async def register():
         flash('A confirmation link has been sent to {}.'.format(user.email),
               'warning')
         return redirect(url_for('main.index'))
-    return render_template('account/register.html', form=form)
+    return await render_template('account/register.html', form=form)
 
 
 @account.route('/logout')
 @login_required
-def logout():
+async def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
@@ -83,9 +83,9 @@ def logout():
 @account.route('/manage', methods=['GET', 'POST'])
 @account.route('/manage/info', methods=['GET', 'POST'])
 @login_required
-def manage():
+async def manage():
     """Display a user's account information."""
-    return render_template('account/manage.html', user=current_user, form=None)
+    return await render_template('account/manage.html', user=current_user, form=None)
 
 
 @account.route('/reset-password', methods=['GET', 'POST'])
@@ -111,11 +111,11 @@ async def reset_password_request():
         flash('A password reset link has been sent to {}.'.format(
             form.email.data), 'warning')
         return redirect(url_for('account.login'))
-    return render_template('account/reset_password.html', form=form)
+    return await render_template('account/reset_password.html', form=form)
 
 
 @account.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
+async def reset_password(token):
     """Reset an existing user's password."""
     if not current_user.is_anonymous:
         return redirect(url_for('main.index'))
@@ -132,7 +132,7 @@ def reset_password(token):
             flash('The password reset link is invalid or has expired.',
                   'form-error')
             return redirect(url_for('main.index'))
-    return render_template('account/reset_password.html', form=form)
+    return await render_template('account/reset_password.html', form=form)
 
 
 @account.route('/manage/change-password', methods=['GET', 'POST'])
@@ -149,12 +149,12 @@ async def change_password():
             return redirect(url_for('main.index'))
         else:
             flash('Original password is invalid.', 'form-error')
-    return render_template('account/manage.html', form=form)
+    return await render_template('account/manage.html', form=form)
 
 
 @account.route('/manage/change-email', methods=['GET', 'POST'])
 @login_required
-def change_email_request():
+async def change_email_request():
     """Respond to existing user's request to change their email."""
     form = ChangeEmailForm()
     if form.validate_on_submit():
@@ -177,12 +177,12 @@ def change_email_request():
             return redirect(url_for('main.index'))
         else:
             flash('Invalid email or password.', 'form-error')
-    return render_template('account/manage.html', form=form)
+    return await render_template('account/manage.html', form=form)
 
 
 @account.route('/manage/change-email/<token>', methods=['GET', 'POST'])
 @login_required
-def change_email(token):
+async def change_email(token):
     """Change existing user's email with provided token."""
     if current_user.change_email(token):
         flash('Your email address has been updated.', 'success')
@@ -193,7 +193,7 @@ def change_email(token):
 
 @account.route('/confirm-account')
 @login_required
-def confirm_request():
+async def confirm_request():
     """Respond to new user's request to confirm their account."""
     token = current_user.generate_confirmation_token()
     confirm_link = url_for('account.confirm', token=token, _external=True)
@@ -212,7 +212,7 @@ def confirm_request():
 
 @account.route('/confirm-account/<token>')
 @login_required
-def confirm(token):
+async def confirm(token):
     """Confirm new user's account with provided token."""
     if current_user.confirmed:
         return redirect(url_for('main.index'))
@@ -252,7 +252,7 @@ async def join_from_invite(user_id, token):
                   'go to the "Your Account" page to review your account '
                   'information and settings.', 'success')
             return redirect(url_for('account.login'))
-        return render_template('account/join_invite.html', form=form)
+        return await render_template('account/join_invite.html', form=form)
     else:
         flash('The confirmation link is invalid or has expired. Another '
               'invite email with a new link has been sent to you.', 'error')
@@ -273,7 +273,7 @@ async def join_from_invite(user_id, token):
 
 
 @account.before_app_request
-def before_request():
+async def before_request():
     """Force user to confirm email before accessing login-required routes."""
     if current_user.is_authenticated \
             and not current_user.confirmed \
@@ -283,8 +283,8 @@ def before_request():
 
 
 @account.route('/unconfirmed')
-def unconfirmed():
+async def unconfirmed():
     """Catch users with unconfirmed emails."""
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
-    return render_template('account/unconfirmed.html')
+    return await render_template('account/unconfirmed.html')
