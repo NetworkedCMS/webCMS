@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 import os, asyncio
 import subprocess
-import click
-from app.main import create_app
-from app.models.users import Role, User, ApiKey
+import click, uvicorn
+from app import create_app
+from app.models import Role, User, ApiKey
 from config import Config
+from asgiref.wsgi import WsgiToAsgi
+from app.common.db import db_session, init_models
 
 app = create_app(os.environ.get('FLASK_CONFIG') or 'default')
+
+
 
 
 @app.cli.command("shell_context")
@@ -23,7 +27,11 @@ def add_api_key():
     """
     Adds Api key to the database.
     """
-    asyncio.run(ApiKey.insert_key())
+    async def main():
+        
+        await ApiKey.insert_key(db_session)
+        await db_session.close()
+    asyncio.run(main())        
 
 @cli.command()
 def test():
@@ -35,7 +43,8 @@ def test():
 
 @cli.command()
 def runserver():
-    app.run()
+    app.run(host="0.0.0.0",  port=5000, reload=True,
+         debug=True,log_level="info", app='manage:app', )     
 
 
 @cli.command
@@ -44,20 +53,8 @@ def recreate_db():
     Recreates a local database. You probably should not use this on
     production.
     """
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-        db.session.commit()
-        db.session.flush()
+    asyncio.run(init_models())
 
-
-@cli.command()
-def create_tables():
-    """
-    Recreates a local database's tables without dropping the database.
-    """
-    db.create_all()
-    db.session.commit()
 
 
 
@@ -77,21 +74,20 @@ def setup_prod():
 async def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
-    await Role.insert_roles()
-    admin_query = await Role.get_or_none(name='Administrator')
+      
+    await Role.insert_roles(db_session)
+    admin_query = await Role.get_by_field('Administrator', 'name', db_session)
     if admin_query is not None:
-        if await User.get_or_none(email=Config.ADMIN_EMAIL).first() is None:
-            user = User(
-                first_name='Admin',
+        if await User.get_by_field(Config.ADMIN_EMAIL, 'email', db_session) is None:
+            user = await User.create(db_session,
+            **dict(first_name='Admin',
                 last_name='Account',
                 password=Config.ADMIN_PASSWORD,
                 confirmed=True,
                 email=Config.ADMIN_EMAIL)
-            await user.save()
+             )
             print('Added administrator {}'.format(user.full_name()))
-
-
-
+    await db_session.close()
 
 
 @cli.command

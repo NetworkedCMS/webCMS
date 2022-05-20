@@ -1,4 +1,3 @@
-import asyncio
 from flask import url_for
 from flask_wtf import FlaskForm
 from wtforms import ValidationError
@@ -9,7 +8,7 @@ from wtforms.fields import (
     SubmitField, EmailField)
 from wtforms.validators import Email, EqualTo, InputRequired, Length
 
-from app.models.users import User
+from app.models import User
 
 
 class LoginForm(FlaskForm):
@@ -75,12 +74,9 @@ class ResetPasswordForm(FlaskForm):
         'Confirm new password', validators=[InputRequired()])
     submit = SubmitField('Reset password')
 
-   
-    async def validate_email(self, field):
-        def main():
-            if User.get_or_none(email=field.data):
-                raise ValidationError('Email already registered.')
-        asyncio.run(main(self, field)) 
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first() is None:
+            raise ValidationError('Unknown email address.')
 
 
 class CreatePasswordForm(FlaskForm):
@@ -116,8 +112,6 @@ class ChangeEmailForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired()])
     submit = SubmitField('Update email')
 
-    async def validate_email(self, field):
-        def main():
-            if User.get_or_none(email=field.data):
-                raise ValidationError('Email already registered.')
-        asyncio.run(main(self, field))        
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered.')

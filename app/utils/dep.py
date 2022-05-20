@@ -1,11 +1,20 @@
-from flask_tortoise import Tortoise
+
 from flask import url_for
 from wtforms.fields import Field
 from wtforms.widgets import HiddenInput
-from flask_login import LoginManager
+from aioflask.patched.flask_login import LoginManager
+
+from redis import Redis
+from rq import Queue
+from config import Config
 
 
-db:"Tortoise" = Tortoise()
+
+redis_conn = Redis(host=Config.RQ_DEFAULT_HOST, 
+    port=Config.RQ_DEFAULT_PORT, db=0, 
+    password=Config.RQ_DEFAULT_PASSWORD)
+
+redis_q = Queue('high', connection=redis_conn)
 
 
 # Set up Flask-Login

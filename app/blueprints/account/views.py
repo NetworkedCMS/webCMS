@@ -1,9 +1,11 @@
-from flask import (
+
+from aioflask import (
     Blueprint,
     flash,
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 from flask_login import (
@@ -13,7 +15,7 @@ from flask_login import (
     logout_user,
 )
 #from flask_rq import get_queue
-
+from app.utils.dep import redis_q
 from app.blueprints.account.forms import (
     ChangeEmailForm,
     ChangePasswordForm,
@@ -24,7 +26,7 @@ from app.blueprints.account.forms import (
     ResetPasswordForm,
 )
 from app.utils.email import send_email
-from app.models.users import User
+from app.models import User
 
 account = Blueprint('account', __name__)
 
@@ -34,7 +36,7 @@ async def login():
     """Log in an existing user."""
     form = LoginForm()
     if form.validate_on_submit():
-        user = await User.get_or_none(email=form.email.data)
+        user = await User.get_or_none(form.email.data, 'email')
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
@@ -42,7 +44,7 @@ async def login():
             return redirect(request.args.get('next') or url_for('main.index'))
         else:
             flash('Invalid email or password.', 'error')
-    return render_template('account/login.html', form=form)
+    return await render_template('account/login.html', form=form)
 
 
 @account.route('/register', methods=['GET', 'POST'])
@@ -51,19 +53,19 @@ async def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = await User.create(
-            first_name=form.first_name.data,
+            **dict(first_name=form.first_name.data,
             last_name=form.last_name.data,
             email=form.email.data,
-            password=form.password.data)
+            password=form.password.data))
         token = user.generate_confirmation_token()
         confirm_link = url_for('account.confirm', token=token, _external=True)
-        """get_queue().enqueue(
+        redis_q.enqueue(
             send_email,
             recipient=user.email,
             subject='Confirm Your Account',
             template='account/email/confirm',
             user=user,
-            confirm_link=confirm_link)"""
+            confirm_link=confirm_link)
         flash('A confirmation link has been sent to {}.'.format(user.email),
               'warning')
         return redirect(url_for('main.index'))
@@ -93,19 +95,19 @@ async def reset_password_request():
         return redirect(url_for('main.index'))
     form = RequestResetPasswordForm()
     if form.validate_on_submit():
-        user = await User.get_or_none(email=form.email.data)
+        user = await User.get_or_404(form.email.data, 'email')
         if user:
             token = user.generate_password_reset_token()
             reset_link = url_for(
                 'account.reset_password', token=token, _external=True)
-            """get_queue().enqueue(
+            redis_q.enqueue(
                 send_email,
                 recipient=user.email,
                 subject='Reset Your Password',
                 template='account/email/reset_password',
                 user=user,
                 reset_link=reset_link,
-                next=request.args.get('next'))"""
+                next=request.args.get('next'))
         flash('A password reset link has been sent to {}.'.format(
             form.email.data), 'warning')
         return redirect(url_for('account.login'))
@@ -113,13 +115,13 @@ async def reset_password_request():
 
 
 @account.route('/reset-password/<token>', methods=['GET', 'POST'])
-async def reset_password(token):
+def reset_password(token):
     """Reset an existing user's password."""
     if not current_user.is_anonymous:
         return redirect(url_for('main.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        user = await User.get_or_none(email=form.email.data)
+        user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             flash('Invalid email address.', 'form-error')
             return redirect(url_for('main.index'))
@@ -141,7 +143,8 @@ async def change_password():
     if form.validate_on_submit():
         if current_user.verify_password(form.old_password.data):
             current_user.password = form.new_password.data
-            await current_user.save()
+            session.add(current_user)
+            await session.commit()
             flash('Your password has been updated.', 'form-success')
             return redirect(url_for('main.index'))
         else:
@@ -151,7 +154,7 @@ async def change_password():
 
 @account.route('/manage/change-email', methods=['GET', 'POST'])
 @login_required
-async def change_email_request():
+def change_email_request():
     """Respond to existing user's request to change their email."""
     form = ChangeEmailForm()
     if form.validate_on_submit():
@@ -160,7 +163,7 @@ async def change_email_request():
             token = current_user.generate_email_change_token(new_email)
             change_email_link = url_for(
                 'account.change_email', token=token, _external=True)
-            """get_queue().enqueue(
+            redis_q.enqueue(
                 send_email,
                 recipient=new_email,
                 subject='Confirm Your New Email',
@@ -168,7 +171,7 @@ async def change_email_request():
                 # current_user is a LocalProxy, we want the underlying user
                 # object
                 user=current_user._get_current_object(),
-                change_email_link=change_email_link)"""
+                change_email_link=change_email_link)
             flash('A confirmation link has been sent to {}.'.format(new_email),
                   'warning')
             return redirect(url_for('main.index'))
@@ -194,14 +197,14 @@ def confirm_request():
     """Respond to new user's request to confirm their account."""
     token = current_user.generate_confirmation_token()
     confirm_link = url_for('account.confirm', token=token, _external=True)
-    """get_queue().enqueue(
+    redis_q.enqueue(
         send_email,
         recipient=current_user.email,
         subject='Confirm Your Account',
         template='account/email/confirm',
         # current_user is a LocalProxy, we want the underlying user object
         user=current_user._get_current_object(),
-        confirm_link=confirm_link)"""
+        confirm_link=confirm_link)
     flash('A new confirmation link has been sent to {}.'.format(
         current_user.email), 'warning')
     return redirect(url_for('main.index'))
@@ -222,7 +225,7 @@ def confirm(token):
 
 @account.route(
     '/join-from-invite/<int:user_id>/<token>', methods=['GET', 'POST'])
-def join_from_invite(user_id, token):
+async def join_from_invite(user_id, token):
     """
     Confirm new user's account with provided token and prompt them to set
     a password.
@@ -231,7 +234,7 @@ def join_from_invite(user_id, token):
         flash('You are already logged in.', 'error')
         return redirect(url_for('main.index'))
 
-    new_user = User.query.get(user_id)
+    new_user = await User.get(user_id)
     if new_user is None:
         return redirect(404)
 
@@ -243,8 +246,8 @@ def join_from_invite(user_id, token):
         form = CreatePasswordForm()
         if form.validate_on_submit():
             new_user.password = form.password.data
-            db.session.add(new_user)
-            db.session.commit()
+            session.add(new_user)
+            await session.commit()
             flash('Your password has been set. After you log in, you can '
                   'go to the "Your Account" page to review your account '
                   'information and settings.', 'success')
@@ -259,7 +262,7 @@ def join_from_invite(user_id, token):
             user_id=user_id,
             token=token,
             _external=True)
-        get_queue().enqueue(
+        redis_q.enqueue(
             send_email,
             recipient=new_user.email,
             subject='You Are Invited To Join',

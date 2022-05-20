@@ -33,6 +33,9 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 
+    #Pagination
+    PAGE_SIZE=50
+
     #Uploads & Images
 
     UPLOADED_IMAGES_DEST = '.././app/static/images/' if \
@@ -81,7 +84,9 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    TORTOISE_ORM_DATABASE_URI = 'sqlite://db.sqlite3'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL', 
+        'sqlite:///''data-dev.sqlite')
+    
 
     
 
@@ -106,7 +111,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     USE_RELOADER = False
-    TORTOISE_ORM_DATABASE_URI = 'sqlite://db.sqlite3'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL', 'sqlite:///''prod.sqlite')
         #'sqlite:///' + os.path.join(basedir, 'data.sqlite'))
     SSL_DISABLE = (os.environ.get('SSL_DISABLE', 'True') == 'True')
 
