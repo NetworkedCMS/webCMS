@@ -1,5 +1,5 @@
 
-from flask import (
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -9,20 +9,21 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_required
-from flask_rq import get_queue
+#from flask_rq import get_queue
 
-from app import db
+#from app import db
 #from app.admin.forms import (
     #ChangeAccountTypeForm,
     #ChangeUserEmailForm,
     #InviteUserForm,
     #NewUserForm,
 #)
-from app.decorators import admin_required
-from app.email import send_email
+from app.utils.decorators import admin_required
+from app.utils.email import send_email
 from app.models import *
 from app.blueprints.html_manager.forms import *
 from app.blueprints.html_manager.views import html_manager
+from app.common.db import db_session as session
 
 
 html_manager = Blueprint('html_manager', __name__)
@@ -30,7 +31,7 @@ html_manager = Blueprint('html_manager', __name__)
 
 @html_manager.route('/html/setting')
 async def index():
-    return render_template('html_manager/index.html')
+    return await render_template('html_manager/index.html')
 
 
 # Add JumbotronHtml
@@ -41,7 +42,7 @@ async def added_jumbotron_html():
     data = JumbotronHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_jumbotron_html'))
-    return render_template(
+    return await render_template(
         'html_manager/jumbotron_html/added_jumbotron_html.html', data=data)
 
 
@@ -50,39 +51,36 @@ async def added_jumbotron_html():
 async def add_jumbotron_html():
     form = JumbotronHtmlForm()
     if form.validate_on_submit():
-        data = JumbotronHtml(
+        await JumbotronHtml.create(
             html = form.html.data
             )
-        db.session.add(data)
-        db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_jumbotron_html'))
-    return render_template('html_manager/jumbotron_html/add_jumbotron_html.html', form=form)
+    return await render_template('html_manager/jumbotron_html/add_jumbotron_html.html', form=form)
 
 
 # Edit JumbotronHtml
 @html_manager.route('/jumbotron_html/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
 async def edit_jumbotron_html(id):
-    data = JumbotronHtml.query.filter_by(id=id).first()
+    data = await JumbotronHtml.get_or_404(id, 'id')
     form = JumbotronHtmlForm(obj=data)
     if form.validate_on_submit():
         data.html=form.html.data
-        db.session.add(data)
-        db.session.commit()
+        session.add(data)
+        await session.commit()
         flash("Jumbotron Html Added Successfully.", "success")
         return redirect(url_for('admin.added_jumbotron_html'))
     else:
         flash('ERROR! Jumbotron Html was not edited.', 'error')
-    return render_template('html_manager/jumbotron_html/add_jumbotron_html.html', form=form)
+    return await render_template('html_manager/jumbotron_html/add_jumbotron_html.html', form=form)
 
 @html_manager.route('/jumbotron_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
 async def delete_jumbotron_html(id):
     """Delete the jumbotron html added """
-    data = JumbotronHtml.query.filter_by(id=id).first()
-    db.session.commit()
-    db.session.delete(data)
+    data = await JumbotronHtml.get_or_404(id, 'id')
+    await data.delete()
     flash('Successfully deleted ' , 'success')
     if data is None:
         return redirect(url_for('admin.add_jumbotron_html'))
@@ -94,10 +92,10 @@ async def delete_jumbotron_html(id):
 @login_required
 async def added_header_html():
     """View added Header HTML setting."""
-    data = HeaderHtml.query.first()
+    data = HeaderHtml
     if data is None:
         return redirect(url_for('admin.add_header_html'))
-    return render_template(
+    return await render_template(
         'html_manager/header_html/added_header_html.html', data=data)
 
 
@@ -113,7 +111,7 @@ async def add_header_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_header_html'))
-    return render_template('html_manager/header_html/add_header_html.html', form=form)
+    return await render_template('html_manager/header_html/add_header_html.html', form=form)
 
 
 # Edit HeaderHtml
@@ -130,7 +128,7 @@ async def edit_header_html(id):
         return redirect(url_for('admin.added_header_html'))
     else:
         flash('ERROR! Header Html was not edited.', 'error')
-    return render_template('html_manager/header_html/add_header_html.html', form=form)
+    return await render_template('html_manager/header_html/add_header_html.html', form=form)
 
 @html_manager.route('/header_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -152,7 +150,7 @@ async def added_header_script():
     data = HeaderScript.query.all()
     if data is None:
         return redirect(url_for('admin.add_header_script'))
-    return render_template(
+    return await render_template(
         'html_manager/header_script/added_header_script.html', data=data)
 
 
@@ -168,7 +166,7 @@ async def add_header_script():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_header_script'))
-    return render_template('html_manager/header_script/add_header_script.html', form=form)
+    return await render_template('html_manager/header_script/add_header_script.html', form=form)
 
 
 # Edit HeaderScript
@@ -185,7 +183,7 @@ async def edit_header_script(id):
         return redirect(url_for('admin.added_header_script'))
     else:
         flash('ERROR! Header Script was not edited.', 'error')
-    return render_template('html_manager/header_script/add_header_script.html', form=form)
+    return await render_template('html_manager/header_script/add_header_script.html', form=form)
 
 @html_manager.route('/header_script/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -207,7 +205,7 @@ async def added_navbar_html():
     data = NavbarHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_navbar_html'))
-    return render_template(
+    return await render_template(
         'html_manager/navbar_html/added_navbar_html.html', data=data)
 
 
@@ -223,7 +221,7 @@ async def add_navbar_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_navbar_html'))
-    return render_template('html_manager/navbar_html/add_navbar_html.html', form=form)
+    return await render_template('html_manager/navbar_html/add_navbar_html.html', form=form)
 
 
 # Edit NavbarHtml
@@ -240,7 +238,7 @@ async def edit_navbar_html(id):
         return redirect(url_for('admin.added_navbar_html'))
     else:
         flash('ERROR! Navbar Html was not edited.', 'error')
-    return render_template('html_manager/navbar_html/add_navbar_html.html', form=form)
+    return await render_template('html_manager/navbar_html/add_navbar_html.html', form=form)
 
 @html_manager.route('/navbar_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -262,7 +260,7 @@ async def added_footer_html():
     data = FooterHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_footer_html'))
-    return render_template(
+    return await render_template(
         'html_manager/footer_html/added_footer_html.html', data=data)
 
 
@@ -278,7 +276,7 @@ async def add_footer_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_footer_html'))
-    return render_template('html_manager/footer_html/add_footer_html.html', form=form)
+    return await render_template('html_manager/footer_html/add_footer_html.html', form=form)
 
 
 # Edit FooterHtml
@@ -295,7 +293,7 @@ async def edit_footer_html(id):
         return redirect(url_for('admin.added_footer_html'))
     else:
         flash('ERROR! Footer Html was not edited.', 'error')
-    return render_template('html_manager/footer_html/add_footer_html.html', form=form)
+    return await render_template('html_manager/footer_html/add_footer_html.html', form=form)
 
 @html_manager.route('/footer_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -317,7 +315,7 @@ async def added_footer_script():
     data = FooterScript.query.all()
     if data is None:
         return redirect(url_for('admin.add_footer_script'))
-    return render_template(
+    return await render_template(
         'html_manager/footer_script/added_footer_script.html', data=data)
 
 
@@ -333,7 +331,7 @@ async def add_footer_script():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_footer_script'))
-    return render_template('html_manager/footer_script/add_footer_script.html', form=form)
+    return await render_template('html_manager/footer_script/add_footer_script.html', form=form)
 
 
 # Edit FooterScript
@@ -350,7 +348,7 @@ async def edit_footer_script(id):
         return redirect(url_for('admin.added_footer_script'))
     else:
         flash('ERROR! Footer Script was not edited.', 'error')
-    return render_template('html_manager/footer_script/add_footer_script.html', form=form)
+    return await render_template('html_manager/footer_script/add_footer_script.html', form=form)
 
 @html_manager.route('/footer_script/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -372,7 +370,7 @@ async def added_carousel_html():
     data = CarouselHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_carousel_html'))
-    return render_template(
+    return await render_template(
         'html_manager/carousel_html/added_carousel_html.html', data=data)
 
 
@@ -388,7 +386,7 @@ async def add_carousel_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_carousel_html'))
-    return render_template('html_manager/carousel_html/add_carousel_html.html', form=form)
+    return await render_template('html_manager/carousel_html/add_carousel_html.html', form=form)
 
 
 # Edit CarouselHtml
@@ -405,7 +403,7 @@ async def edit_carousel_html(id):
         return redirect(url_for('admin.added_carousel_html'))
     else:
         flash('ERROR! Carousel Html was not edited.', 'error')
-    return render_template('html_manager/carousel_html/add_carousel_html.html', form=form)
+    return await render_template('html_manager/carousel_html/add_carousel_html.html', form=form)
 
 @html_manager.route('/carousel_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -427,7 +425,7 @@ async def added_album_html():
     data = AlbumHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_album_html'))
-    return render_template(
+    return await render_template(
         'html_manager/album_html/added_album_html.html', data=data)
 
 
@@ -443,7 +441,7 @@ async def add_album_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_album_html'))
-    return render_template('html_manager/album_html/add_album_html.html', form=form)
+    return await render_template('html_manager/album_html/add_album_html.html', form=form)
 
 
 # Edit AlbumHtml
@@ -460,7 +458,7 @@ async def edit_album_html(id):
         return redirect(url_for('admin.added_album_html'))
     else:
         flash('ERROR! Album Html was not edited.', 'error')
-    return render_template('html_manager/album_html/add_album_html.html', form=form)
+    return await render_template('html_manager/album_html/add_album_html.html', form=form)
 
 @html_manager.route('/album_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -482,7 +480,7 @@ async def added_blank_html():
     data = BlankHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_blank_html'))
-    return render_template(
+    return await render_template(
         'html_manager/blank_html/added_blank_html.html', data=data)
 
 
@@ -498,7 +496,7 @@ async def add_blank_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_blank_html'))
-    return render_template('html_manager/blank_html/add_blank_html.html', form=form)
+    return await render_template('html_manager/blank_html/add_blank_html.html', form=form)
 
 
 # Edit BlankHtml
@@ -515,7 +513,7 @@ async def edit_blank_html(id):
         return redirect(url_for('admin.added_blank_html'))
     else:
         flash('ERROR! Blank Html was not edited.', 'error')
-    return render_template('html_manager/blank_html/add_blank_html.html', form=form)
+    return await render_template('html_manager/blank_html/add_blank_html.html', form=form)
 
 @html_manager.route('/blank_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -538,7 +536,7 @@ async def added_form_html():
     data = FormHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_form_html'))
-    return render_template(
+    return await render_template(
         'html_manager/form_html/added_form_html.html', data=data)
 
 
@@ -555,7 +553,7 @@ async def add_form_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_form_html'))
-    return render_template('html_manager/form_html/add_form_html.html', form=form)
+    return await render_template('html_manager/form_html/add_form_html.html', form=form)
 
 
 # Edit FormHtml
@@ -573,7 +571,7 @@ async def edit_form_html(id):
         return redirect(url_for('admin.added_form_html'))
     else:
         flash('ERROR! Form Html was not edited.', 'error')
-    return render_template('html_manager/form_html/add_form_html.html', form=form)
+    return await render_template('html_manager/form_html/add_form_html.html', form=form)
 
 @html_manager.route('/form_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -595,7 +593,7 @@ async def added_features_html():
     data = FeaturesHtml.query.all()
     if data is None:
         return redirect(url_for('admin.add_features_html'))
-    return render_template(
+    return await render_template(
         'html_manager/features_html/added_features_html.html', data=data)
 
 
@@ -611,7 +609,7 @@ async def add_features_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_features_html'))
-    return render_template('html_manager/features_html/add_features_html.html', form=form)
+    return await render_template('html_manager/features_html/add_features_html.html', form=form)
 
 
 # Edit FeaturesHtml
@@ -628,7 +626,7 @@ async def edit_features_html(id):
         return redirect(url_for('admin.added_features_html'))
     else:
         flash('ERROR! Features Html was not edited.', 'error')
-    return render_template('html_manager/features_html/add_features_html.html', form=form)
+    return await render_template('html_manager/features_html/add_features_html.html', form=form)
 
 @html_manager.route('/features_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -650,7 +648,7 @@ async def added_pricing_html():
     data = PricingHtml.query.all()
     if data is None:
         return redirect(url_for('admin.add_pricing_html'))
-    return render_template(
+    return await render_template(
         'html_manager/pricing_html/added_pricing_html.html', data=data)
 
 
@@ -666,7 +664,7 @@ async def add_pricing_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_pricing_html'))
-    return render_template('html_manager/pricing_html/add_pricing_html.html', form=form)
+    return await render_template('html_manager/pricing_html/add_pricing_html.html', form=form)
 
 
 # Edit PricingHtml
@@ -683,7 +681,7 @@ async def edit_pricing_html(id):
         return redirect(url_for('admin.added_pricing_html'))
     else:
         flash('ERROR! Pricing Html was not edited.', 'error')
-    return render_template('html_manager/pricing_html/add_pricing_html.html', form=form)
+    return await render_template('html_manager/pricing_html/add_pricing_html.html', form=form)
 
 @html_manager.route('/pricing_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -705,7 +703,7 @@ async def added_testimonials_html():
     data = TestimonialsHtml.query.all()
     if data is None:
         return redirect(url_for('admin.add_testimonials_html'))
-    return render_template(
+    return await render_template(
         'html_manager/testimonials_html/added_testimonials_html.html', data=data)
 
 
@@ -721,7 +719,7 @@ async def add_testimonials_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_testimonials_html'))
-    return render_template('html_manager/testimonials_html/add_testimonials_html.html', form=form)
+    return await render_template('html_manager/testimonials_html/add_testimonials_html.html', form=form)
 
 
 # Edit TestimonialsHtml
@@ -738,7 +736,7 @@ async def edit_testimonials_html(id):
         return redirect(url_for('admin.added_testimonials_html'))
     else:
         flash('ERROR! Testimonials Html was not edited.', 'error')
-    return render_template('html_manager/testimonials_html/add_testimonials_html.html', form=form)
+    return await render_template('html_manager/testimonials_html/add_testimonials_html.html', form=form)
 
 @html_manager.route('/testimonials_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -760,7 +758,7 @@ async def added_contact_html():
     data = ContactHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_contact_html'))
-    return render_template(
+    return await render_template(
         'html_manager/contact_html/added_contact_html.html', data=data)
 
 
@@ -776,7 +774,7 @@ async def add_contact_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_contact_html'))
-    return render_template('html_manager/contact_html/add_contact_html.html', form=form)
+    return await render_template('html_manager/contact_html/add_contact_html.html', form=form)
 
 
 # Edit ContactHtml
@@ -793,7 +791,7 @@ async def edit_contact_html(id):
         return redirect(url_for('admin.added_contact_html'))
     else:
         flash('ERROR! Contact Html was not edited.', 'error')
-    return render_template('html_manager/contact_html/add_contact_html.html', form=form)
+    return await render_template('html_manager/contact_html/add_contact_html.html', form=form)
 
 @html_manager.route('/contact_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -816,7 +814,7 @@ async def added_metatags_html():
     data = MetatagsHtml.query.all()
     if data is None:
         return redirect(url_for('admin.add_metatags_html'))
-    return render_template(
+    return await render_template(
         'html_manager/metatags_html/added_metatags_html.html', data=data)
 
 
@@ -832,7 +830,7 @@ async def add_metatags_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_metatags_html'))
-    return render_template('html_manager/metatags_html/add_metatags_html.html', form=form)
+    return await render_template('html_manager/metatags_html/add_metatags_html.html', form=form)
 
 
 # Edit MetatagsHtml
@@ -849,7 +847,7 @@ async def edit_metatags_html(id):
         return redirect(url_for('admin.added_metatags_html'))
     else:
         flash('ERROR! Metatags Html was not edited.', 'error')
-    return render_template('html_manager/metatags_html/add_metatags_html.html', form=form)
+    return await render_template('html_manager/metatags_html/add_metatags_html.html', form=form)
 
 @html_manager.route('/metatags_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -871,7 +869,7 @@ async def added_title_html():
     data = TitleHtml.query.first()
     if data is None:
         return redirect(url_for('admin.add_title_html'))
-    return render_template(
+    return await render_template(
         'html_manager/title_html/added_title_html.html', data=data)
 
 
@@ -887,7 +885,7 @@ async def add_title_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_title_html'))
-    return render_template('html_manager/title_html/add_title_html.html', form=form)
+    return await render_template('html_manager/title_html/add_title_html.html', form=form)
 
 
 # Edit TitleHtml
@@ -904,7 +902,7 @@ async def edit_title_html(id):
         return redirect(url_for('admin.added_title_html'))
     else:
         flash('ERROR! Title Html was not edited.', 'error')
-    return render_template('html_manager/title_html/add_title_html.html', form=form)
+    return await render_template('html_manager/title_html/add_title_html.html', form=form)
 
 @html_manager.route('/title_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -926,7 +924,7 @@ async def added_link_html():
     data = LinkHtml.query.all()
     if data is None:
         return redirect(url_for('admin.add_link_html'))
-    return render_template(
+    return await render_template(
         'html_manager/link_html/added_link_html.html', data=data)
 
 
@@ -942,7 +940,7 @@ async def add_link_html():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('admin.added_link_html'))
-    return render_template('html_manager/link_html/add_link_html.html', form=form)
+    return await render_template('html_manager/link_html/add_link_html.html', form=form)
 
 
 # Edit LinkHtml
@@ -959,7 +957,7 @@ async def edit_link_html(id):
         return redirect(url_for('admin.added_link_html'))
     else:
         flash('ERROR! Link Html was not edited.', 'error')
-    return render_template('html_manager/link_html/add_link_html.html', form=form)
+    return await render_template('html_manager/link_html/add_link_html.html', form=form)
 
 @html_manager.route('/link_html/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required

@@ -59,10 +59,10 @@ def create_app(config):
     from .blueprints.main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    """from .blueprints.content_manager import content_manager as content_manager_blueprint
+    from .blueprints.content_manager import content_manager as content_manager_blueprint
     app.register_blueprint(content_manager_blueprint)
 
-    from .blueprints.template_manager import template_manager as template_manager_blueprint
+    """from .blueprints.template_manager import template_manager as template_manager_blueprint
     app.register_blueprint(template_manager_blueprint)
 
     from .blueprints.messaging_manager import messaging_manager as messaging_manager_blueprint
@@ -85,10 +85,10 @@ def create_app(config):
     app.register_blueprint(account_blueprint)
 
     """from .blueprints.admin import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')"""
 
     from .blueprints.api import api as api_blueprint
-    app.register_blueprint(api_blueprint, url_prefix='/api')"""
+    app.register_blueprint(api_blueprint, url_prefix='/api')
 
 
     @app.teardown_appcontext

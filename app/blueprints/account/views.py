@@ -57,8 +57,9 @@ async def register():
             last_name=form.last_name.data,
             email=form.email.data,
             password=form.password.data))
-        token = user.generate_confirmation_token()
-        confirm_link = url_for('account.confirm', token=token, _external=True)
+        print(user.full_name)    
+        #token = user.generate_confirmation_token()
+        """confirm_link = url_for('account.confirm', token=token, _external=True)
         redis_q.enqueue(
             send_email,
             recipient=user.email,
@@ -67,9 +68,17 @@ async def register():
             user=user,
             confirm_link=confirm_link)
         flash('A confirmation link has been sent to {}.'.format(user.email),
-              'warning')
+              'warning')"""
         return redirect(url_for('main.index'))
     return await render_template('account/register.html', form=form)
+
+@account.route('/users', methods=['GET', 'POST'])
+async def users():
+    """Register a new user, and send them a confirmation email."""
+    users = [i.full_name for i in  await User.count()]
+    print(users)
+    return redirect(url_for('main.index'))
+
 
 
 @account.route('/logout')

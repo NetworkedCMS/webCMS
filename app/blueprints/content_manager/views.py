@@ -1,4 +1,4 @@
-from flask import (
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -8,19 +8,18 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_required
-from flask_rq import get_queue
+#from flask_rq import get_queue
 from flask_ckeditor import upload_success
-from flask_sqlalchemy import Pagination
+#from flask_sqlalchemy import Pagination
 
-from app import db
 #from app.admin.forms import (
     #ChangeAccountTypeForm,
     #ChangeUserEmailForm,
     #InviteUserForm,
     #NewUserForm,
 #)
-from app.decorators import admin_required
-from app.email import send_email
+from app.utils.decorators import admin_required
+from app.utils.email import send_email
 from app.models import *
 from app.blueprints.content_manager.forms import *
 
@@ -29,7 +28,7 @@ content_manager = Blueprint('content_manager', __name__)
 
 @content_manager.route('/content/setting')
 async def index():
-    return render_template('content_manager/index.html')
+    return await render_template('content_manager/index.html')
 
 ####################Content Management System Start #################
 @content_manager.route('/slideshows-list')
@@ -37,10 +36,10 @@ async def index():
 
 async def added_slideshows():
     """View all registered users."""
-    slideshow = SlideShowImage.query.all()
+    slideshow = await SlideShowImage.all()
     if slideshow is None:
         return redirect(url_for('content_manager.add_slideshows'))
-    return render_template(
+    return await render_template(
         'content_manager/slideshows/added_slideshows.html', slideshow=slideshow)
 
 @content_manager.route('/slideshows/add_slideshow', methods=['GET', 'POST'])
@@ -51,21 +50,18 @@ async def add_slideshow():
         if form.validate_on_submit():
             title = form.title.data
             image = images.save(request.files['image'])
-            slideshow = SlideShowImage(title=title,image_filename=image)
-            db.session.add(slideshow)
-            db.session.commit()
+            await SlideShowImage.create(title=title,image_filename=image)
             flash("SlideShow added successfully .", "success")
             return redirect(url_for("content_manager.added_slideshows"))
     
-    return render_template("content_manager/slideshows/add_slideshow.html", form=form)
+    return await render_template("content_manager/slideshows/add_slideshow.html", form=form)
 
 @content_manager.route('/slideshows/<int:slideshow_id>/_delete', methods=['GET', 'POST'])
 
 async def delete_slideshow(slideshow_id):
     """Delete the item """
-    slideshows = SlideShowImage.query.filter_by(id=slideshow_id).first()
-    db.session.commit()
-    db.session.delete(slideshows)
+    slideshows = await SlideShowImage.get_or_404(slideshow_id, 'id')
+    await slideshows.delete()
     flash('Successfully deleted ' , 'success')
     return redirect(url_for('content_manager.added_slideshows'))
 
@@ -75,10 +71,10 @@ async def delete_slideshow(slideshow_id):
 
 async def added_images():
     """View all added images to the public area under the Information/Tech area."""
-    images = TechnologiesImage.query.all()
+    images = await TechnologiesImage.all()
     if images is None:
         return redirect(url_for('content_manager.add_image'))
-    return render_template(
+    return await render_template(
         'content_manager/images/added_images.html', slideshow=images)
 
 @content_manager.route('/images/add_image', methods=['GET', 'POST'])
@@ -87,12 +83,10 @@ async def add_image():
     form = ImageTechnologyForm()
     if request.method == 'POST':
         image = images.save(request.files['image'])
-        technology_img = TechnologiesImage(image=image)
-        db.session.add(technology_img)
-        db.session.commit()
+        technology_img = await TechnologiesImage.create(image=image)
         flash("Technology Added Successfully .", "success")
         return redirect(url_for('content_manager.added_images'))
-    return render_template("content_manager/images/add_image.html", form=form)
+    return await render_template("content_manager/images/add_image.html", form=form)
 
 '''
 ##needless to edit, just delete is enough
@@ -114,15 +108,14 @@ async def edit_image(image_id):
         db.session.commit()
         flash("Technology Image Updated Successfully.", "success")
         return redirect(url_for("content_manager.technology_image"))
-    return render_template("content_manager/images/edit_image.html", form=form, image_data=image_data)
+    return await render_template("content_manager/images/edit_image.html", form=form, image_data=image_data)
 '''
 # delete image 
 @content_manager.route('/images/delete/<int:image_id>', methods=['GET', 'POST'])
 
 async def delete_image(image_id):
-    data = TechnologiesImage.query.get(image_id)
-    db.session.delete(data)
-    db.session.commit()
+    data = await TechnologiesImage.get_or_404(image_id, 'id')
+    await data.delete()
     flash("Technology Image deleted Successfully.", "success")
     return redirect(url_for('content_manager.added_images'))
 
@@ -132,10 +125,10 @@ async def delete_image(image_id):
 
 async def added_client():
     """View all added client logos to the landing page"""
-    data = Client.query.all()
+    data = await Client.all()
     if data is None:
         return redirect(url_for('content_manager.add_client'))
-    return render_template(
+    return await render_template(
         'content_manager/client/added_client.html', data=data)
 
 @content_manager.route('/clients/add_client', methods=['GET', 'POST'])
@@ -144,21 +137,18 @@ async def add_client():
     form = ClientForm()
     if request.method == 'POST':
         image = images.save(request.files['image'])
-        data = Client(image=image)
-        db.session.add(data)
-        db.session.commit()
+        data = await Client.create(image=image)
         flash("Client logo Added Successfully .", "success")
         return redirect(url_for('content_manager.added_client'))
-    return render_template("content_manager/client/add_client.html", form=form)
+    return await render_template("content_manager/client/add_client.html", form=form)
 
 
 # delete client 
 @content_manager.route('/clients/delete/<int:id>', methods=['GET', 'POST'])
 
 async def delete_client(id):
-    data = Client.query.get(id)
-    db.session.delete(data)
-    db.session.commit()
+    data = await Client.get_or_404(id, 'id')
+    await data.delete()
     flash("Client logo deleted Successfully.", "success")
     return redirect(url_for('content_manager.added_client'))
 
@@ -169,10 +159,10 @@ async def delete_client(id):
 
 async def added_calltoaction():
     """View all added call to actin text."""
-    data = CallToAction.query.first()
+    data = await CallToAction.first()
     if data is None:
         return redirect(url_for('content_manager.add_call_to_action'))
-    return render_template(
+    return await render_template(
         'content_manager/calltoaction/added_calltoaction.html', data=data)
 
 # Add CallToAction 
@@ -181,23 +171,20 @@ async def added_calltoaction():
 async def add_call_to_action():
     form = CallToActionForm()
     if form.validate_on_submit():
-        data = CallToAction(
+        await CallToAction.create(
             text=form.text.data,
             url=form.url.data
             )
-        db.session.add(data)
-        db.session.commit()
         flash("Call To Action Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_calltoaction'))
-    return render_template('content_manager/calltoaction/add_call_to_action.html', form=form)
+    return await render_template('content_manager/calltoaction/add_call_to_action.html', form=form)
 
 @content_manager.route('/calltoaction/<int:id>/_delete', methods=['GET', 'POST'])
 
 async def delete_calltoaction(id):
     """Delete the item """
-    data = CallToAction.query.filter_by(id=id).first()
-    db.session.commit()
-    db.session.delete(data)
+    data = await CallToAction.get_or_404(id, 'id')
+    await data.delete()
     flash('Successfully deleted ' , 'success')
     return redirect(url_for('content_manager.added_calltoaction'))
 
@@ -209,15 +196,13 @@ async def delete_calltoaction(id):
 async def add_navmenu():
     form = NavMenuForm()
     if form.validate_on_submit():
-        data = NavMenu(
+        data = await NavMenu.create(
             text=form.text.data,
             url=form.url.data
             )
-        db.session.add(data)
-        db.session.commit()
         flash("Navigation menu item added successfully.", "success")
         return redirect(url_for('content_manager.added_navmenu'))
-    return render_template('content_manager/nav_menu.html', form=form)
+    return await render_template('content_manager/nav_menu.html', form=form)
 
 
 
@@ -226,17 +211,16 @@ async def add_navmenu():
 
 async def added_navmenu():
     """View all added navigations."""
-    data = NavMenu.query.all()
-    return render_template(
+    data = await NavMenu.all()
+    return await render_template(
         'content_manager/added_navmenu.html', data=data)
 
 @content_manager.route('/navmenu/<int:id>/_delete', methods=['GET', 'POST'])
 
 async def delete_navmenu(id):
     """Delete the item """
-    data = NavMenu.query.filter_by(id=id).first()
-    db.session.commit()
-    db.session.delete(data)
+    data = await NavMenu.get_or_404(id, 'id')
+    await data.delete()
     flash('Successfully deleted ' , 'success')
     return redirect(url_for('content_manager.added_navmenu'))
 
@@ -248,7 +232,7 @@ async def delete_navmenu(id):
 
 async def home_text():
     """Create a new text for the home page."""
-    item = HomeText.query.first()
+    item = await HomeText.first()
     if item is not None:
         return redirect(url_for('content_manager.added_hometext'))
         
@@ -262,7 +246,7 @@ async def home_text():
         flash('HomeText {} successfully created'.format(data.firstext),
               'form-success')
         return redirect(url_for('content_manager.added_hometext'))
-    return render_template('content_manager/hometext/add_hometext.html', form=form)
+    return await render_template('content_manager/hometext/add_hometext.html', form=form)
 
 @content_manager.route('/hometext-list')
 @login_required
@@ -270,7 +254,7 @@ async def home_text():
 async def added_hometext():
     """View all added texts."""
     data = HomeText.query.first()
-    return render_template(
+    return await render_template(
         'content_manager/hometext/added_hometext.html', data=data)
 
 @content_manager.route('/hometext/<int:id>/_delete', methods=['GET', 'POST'])
@@ -292,7 +276,7 @@ async def added_information():
     data = TechnologiesText.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_information'))
-    return render_template(
+    return await render_template(
         'content_manager/information/added_information.html', data=data)
 
 # Add Information to Public Page
@@ -309,7 +293,7 @@ async def add_information():
         db.session.commit()
         flash("Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_information'))
-    return render_template('content_manager/information/add_information.html', form=form)
+    return await render_template('content_manager/information/add_information.html', form=form)
 
 @content_manager.route('/information/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -335,7 +319,7 @@ async def added_count():
     data = Counter.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_counter'))
-    return render_template(
+    return await render_template(
         'content_manager/counter/added_counters.html', data=data)
 
 @content_manager.route('/count/add', methods=['POST', 'GET'])
@@ -351,7 +335,7 @@ async def add_count():
         db.session.commit()
         flash("Count Added Successfully.", "success")
         return redirect(url_for('content_manager.added_count'))
-    return render_template('content_manager/counter/add_count.html', form=form)
+    return await render_template('content_manager/counter/add_count.html', form=form)
 
 @content_manager.route('/count/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -374,7 +358,7 @@ async def added_services():
     data = Service.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_service'))
-    return render_template(
+    return await render_template(
         'content_manager/service/added_services.html', data=data)
 
 
@@ -391,7 +375,7 @@ async def add_service():
         db.session.commit()
         flash("Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_services'))
-    return render_template('content_manager/service/add_service.html', form=form)
+    return await render_template('content_manager/service/add_service.html', form=form)
 
 @content_manager.route('/service/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -414,7 +398,7 @@ async def added_faq():
     data = Faq.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_faq'))
-    return render_template(
+    return await render_template(
         'content_manager/faq/added_faq.html', data=data)
 
 
@@ -431,7 +415,7 @@ async def add_faq():
         db.session.commit()
         flash("Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_faq'))
-    return render_template('content_manager/faq/add_faq.html', form=form)
+    return await render_template('content_manager/faq/add_faq.html', form=form)
 
 
 @content_manager.route('/faq/<int:id>/_delete', methods=['GET', 'POST'])
@@ -456,7 +440,7 @@ async def added_members():
     data = Team.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_member'))
-    return render_template(
+    return await render_template(
         'content_manager/team/added_members.html', data=data)
 
 
@@ -474,7 +458,7 @@ async def add_member():
         db.session.commit()
         flash("Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_members'))
-    return render_template('content_manager/team/add_member.html', form=form)
+    return await render_template('content_manager/team/add_member.html', form=form)
 
 @content_manager.route('/member/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -498,7 +482,7 @@ async def added_video():
     data = Video.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_video'))
-    return render_template(
+    return await render_template(
         'content_manager/video/added_video.html', data=data)
 
 
@@ -517,7 +501,7 @@ async def add_video():
         db.session.commit()
         flash("Video Added Successfully.", "success")
         return redirect(url_for('content_manager.added_video'))
-    return render_template('content_manager/video/add_video.html', form=form)
+    return await render_template('content_manager/video/add_video.html', form=form)
 
 @content_manager.route('/video/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -541,7 +525,7 @@ async def added_portfolio():
     data = Portfolio.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_portfolio'))
-    return render_template(
+    return await render_template(
         'content_manager/portfolio/added_portfolio.html', data=data)
 
 
@@ -559,7 +543,7 @@ async def add_portfolio():
         db.session.commit()
         flash("Portfolio Added Successfully.", "success")
         return redirect(url_for('content_manager.added_portfolio'))
-    return render_template('content_manager/portfolio/add_portfolio.html', form=form)
+    return await render_template('content_manager/portfolio/add_portfolio.html', form=form)
 
 @content_manager.route('/portfolio/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -582,7 +566,7 @@ async def added_testimonial():
     data = Testimonial.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_testimonial'))
-    return render_template(
+    return await render_template(
         'content_manager/testimonial/added_testimonial.html', data=data)
 
 
@@ -601,7 +585,7 @@ async def add_testimonial():
         db.session.commit()
         flash("Testimonial Added Successfully.", "success")
         return redirect(url_for('content_manager.added_testimonial'))
-    return render_template('content_manager/testimonial/add_testimonial.html', form=form)
+    return await render_template('content_manager/testimonial/add_testimonial.html', form=form)
 
 @content_manager.route('/testimonial/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -625,7 +609,7 @@ async def added_background_image():
     data = BackgroundImage.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_background_image'))
-    return render_template(
+    return await render_template(
         'content_manager/background/added_images.html', data=data)
 
 # Background Image add method
@@ -640,7 +624,7 @@ async def add_background_image():
         db.session.commit()
         flash("Background Added Successfully .", "success")
         return redirect(url_for('content_manager.added_background_image'))
-    return render_template('content_manager/background/add_image.html', form=form)
+    return await render_template('content_manager/background/add_image.html', form=form)
 
 # Background Image Delete Method 
 @content_manager.route('/background_image/delete/<int:background_image_id>', methods=['POST', 'GET'])
@@ -660,7 +644,7 @@ async def added_logo():
     data = Logo.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_logo'))
-    return render_template(
+    return await render_template(
         'content_manager/logo/added_logo.html', data=data)
 
 # Logo add method
@@ -675,7 +659,7 @@ async def add_logo():
         db.session.commit()
         flash("Logo Added Successfully .", "success")
         return redirect(url_for('content_manager.added_logo'))
-    return render_template('content_manager/logo/add_logo.html', form=form)
+    return await render_template('content_manager/logo/add_logo.html', form=form)
 
 # Logo Delete Method 
 @content_manager.route('/logo/delete/<int:logo_id>', methods=['POST', 'GET'])
@@ -706,7 +690,7 @@ async def add_brand_name():
         flash('BrandName {} successfully created'.format(data.text),
               'form-success')
         return redirect(url_for('content_manager.added_brandname'))
-    return render_template('content_manager/brandname/add_brandname.html', form=form)
+    return await render_template('content_manager/brandname/add_brandname.html', form=form)
 
 @content_manager.route('/brandname-list')
 @login_required
@@ -714,7 +698,7 @@ async def add_brand_name():
 async def added_brandname():
     """View added brand name."""
     data = BrandName.query.first()
-    return render_template(
+    return await render_template(
         'content_manager/brandname/added_brandname.html', data=data)
 
 @content_manager.route('/brandname/<int:id>/_delete', methods=['GET', 'POST'])
@@ -735,7 +719,7 @@ async def added_seo():
     data = Seo.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_seo'))
-    return render_template(
+    return await render_template(
         'content_manager/seo/added_seo.html', data=data)
 
 # Add SEO 
@@ -752,7 +736,7 @@ async def add_seo():
         db.session.commit()
         flash("SEO Added Successfully.", "success")
         return redirect(url_for('content_manager.added_seo'))
-    return render_template('content_manager/seo/add_seo.html', form=form)
+    return await render_template('content_manager/seo/add_seo.html', form=form)
 
 # Edit SEO 
 @content_manager.route('/seo/<int:id>/edit', methods=['POST', 'GET'])
@@ -770,7 +754,7 @@ async def edit_seo(id):
         return redirect(url_for('content_manager.added_seo'))
     else:
         flash('ERROR! SEO was not edited.', 'error')
-    return render_template('content_manager/seo/add_seo.html', form=form)
+    return await render_template('content_manager/seo/add_seo.html', form=form)
 
 @content_manager.route('/seo/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -793,7 +777,7 @@ async def added_footertext():
     data = FooterText.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_footertext'))
-    return render_template(
+    return await render_template(
         'content_manager/footertext/added_footertext.html', data=data)
 
 # Add FooterText 
@@ -809,7 +793,7 @@ async def add_footertext():
         db.session.commit()
         flash("Footer Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_footertext'))
-    return render_template('content_manager/footertext/add_footertext.html', form=form)
+    return await render_template('content_manager/footertext/add_footertext.html', form=form)
 
 
 # Edit SEO 
@@ -827,7 +811,7 @@ async def edit_footertext(id):
         return redirect(url_for('content_manager.added_footertext'))
     else:
         flash('ERROR! Text was not edited.', 'error')
-    return render_template('content_manager/footertext/add_footertext.html', form=form)
+    return await render_template('content_manager/footertext/add_footertext.html', form=form)
 
 @content_manager.route('/footer/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -847,7 +831,7 @@ async def added_icons():
     data = SocialMediaIcon.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_icon'))
-    return render_template(
+    return await render_template(
         'content_manager/icon/added_icon.html', data=data)
 
 # Add Icon 
@@ -864,7 +848,7 @@ async def add_icon():
         db.session.commit()
         flash("Icon Added Successfully.", "success")
         return redirect(url_for('content_manager.added_icons'))
-    return render_template('content_manager/icon/add_icon.html', form=form)
+    return await render_template('content_manager/icon/add_icon.html', form=form)
 
 # Edit Icon 
 @content_manager.route('/icon/<int:id>/edit', methods=['POST', 'GET'])
@@ -882,7 +866,7 @@ async def edit_icon(id):
         return redirect(url_for('content_manager.added_icons'))
     else:
         flash('ERROR! icon was not edited.', 'error')
-    return render_template('content_manager/icon/add_icon.html', form=form)
+    return await render_template('content_manager/icon/add_icon.html', form=form)
 
 @content_manager.route('/icon/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -903,7 +887,7 @@ async def added_about():
     data = About.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_about'))
-    return render_template(
+    return await render_template(
         'content_manager/about/added_about.html', data=data)
 
  
@@ -920,7 +904,7 @@ async def add_about():
         db.session.commit()
         flash("Added Successfully.", "success")
         return redirect(url_for('content_manager.added_about'))
-    return render_template('content_manager/about/add_about.html', form=form)
+    return await render_template('content_manager/about/add_about.html', form=form)
 
 
 # Edit About
@@ -939,7 +923,7 @@ async def edit_about(id):
         return redirect(url_for('content_manager.added_about'))
     else:
         flash('ERROR! Text was not edited.', 'error')
-    return render_template('content_manager/about/add_about.html', form=form)
+    return await render_template('content_manager/about/add_about.html', form=form)
 
 @content_manager.route('/about/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -961,7 +945,7 @@ async def added_copyright():
     data = CopyRight.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_copyright'))
-    return render_template(
+    return await render_template(
         'content_manager/copyright/added_copyright.html', data=data)
 
 
@@ -977,7 +961,7 @@ async def add_copyright():
         db.session.commit()
         flash("CopyRight Text Added Successfully.", "success")
         return redirect(url_for('content_manager.added_copyright'))
-    return render_template('content_manager/copyright/add_copyright.html', form=form)
+    return await render_template('content_manager/copyright/add_copyright.html', form=form)
 
 
 # Edit Copyright
@@ -995,7 +979,7 @@ async def edit_copyright(id):
         return redirect(url_for('content_manager.added_copyright'))
     else:
         flash('ERROR! Text was not edited.', 'error')
-    return render_template('content_manager/copyright/add_copyright.html', form=form)
+    return await render_template('content_manager/copyright/add_copyright.html', form=form)
 
 @content_manager.route('/copyright/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -1017,7 +1001,7 @@ async def added_favicon_image():
     data = FaviconImage.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_favicon_image'))
-    return render_template(
+    return await render_template(
         'content_manager/favicon/added_images.html', data=data)
 
 # Favicon Image add method
@@ -1032,7 +1016,7 @@ async def add_favicon_image():
         db.session.commit()
         flash("Favicon Added Successfully .", "success")
         return redirect(url_for('content_manager.added_favicon_image'))
-    return render_template('content_manager/favicon/add_image.html', form=form)
+    return await render_template('content_manager/favicon/add_image.html', form=form)
 
 # Favicon Image Delete Method 
 @content_manager.route('/favicon_image/delete/<int:favicon_image_id>', methods=['POST', 'GET'])
@@ -1054,7 +1038,7 @@ async def added_apple_touch_icon():
     data = AppleTouchIcon.query.first()
     if data is None:
         return redirect(url_for('content_manager.add_apple_touch_icon'))
-    return render_template(
+    return await render_template(
         'content_manager/apple_touch_icon/added_apple_touch_icon.html', data=data)
 
 # Favicon Image add method
@@ -1069,7 +1053,7 @@ async def add_apple_touch_icon():
         db.session.commit()
         flash("Favicon Added Successfully .", "success")
         return redirect(url_for('content_manager.added_apple_touch_icon'))
-    return render_template('content_manager/apple_touch_icon/add_apple_touch_icon.html', form=form)
+    return await render_template('content_manager/apple_touch_icon/add_apple_touch_icon.html', form=form)
 
 # Favicon Image Delete Method 
 @content_manager.route('/apple_touch_icon/delete/<int:apple_touch_icon_id>', methods=['POST', 'GET'])
@@ -1090,7 +1074,7 @@ async def added_trackingscript():
     data = TrackingScript.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_trackingscript'))
-    return render_template(
+    return await render_template(
         'content_manager/trackingscript/added_trackingscript.html', data=data)
 
 # Add TrackingScript 
@@ -1107,7 +1091,7 @@ async def add_trackingscript():
         db.session.commit()
         flash("Tracking Script Added Successfully.", "success")
         return redirect(url_for('content_manager.added_trackingscript'))
-    return render_template('content_manager/trackingscript/add_trackingscript.html', form=form)
+    return await render_template('content_manager/trackingscript/add_trackingscript.html', form=form)
 
 
 # Edit SEO 
@@ -1126,7 +1110,7 @@ async def edit_trackingscript(id):
         return redirect(url_for('content_manager.added_trackingscript'))
     else:
         flash('ERROR! Text was not edited.', 'error')
-    return render_template('content_manager/trackingscript/add_trackingscript.html', form=form)
+    return await render_template('content_manager/trackingscript/add_trackingscript.html', form=form)
 
 @content_manager.route('/trackingscript/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -1155,7 +1139,7 @@ async def add_location():
         db.session.commit()
         flash("Location Added Successfully.", "success")
         return redirect(url_for('content_manager.added_location'))
-    return render_template('content_manager/location/add_location.html', form=form)
+    return await render_template('content_manager/location/add_location.html', form=form)
 
 
 @content_manager.route('/location')
@@ -1166,7 +1150,7 @@ async def added_location():
     data = Location.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_location'))
-    return render_template(
+    return await render_template(
         'content_manager/location/added_location.html', data=data)
 
 # Edit Location 
@@ -1185,7 +1169,7 @@ async def edit_location(id):
         return redirect(url_for('content_manager.added_location'))
     else:
         flash('ERROR! Text was not edited.', 'error')
-    return render_template('content_manager/location/add_location.html', form=form)
+    return await render_template('content_manager/location/add_location.html', form=form)
 
 @content_manager.route('/location/<int:id>/_delete', methods=['GET', 'POST'])
 
@@ -1209,7 +1193,7 @@ async def added_pricing():
     pricing_attributes = PricingAttribute.query.all()
     if data is None:
         return redirect(url_for('content_manager.add_pricing'))
-    return render_template(
+    return await render_template(
         'content_manager/pricing/added_pricing.html', data=data, cost_data = Cost.query.all(),
         pricing_attributes = PricingAttribute.query.all())
 
@@ -1226,7 +1210,7 @@ async def add_pricing():
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('content_manager.added_pricing'))
-    return render_template('content_manager/pricing/add_pricing.html', form=form)
+    return await render_template('content_manager/pricing/add_pricing.html', form=form)
 
 
 # Edit Pricing
@@ -1244,7 +1228,7 @@ async def edit_pricing(id):
         return redirect(url_for('content_manager.added_pricing'))
     else:
         flash('ERROR! Pricing was not edited.', 'error')
-    return render_template('content_manager/pricing/add_pricing.html', form=form)
+    return await render_template('content_manager/pricing/add_pricing.html', form=form)
 
 @content_manager.route('/pricing/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -1273,7 +1257,7 @@ async def add_pricing_attribute(id):
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('content_manager.added_pricing_attribute', id=id, title=pricing_id.title))
-    return render_template('content_manager/pricing/add_pricing_attribute.html', form=form)
+    return await render_template('content_manager/pricing/add_pricing_attribute.html', form=form)
 
 @content_manager.route('/pricing/<int:id>/<title>', methods=['POST', 'GET'])
 @login_required
@@ -1282,7 +1266,7 @@ async def added_pricing_attribute(id, title):
     data = PricingAttribute.query.filter_by(pricing_id=id).first()
     if data is None:
         return redirect(url_for('content_manager.add_pricing_attribute', id=id))
-    return render_template(
+    return await render_template(
         'content_manager/pricing/added_pricing_attribute.html', data=data, title=title)
 
 
@@ -1300,7 +1284,7 @@ async def edit_pricing_attribute(id):
         return redirect(url_for('content_manager.added_pricing_attribute'))
     else:
         flash('ERROR! PricingAttribute was not edited.', 'error')
-    return render_template('content_manager/pricing/add_pricing_attribute.html', form=form)
+    return await render_template('content_manager/pricing/add_pricing_attribute.html', form=form)
 
 @content_manager.route('/pricing_attribute/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required
@@ -1322,7 +1306,7 @@ async def added_cost(id, title):
     data = Cost.query.filter_by(pricing_id=id).first()
     if data is None:
         return redirect(url_for('content_manager.add_cost', id=id))
-    return render_template(
+    return await render_template(
         'content_manager/pricing/added_cost.html', data=data, title=title)
 
 @content_manager.route('/cost/<int:id>/add', methods=['POST', 'GET'])
@@ -1344,7 +1328,7 @@ async def add_cost(id):
         db.session.commit()
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('content_manager.added_cost', id=id, title=pricing_id.title))
-    return render_template('content_manager/pricing/add_cost.html', form=form)
+    return await render_template('content_manager/pricing/add_cost.html', form=form)
 
 
 # Edit Cost
@@ -1363,7 +1347,7 @@ async def edit_cost(id):
         return redirect(url_for('content_manager.added_cost'))
     else:
         flash('ERROR! Cost was not edited.', 'error')
-    return render_template('content_manager/pricing/add_cost.html', form=form)
+    return await render_template('content_manager/pricing/add_cost.html', form=form)
 
 @content_manager.route('/cost/setting/<int:id>/_delete', methods=['GET', 'POST'])
 @login_required

@@ -1,9 +1,11 @@
 from math import ceil
+from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 from .db import Base
 from flask import abort, flash
 from sqlalchemy import select, func, Column, DateTime, Integer
-from .db import db_session  as session
+
+from .db import db_session, AsyncSession
 from config import  Config
 
 
@@ -19,6 +21,7 @@ class Page(object):
         #previous_items = (page - 1) * page_size
         #has_next = previous_items + len(items) < total
         self.next_page = page + 1 if self.has_next else None
+
 
 
 
@@ -109,43 +112,53 @@ class CRUDMixin(object):
     """Mixin that adds convenience methods for CRUD (create, read, update, delete)
     operations.
     """
-
+  
     @classmethod
     async def get_or_404(cls, value, field:str):
-        result = await session.execute(select(cls).where(getattr(cls, field)  == value ))
+        result = await cls.session().execute(select(cls).where(getattr(cls, field)  == value ))
         query = result.scalars().first()
         return query if query is not None else abort(404)
 
     @classmethod
     async def all_by_field(cls, value, field:str):
-        result = await session.execute(select(cls).where(getattr(cls, field)  == value ))
-        return result.scalars().all()    
+        result = await cls.session().execute(select(cls).where(getattr(cls, field)  == value ))
+        return result.scalars().all()
+
+    
+    @classmethod
+    def session(cls)->AsyncSession:
+        s = db_session
+        return s
+
+
+
+
 
     @classmethod
     async def contains(cls, value, field:str):
-        result = await session.execute(select(cls).where(getattr(cls, field).contains(value)))
+        result = await cls.session().execute(select(cls).where(getattr(cls, field).contains(value)))
         return result.scalars().first()  
 
     @classmethod
     async def get_all_by_multiple(cls, **kwargs):
-        keys = await session.execute(select(cls).filter_by(**kwargs))
+        keys = await cls.session().execute(select(cls).filter_by(**kwargs))
         return keys.scalars().all()
 
     @classmethod
     async def get(cls, class_id:int):
         print(class_id)
-        keys = await session.execute(select(cls).where(cls.id == class_id))
+        keys = await cls.session().execute(select(cls).where(cls.id == class_id))
         return keys.scalars().first()
 
     @classmethod
     async def get_or_none(cls, value, field:str):
-        result = await session.execute(select(cls).where(getattr(cls, field)  == value ))
+        result = await cls.session().execute(select(cls).where(getattr(cls, field)  == value ))
         query = result.scalars().first()
         return query if query is not None else None      
 
     @classmethod
     async def get_by_filter(cls, **kwargs):
-        keys = await session.execute(select(cls).filter_by(
+        keys = await cls.session().execute(select(cls).filter_by(
         **kwargs))
         return keys.scalars().first()          
 
@@ -153,13 +166,18 @@ class CRUDMixin(object):
 
     @classmethod
     async def all(cls):
-        total = await session.execute(select(cls).order_by(cls.id.desc()))
+        total = await cls.session().execute(select(cls).order_by(cls.id.desc()))
         return total.scalars().all()
 
     @classmethod
+    async def first(cls):
+        total = await cls.session().execute(select(cls).order_by(cls.updated_at.desc()))
+        return len(total.scalars().first())
+
+    @classmethod
     async def count(cls):
-        total = await session.execute(select(cls).order_by(cls.id.desc()))
-        return len(total.scalars().all())    
+        total = await cls.session().execute(select(cls).order_by(cls.id.desc()))
+        return len(total.scalars().all())        
 
     @classmethod
     async def paginate(cls, page, page_size=Config.PAGE_SIZE):
@@ -167,7 +185,7 @@ class CRUDMixin(object):
             raise AttributeError('page needs to be >= 1')
         if page_size <= 0:
             raise AttributeError('page_size needs to be >= 1')
-        
+        session =cls.session()
         items= await session.execute(select(cls).\
             limit(page_size).offset((page - 1) * page_size))
         items = items.scalars().all()
@@ -177,7 +195,7 @@ class CRUDMixin(object):
 
     @classmethod
     async def find_latest(cls):
-        total = await session.execute(select(cls).order_by(cls.updated_at.desc()))
+        total = await cls.session().execute(select(cls).order_by(cls.updated_at.desc()))
         return total.scalars().all()
       
 
@@ -208,6 +226,7 @@ class CRUDMixin(object):
 
     async def save_multiple(self, commit=True):
         """Save the record."""
+        session = self.session()
         session.add_all(self)
         if commit:
             try:
@@ -220,6 +239,7 @@ class CRUDMixin(object):
 
     async def save(self, commit=True):
         """Save the record."""
+        session = self.session()
         session.add(self)
         if commit:
             try:

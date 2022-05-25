@@ -1,4 +1,4 @@
-from flask import (
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -8,19 +8,16 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_required
-from flask_rq import get_queue
 from flask_ckeditor import upload_success
-from flask_sqlalchemy import Pagination
 
-from app import db
 #from app.admin.forms import (
     #ChangeAccountTypeForm,
     #ChangeUserEmailForm,
     #InviteUserForm,
     #NewUserForm,
 #)
-from app.decorators import admin_required
-from app.email import send_email
+from app.utils.decorators import admin_required
+from app.utils.email import send_email
 from app.models import *
 from app.blueprints.template_manager.forms import *
 from app.blueprints.template_manager.views import template_manager
@@ -40,7 +37,7 @@ def allowed_file(filename):
 async def index():
     """Template manager page."""
         
-    data = TemplateSetting.query.all()
+    data = await TemplateSetting.all()
     form = TemplateChoiceForm()
     if form.validate_on_submit():
         choice = TemplateChoice(
