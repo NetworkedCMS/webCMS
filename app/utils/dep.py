@@ -1,4 +1,4 @@
-
+import aiofiles
 from flask import url_for
 from wtforms.fields import Field
 from wtforms.widgets import HiddenInput
@@ -66,11 +66,11 @@ class CustomSelectField(Field):
 
 
 
-"""async def create_template(file_name:str, **kwargs):
+async def create_template(file_name:str, **kwargs):
     try:
         async with aiofiles.open(f"{file_name}", 'w') as f:
             await f.write(**kwargs)
     except Exception as e:
-        raise Exception"""
+        raise Exception
     
 
