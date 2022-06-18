@@ -1,5 +1,5 @@
 from flask import url_for
-from app.flask_uploads import UploadSet, IMAGES
+from app.utils.flask_uploads import UploadSet, IMAGES
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import ValidationError, validators

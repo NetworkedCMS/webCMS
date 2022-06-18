@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template
+from aioflask import render_template
 from flask_mail import Message
 
 from app import create_app, mail
@@ -13,6 +13,6 @@ async def send_email(recipient, subject, template, **kwargs):
             app.config['EMAIL_SUBJECT_PREFIX'] + ' ' + subject,
             sender=app.config['EMAIL_SENDER'],
             recipients=[recipient])
-        msg.body = render_template(template + '.txt', **kwargs)
-        msg.html = render_template(template + '.html', **kwargs)
+        msg.body = await render_template(template + '.txt', **kwargs)
+        msg.html = await render_template(template + '.html', **kwargs)
         mail.send(msg)

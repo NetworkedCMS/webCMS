@@ -1,4 +1,5 @@
 from math import ceil
+from unittest import result
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 from .db import Base
@@ -112,6 +113,11 @@ class CRUDMixin(object):
     """Mixin that adds convenience methods for CRUD (create, read, update, delete)
     operations.
     """
+
+    @classmethod
+    async def first(cls):
+        result_ = await cls.session().execute(select(cls).order_by(cls.id.asc()))
+        return result_.first()
   
     @classmethod
     async def get_or_404(cls, value, field:str):
@@ -168,11 +174,6 @@ class CRUDMixin(object):
     async def all(cls):
         total = await cls.session().execute(select(cls).order_by(cls.id.desc()))
         return total.scalars().all()
-
-    @classmethod
-    async def first(cls):
-        total = await cls.session().execute(select(cls).order_by(cls.updated_at.desc()))
-        return len(total.scalars().first())
 
     @classmethod
     async def count(cls):
@@ -243,7 +244,8 @@ class CRUDMixin(object):
         session.add(self)
         if commit:
             try:
-                await session.commit()    
+                await session.commit()
+                await session.refresh(self)
             except IntegrityError as ex:
                 await session.rollback()
                 flash(f"The object is already stored, {ex}")    

@@ -10,7 +10,9 @@ from flask_mail import Mail
 from flask_compress import Compress
 from app.utils.assets import app_css, app_js, vendor_css, vendor_js
 from app.models import *
+from flask_jwt_extended import JWTManager
 from app.common.db import engine, db_session  as session
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -19,6 +21,7 @@ csrf = CSRFProtect()
 compress = Compress()
 images = UploadSet('images', IMAGES)
 docs = UploadSet('docs', ('rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'pdf', 'css'))
+jwt = JWTManager()
 
 
 
@@ -26,7 +29,6 @@ docs = UploadSet('docs', ('rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx',
 def create_app(config):
     app:"Flask" = Flask(__name__)
     config_name = config
-    print(config)
     if not isinstance(config, str):
         config_name = os.environ.get('FLASK_CONFIG')
     app.config.from_object(Config[config_name])
@@ -34,6 +36,7 @@ def create_app(config):
     mail.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+    jwt.init_app(app)
     compress.init_app(app)
     configure_uploads(app, images)
     configure_uploads(app, docs)
@@ -62,7 +65,7 @@ def create_app(config):
     from .blueprints.content_manager import content_manager as content_manager_blueprint
     app.register_blueprint(content_manager_blueprint)
 
-    """from .blueprints.template_manager import template_manager as template_manager_blueprint
+    from .blueprints.template_manager import template_manager as template_manager_blueprint
     app.register_blueprint(template_manager_blueprint)
 
     from .blueprints.messaging_manager import messaging_manager as messaging_manager_blueprint
@@ -78,14 +81,14 @@ def create_app(config):
     app.register_blueprint(onepage_blueprint)
 
     from .blueprints.presento import presento as presento_blueprint
-    app.register_blueprint(presento_blueprint)"""
+    app.register_blueprint(presento_blueprint)
     
 
     from .blueprints.account import account as account_blueprint
-    app.register_blueprint(account_blueprint)
+    app.register_blueprint(account_blueprint, url_prefix='/account')
 
-    """from .blueprints.admin import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix='/admin')"""
+    from .blueprints.admin import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
     from .blueprints.api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')

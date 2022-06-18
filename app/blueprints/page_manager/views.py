@@ -1,5 +1,5 @@
 
-from flask import (
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -8,21 +8,17 @@ from flask import (
     request,
     url_for,
 )
-from flask_login import current_user, login_required
-from flask_rq import get_queue
-from flask_ckeditor import upload_success
-from flask_sqlalchemy import Pagination
-
-from app import db
+from aioflask.patched.flask_login import login_required
 #from app.page_manager.forms import (
     #ChangeAccountTypeForm,
     #ChangeUserEmailForm,
     #InviteUserForm,
     #NewUserForm,
 #)
-from app.decorators import admin_required
-from app.email import send_email
+from app.utils.decorators import admin_required
+from app.utils.email import send_email
 from app.models import *
+from app.common.BaseModel import db_session as session
 from app.blueprints.page_manager.forms import *
 
 page_manager = Blueprint('page_manager', __name__)
@@ -31,17 +27,17 @@ page_manager = Blueprint('page_manager', __name__)
 @page_manager.route('/page/setting')
 @login_required
 async def index():
-    return render_template('page_manager/page/index.html')
+    return await render_template('page_manager/page/index.html')
 
 # Add Page
 @page_manager.route('/page/setting/added', methods=['POST', 'GET'])
 @login_required
 async def added_page():
     """View added Page setting."""
-    data = Page.query.all()
+    data = await Page.all()
     if data is None:
         return redirect(url_for('page_manager.add_page'))
-    return render_template(
+    return await render_template(
         'page_manager/page/added_page.html', data=data)
 
 
@@ -50,30 +46,29 @@ async def added_page():
 async def add_page():
     form = PageForm()
     if form.validate_on_submit():
-        data = Page(
-            name = form.name.data,
+        data = await Page.create(
+            **dict(name = form.name.data,
             #seo_title = form.seo_title.data,
             #seo_description = form.seo_description.data,
             content = form.content.data
-            )
-        db.session.add(data)
-        db.session.commit()
+            ))
         flash("Settings Added Successfully.", "success")
         return redirect(url_for('page_manager.added_page'))
-    return render_template('page_manager/page/add_page.html', form=form)
+    return await render_template('page_manager/page/add_page.html', form=form)
 
 
 # Edit Page
 @page_manager.route('/page/<int:id>/edit', methods=['POST', 'GET'])
 @login_required
 async def edit_page(id):
-    data = Page.query.filter_by(id=id).first()
+    data = await Page.get_or_404(id, 'id')
     form = PageForm(obj=data)
     if form.validate_on_submit():
         data.name=form.name.data
         data.content=form.content.data
-        db.session.add(data)
-        db.session.commit()
+        session.add(data)
+        await session.commit()
+
         flash("Link Html Added Successfully.", "success")
         return redirect(url_for('page_manager.added_page'))
     else:
@@ -84,9 +79,8 @@ async def edit_page(id):
 @login_required
 async def delete_page(id):
     """Delete the page added """
-    data = Page.query.filter_by(id=id).first()
-    db.session.commit()
-    db.session.delete(data)
+    data = await Page.get_or_404(id, 'id')
+    await data.delete()
     flash('Successfully deleted ' , 'success')
     if data is None:
         return redirect(url_for('page_manager.add_page'))

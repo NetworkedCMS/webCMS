@@ -1,5 +1,5 @@
 import json
-from flask import (
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -8,19 +8,18 @@ from flask import (
     request,
     url_for,
 )
-from flask_login import current_user, login_required
-from flask_rq import get_queue
-from flask_ckeditor import upload_success
-from flask_sqlalchemy import Pagination
-
-from app import db
+from aioflask.patched.flask_login import current_user, login_required
+from app.utils.dep import redis_q
+from sqlalchemy import select
+from app.common.db import db_session as session
+from app.common.BaseModel import Page
 #from app.admin.forms import (
     #ChangeAccountTypeForm,
     #ChangeUserEmailForm,
     #InviteUserForm,
     #NewUserForm,
 #)
-from app.decorators import admin_required
+from app.utils.decorators import admin_required
 from app.models import *
 from app.blueprints.messaging_manager.forms import *
 from app.blueprints.messaging_manager.views import messaging_manager
@@ -35,8 +34,10 @@ messaging_manager = Blueprint('messaging_manager', __name__)
 @login_required
 async def contact_messages(mtype, page):
     if mtype == 'primary':
-        contact_messages_result = ContactMessage.query.filter_by(spam=False).order_by(
-            ContactMessage.created_at.desc()).paginate(page, per_page=100)
+        contact_messages_result_ = await session.execute(select(ContactMessage).order_by(
+            ContactMessage.created_at.desc()))
+        contact_messages_result = contact_messages_result_.scalars().count()    
+
     elif mtype == 'spam':
         contact_messages_result = ContactMessage.query.filter(
             (ContactMessage.spam == True) | (ContactMessage.spam == None)).order_by(

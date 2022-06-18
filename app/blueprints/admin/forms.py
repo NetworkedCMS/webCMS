@@ -13,7 +13,7 @@ from wtforms.validators import (
     Length,
 )
 
-from app import db
+#from app import db
 from app.models import Role, User
 
 
@@ -33,8 +33,8 @@ class ChangeAccountTypeForm(FlaskForm):
     role = QuerySelectField(
         'New account type',
         validators=[InputRequired()],
-        get_label='name',
-        query_factory=lambda: db.session.query(Role).order_by('permissions'))
+        get_label='name',)
+        #query_factory=lambda: db.session.query(Role).order_by('permissions'))
     submit = SubmitField('Update role')
 
 
@@ -42,8 +42,8 @@ class InviteUserForm(FlaskForm):
     role = QuerySelectField(
         'Account type',
         validators=[InputRequired()],
-        get_label='name',
-        query_factory=lambda: db.session.query(Role).order_by('permissions'))
+        get_label='name',)
+       # query_factory=lambda: db.session.query(Role).order_by('permissions'))
     first_name = StringField(
         'First name', validators=[InputRequired(),
                                   Length(1, 64)])

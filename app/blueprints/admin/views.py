@@ -1,4 +1,4 @@
-from flask import (
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -7,7 +7,7 @@ from flask import (
     request,
     url_for,
 )
-from flask_login import current_user, login_required
+from aioflask.patched.flask_login import current_user, login_required
 from app.utils.dep import redis_q
 
 from app.common.db import db_session as session
@@ -29,7 +29,7 @@ admin = Blueprint('admin', __name__)
 @admin_required
 async def index():
     """Admin dashboard page."""
-    return render_template('admin/index.html')
+    return await render_template('admin/index.html')
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -49,7 +49,7 @@ async def new_user():
         await session.commit()
         flash('User {} successfully created'.format(user.full_name()),
               'form-success')
-    return render_template('admin/new_user.html', form=form)
+    return await render_template('admin/new_user.html', form=form)
 
 
 @admin.route('/invite-user', methods=['GET', 'POST'])
@@ -80,7 +80,7 @@ async def invite_user():
         )
         flash('User {} successfully invited'.format(user.full_name()),
               'form-success')
-    return render_template('admin/new_user.html', form=form)
+    return await render_template('admin/new_user.html', form=form)
 
 
 @admin.route('/users')
@@ -90,7 +90,7 @@ async def registered_users():
     """View all registered users."""
     users = await User.all()
     roles = await Role.all()
-    return render_template(
+    return await render_template(
         'admin/registered_users.html', users=users, roles=roles)
 
 
@@ -103,7 +103,7 @@ async def user_info(user_id):
     user = await User.get(user_id)
     if user is None:
         raise Exception
-    return render_template('admin/manage_user.html', user=user)
+    return await render_template('admin/manage_user.html', user=user)
 
 
 @admin.route('/user/<int:user_id>/change-email', methods=['GET', 'POST'])
@@ -121,7 +121,7 @@ async def change_user_email(user_id):
         await session.commit()
         flash('Email for user {} successfully changed to {}.'.format(
             user.full_name(), user.email), 'form-success')
-    return render_template('admin/manage_user.html', user=user, form=form)
+    return await render_template('admin/manage_user.html', user=user, form=form)
 
 
 @admin.route(
@@ -145,7 +145,7 @@ async def change_account_type(user_id):
         await session.commit()
         flash('Role for user {} successfully changed to {}.'.format(
             user.full_name(), user.role.name), 'form-success')
-    return render_template('admin/manage_user.html', user=user, form=form)
+    return await render_template('admin/manage_user.html', user=user, form=form)
 
 
 @admin.route('/user/<int:user_id>/delete')
@@ -156,7 +156,7 @@ async def delete_user_request(user_id):
     user = User.get(id=user_id)
     if user is None:
         raise Exception
-    return render_template('admin/manage_user.html', user=user)
+    return await render_template('admin/manage_user.html', user=user)
 
 
 @admin.route('/user/<int:user_id>/_delete')

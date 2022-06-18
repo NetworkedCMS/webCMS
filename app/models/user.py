@@ -66,13 +66,16 @@ class User(UserMixin, BaseModel):
 
 
     
-    async def assign_role(self, email:EmailStr):
+    async def assign_role(self):
         if self.role == None:
-            if email == current_app.config['ADMIN_EMAIL']:
-                self.role = await Role.get_by_field(Permission.ADMINISTER, 
+            if self.email == current_app.config['ADMIN_EMAIL']:
+                self.role = await Role.get_or_404(Permission.ADMINISTER, 
                 'permissions')
         if self.role is None:
-            self.role = await Role.get_by_field(True, 'default', session)   
+            self.role = await Role.get_or_404(True, 'default')
+        session.add(self)
+        await session.commit()
+        await session.refresh(self)       
         
 
 
@@ -128,6 +131,7 @@ class User(UserMixin, BaseModel):
         self.confirmed = True
         session.add(self)
         await session.commit()
+        await session.refresh(self)
         return True
 
     async def change_email(self, token:str):
@@ -147,6 +151,7 @@ class User(UserMixin, BaseModel):
         self.email = new_email
         session.add(self)
         await session.commit()
+        await session.refresh(self)
         return True
 
     async def reset_password(self, token:str,
@@ -162,6 +167,7 @@ class User(UserMixin, BaseModel):
         self.password = new_password
         session.add(self)
         await session.commit()
+        await session.refresh(self)
         return True
 
     @staticmethod
@@ -252,6 +258,7 @@ class ApiKey(BaseModel):
         )
         session.add(access_token)
         await session.commit()
+        await session.refresh(access_token)
         await session.flush()
         print('Created Api Access Key')
 

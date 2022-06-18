@@ -45,8 +45,11 @@ def test():
 
 @cli.command()
 def runserver():
+    """
+    Fires up a web server.
+    """
     app.run(host="0.0.0.0",  port=5000, reload=True,
-         debug=True,log_level="info", app='manage:app', )     
+         debug=True,log_level="info", app='manage:app')     
 
 
 @cli.command

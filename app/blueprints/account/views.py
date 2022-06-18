@@ -1,4 +1,4 @@
-
+import datetime
 from aioflask import (
     Blueprint,
     flash,
@@ -7,6 +7,7 @@ from aioflask import (
     request,
     session,
     url_for,
+    make_response
 )
 from aioflask.patched.flask_login import (
     current_user,
@@ -27,6 +28,7 @@ from app.blueprints.account.forms import (
 )
 from app.utils.email import send_email
 from app.models import User
+from flask_jwt_extended import create_access_token
 
 account = Blueprint('account', __name__)
 
@@ -34,6 +36,9 @@ account = Blueprint('account', __name__)
 @account.route('/login', methods=['GET', 'POST'])
 async def login():
     """Log in an existing user."""
+    next = ''
+    if 'next' in request.values:
+        next = request.values['next']
     form = LoginForm()
     if form.validate_on_submit():
         user = await User.get_or_none(form.email.data, 'email')
@@ -41,25 +46,35 @@ async def login():
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             flash('You are now logged in. Welcome back!', 'success')
-            return redirect(request.args.get('next') or url_for('main.index'))
+            if request.form['next'] != '':
+                resp = make_response(redirect(request.args.get('next')))
+                resp.set_cookie('user_token', create_access_token(
+                        identity=user.email), expires=datetime.datetime.now() + datetime.timedelta(days=30))
+                return resp
+            else:      
+                return redirect(url_for('main.index'))
         else:
             flash('Invalid email or password.', 'error')
-    return await render_template('account/login.html', form=form)
+    return await render_template('account/login.html', form=form, next=next)
 
 
 @account.route('/register', methods=['GET', 'POST'])
 async def register():
     """Register a new user, and send them a confirmation email."""
     form = RegistrationForm()
+    user = await User.get_or_none(form.email.data, 'email')
+    if user is not None:
+        flash("User already exists", 'form-error')
+        return await render_template('account/register.html', form=form)      
     if form.validate_on_submit():
         user = await User.create(
             **dict(first_name=form.first_name.data,
             last_name=form.last_name.data,
             email=form.email.data,
             password=form.password.data))
-        print(user.full_name)    
-        #token = user.generate_confirmation_token()
-        """confirm_link = url_for('account.confirm', token=token, _external=True)
+        await user.assign_role()   
+        token = user.generate_confirmation_token()
+        confirm_link = url_for('account.confirm', token=token, _external=True)
         redis_q.enqueue(
             send_email,
             recipient=user.email,
@@ -68,16 +83,9 @@ async def register():
             user=user,
             confirm_link=confirm_link)
         flash('A confirmation link has been sent to {}.'.format(user.email),
-              'warning')"""
-        return redirect(url_for('main.index'))
+              'warning')
+        return redirect(url_for('account.confirm'))
     return await render_template('account/register.html', form=form)
-
-@account.route('/users', methods=['GET', 'POST'])
-async def users():
-    """Register a new user, and send them a confirmation email."""
-    users = [i.full_name for i in  await User.count()]
-    print(users)
-    return redirect(url_for('main.index'))
 
 
 

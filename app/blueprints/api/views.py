@@ -1,5 +1,5 @@
 
-from flask import (
+from aioflask import (
     Blueprint,
     abort,
     flash,
@@ -11,7 +11,7 @@ from flask import (
     make_response
 )
 from flask.globals import session
-from flask_login import current_user, login_required
+from aioflask.patched.flask_login import current_user, login_required
 from flask_ckeditor import upload_success
 
 #from app.admin.forms import (

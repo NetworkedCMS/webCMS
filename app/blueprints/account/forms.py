@@ -42,15 +42,15 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
     submit = SubmitField('Register')
 
-    def validate_email(self, field):
+    """def validate_email(self, field):
         event = asyncio.get_running_loop()
         asyncio.ensure_future(_email(field), loop=event)
 
-async def _email(field):
-    if await User.get_or_none(field.data, 'email'):
-        raise ValidationError('Email already registered. (Did you mean to '
+        async def _email(field):
+            if await User.get_or_none(field.data, 'email'):
+                raise ValidationError('Email already registered. (Did you mean to '
                                   '<a href="{}">log in</a> instead?)'.format(
-                                    url_for('account.login')))
+                                    url_for('account.login')))"""
 
 
 class RequestResetPasswordForm(FlaskForm):

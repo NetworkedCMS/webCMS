@@ -23,8 +23,6 @@ from wtforms.validators import (
     Length,
     DataRequired
 )
-
-from app import db
 from app.models import *
 from wtforms_alchemy import Unique, ModelForm, model_form_factory
 
