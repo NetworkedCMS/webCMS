@@ -1,14 +1,16 @@
 import os
 
 from flask import url_for
-from .. import db
+from app.common.BaseModel import BaseModel
+from sqlalchemy import Column, Text, String,ForeignKey, Integer, Float
+from sqlalchemy.orm import relationship
 
 
-class SlideShowImage(db.Model):
+class SlideShowImage(BaseModel):
     __tablename__ = "slide_show_images"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=True)
-    image_filename = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(80), nullable=True)
+    image_filename = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -27,12 +29,12 @@ def slide_show_images_serializer(slide_show_images):
         'image_filename': slide_show_images.image_filename,
         }
 
-class Seo(db.Model):
+class Seo(BaseModel):
     __tablename__ = "seo"
-    id = db.Column(db.Integer, primary_key=True)
-    meta_tag = db.Column(db.String(80), nullable=True)
-    title = db.Column(db.String(80), nullable=True)
-    content = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    meta_tag = Column(String(80), nullable=True)
+    title = Column(String(80), nullable=True)
+    content = Column(String(256), nullable=True)
 
 def seo_serializer(seo):
     return {
@@ -42,12 +44,12 @@ def seo_serializer(seo):
         }
 
 
-class Setting(db.Model):
+class Setting(BaseModel):
     __tablename__ = "settings"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=True)
-    display_name = db.Column(db.String(80), nullable=True)
-    value = db.Column(db.String(512), nullable=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(80), nullable=True)
+    display_name = Column(String(80), nullable=True)
+    value = Column(String(512), nullable=True)
 
 
 def settings_serializer(settings):
@@ -60,11 +62,11 @@ def settings_serializer(settings):
 
 #####################################################
 
-class Counter(db.Model):
+class Counter(BaseModel):
     __tablename__ = "counter"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=True)
-    count = db.Column(db.String(25), nullable=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(80), nullable=True)
+    count = Column(String(25), nullable=True)
 
 def counter_serializer(counter):
     return {
@@ -73,11 +75,11 @@ def counter_serializer(counter):
         }
 
 
-class HomeText(db.Model):
+class HomeText(BaseModel):
     __tablename__ = "hometext"
-    id = db.Column(db.Integer, primary_key=True)
-    firstext = db.Column(db.String(80), nullable=True)
-    secondtext = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    firstext = Column(String(80), nullable=True)
+    secondtext = Column(Text)
 
 def hometext_serializer(hometext):
     return {
@@ -87,11 +89,11 @@ def hometext_serializer(hometext):
         }
 
 
-class TrackingScript(db.Model):
+class TrackingScript(BaseModel):
     __tablename__ = "tracking_script"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=True)
-    script = db.Column(db.String(150), nullable=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=True)
+    script = Column(String(150), nullable=True)
 
 def tracking_script_serializer(tracking_script):
     return {
@@ -100,11 +102,11 @@ def tracking_script_serializer(tracking_script):
         'script': tracking_script.script,
         }
 
-class TechnologiesText(db.Model):
+class TechnologiesText(BaseModel):
     __tablename__ = "technologies_text"
-    id = db.Column(db.Integer, primary_key=True)
-    firstext = db.Column(db.String(80), nullable=True)
-    secondtext = db.Column(db.String(80), nullable=True)
+    id = Column(Integer, primary_key=True)
+    firstext = Column(String(80), nullable=True)
+    secondtext = Column(String(80), nullable=True)
 
 def technologies_text_serializer(technologies_text):
     return {
@@ -113,12 +115,12 @@ def technologies_text_serializer(technologies_text):
         'secondtext': technologies_text.secondtext,
         }
 
-class Service(db.Model):
+class Service(BaseModel):
     __tablename__ = "services"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=True)
-    description = db.Column(db.String(80), nullable=True)
-    icon = db.Column(db.String(50), nullable=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(80), nullable=True)
+    description = Column(String(80), nullable=True)
+    icon = Column(String(50), nullable=True)
 
 def services_serializer(services):
     return {
@@ -128,11 +130,11 @@ def services_serializer(services):
         'icon': services.icon,
         }
 
-class About(db.Model):
+class About(BaseModel):
     __tablename__ = "about"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(180), nullable=True)
-    description = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(180), nullable=True)
+    description = Column(Text)
 
 def about_serializer(about):
     return {
@@ -141,12 +143,12 @@ def about_serializer(about):
         'description': about.description,
         }
 
-class Team(db.Model):
+class Team(BaseModel):
     __tablename__ = "members"
-    id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(80), nullable=True)
-    job_title = db.Column(db.String(80), nullable=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    full_name = Column(String(80), nullable=True)
+    job_title = Column(String(80), nullable=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -165,13 +167,13 @@ def members_serializer(members):
         'image': members.image,
         }
     
-class Video(db.Model):
+class Video(BaseModel):
     __tablename__ = "video"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=True)
-    url = db.Column(db.String(80), nullable=True)
-    description = db.Column(db.Text)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(80), nullable=True)
+    url = Column(String(80), nullable=True)
+    description = Column(Text)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -190,12 +192,12 @@ def video_serializer(video):
         'description': video.description,
         }
 
-class Portfolio(db.Model):
+class Portfolio(BaseModel):
     __tablename__ = "portfolio"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=True)
-    description = db.Column(db.String(80), nullable=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(80), nullable=True)
+    description = Column(String(80), nullable=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -214,13 +216,13 @@ def portfolio_serializer(portfolio):
         'description': portfolio.description,
         }
 
-class Testimonial(db.Model):
+class Testimonial(BaseModel):
     __tablename__ = "testimonial"
-    id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(80), nullable=True)
-    job_title = db.Column(db.String(80), nullable=True)
-    comment = db.Column(db.String(140), nullable=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    full_name = Column(String(80), nullable=True)
+    job_title = Column(String(80), nullable=True)
+    comment = Column(String(140), nullable=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -240,24 +242,24 @@ def testimonial_serializer(testimonial):
         'comment': testimonial.comment,
         }
 
-class CallToAction(db.Model):
+class CallToAction(BaseModel):
     __tablename__ = "call_to_action"
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(80), nullable=True)
-    url = db.Column(db.String(80), nullable=True)
+    id = Column(Integer, primary_key=True)
+    text = Column(String(80), nullable=True)
+    url = Column(String(80), nullable=True)
 
 def call_to_action_serializer(call_to_action):
     return {
         'id':call_to_action.id,
         'text':call_to_action.text ,
-        'url':testimonial.url ,
+        'url':call_to_action.url ,
         }
 
-class NavMenu(db.Model):
+class NavMenu(BaseModel):
     __tablename__ = "nav_menu"
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(80), nullable=True)
-    url = db.Column(db.String(80), nullable=True)
+    id = Column(Integer, primary_key=True)
+    text = Column(String(80), nullable=True)
+    url = Column(String(80), nullable=True)
 
 def nav_menu_serializer(nav_menu):
     return {
@@ -266,10 +268,10 @@ def nav_menu_serializer(nav_menu):
         'url':nav_menu.url ,
         }
 
-class TechnologiesImage(db.Model):
+class TechnologiesImage(BaseModel):
     __tablename__ = "technologies_images"
-    id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -286,10 +288,10 @@ def technologies_images_serializer(technologies_images):
         'image':technologies_images.image ,
         }
 
-class Client(db.Model):
+class Client(BaseModel):
     __tablename__ = "client"
-    id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -307,10 +309,10 @@ def client_serializer(client):
         }
 
 
-class AppleTouchIcon(db.Model):
+class AppleTouchIcon(BaseModel):
     __tablename__ = "apple_touch_icon"
-    id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -328,10 +330,10 @@ def apple_touch_icon_serializer(apple_touch_icon):
         }
 
     
-class Logo(db.Model):
+class Logo(BaseModel):
     _tablename_ = "logo"
-    id = db.Column(db.Integer, primary_key=True)
-    logo_image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    logo_image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -350,10 +352,10 @@ def logo_serializer(logo):
 
 
 
-class BackgroundImage(db.Model):
+class BackgroundImage(BaseModel):
     _tablename_ = "background_image"
-    id = db.Column(db.Integer, primary_key=True)
-    background_image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    background_image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -372,10 +374,10 @@ def background_image_serializer(background_image):
 
 
 # Favicon Image Model 
-class FaviconImage(db.Model):
+class FaviconImage(BaseModel):
     __tablename__ = "favicon_image"
-    id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -388,16 +390,16 @@ class FaviconImage(db.Model):
     
 def favicon_image_serializer(favicon_image):
     return {
-        'id':favicon__image.id,
-        'image':favicon__image.image ,
+        'id':favicon_image.id,
+        'image':favicon_image.image ,
         }
 
 
 # Footer Image Model 
-class FooterImage(db.Model):
+class FooterImage(BaseModel):
     __tablename__ = "footerimage"
-    id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    image = Column(String(256), nullable=True)
 
     @property
     def image_url(self):
@@ -417,10 +419,10 @@ def footerimage_serializer(footerimage):
 
 
 #Footer Text Model
-class FooterText(db.Model):
+class FooterText(BaseModel):
     __tablename__ = "footertext"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(256), nullable=True)
 
 def footertext_serializer(footertext):
     return {
@@ -431,11 +433,11 @@ def footertext_serializer(footertext):
 
 
 # Footer Social Media Icon with link Model
-class SocialMediaIcon(db.Model):
+class SocialMediaIcon(BaseModel):
     __tablename__ = "socialmediaicon"
-    id = db.Column(db.Integer, primary_key=True)
-    icon = db.Column(db.String(50), nullable=True)
-    url_link = db.Column(db.String(300), nullable=True)
+    id = Column(Integer, primary_key=True)
+    icon = Column(String(50), nullable=True)
+    url_link = Column(String(300), nullable=True)
 
 def socialmediaicon_serializer(socialmediaicon):
     return {
@@ -446,11 +448,11 @@ def socialmediaicon_serializer(socialmediaicon):
 
 
 # Faq text here
-class Faq(db.Model):
+class Faq(BaseModel):
     __tablename__ = "faq"
-    id = db.Column(db.Integer, primary_key=True)
-    question = db.Column(db.String(50), nullable=True)
-    answer = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    question = Column(String(50), nullable=True)
+    answer = Column(Text)
 
 def faq_serializer(faq):
     return {
@@ -460,11 +462,11 @@ def faq_serializer(faq):
         }
 
 # Faq text here
-class Location(db.Model):
+class Location(BaseModel):
     __tablename__ = "location"
-    id = db.Column(db.Integer, primary_key=True)
-    locality = db.Column(db.String(50), nullable=True)
-    town = db.Column(db.String(50), nullable=True)
+    id = Column(Integer, primary_key=True)
+    locality = Column(String(50), nullable=True)
+    town = Column(String(50), nullable=True)
 
 def location_serializer(location):
     return {
@@ -474,10 +476,10 @@ def location_serializer(location):
         }
     
 # BrandName text here
-class BrandName(db.Model):
+class BrandName(BaseModel):
     __tablename__ = "brandname"
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(15), nullable=True)
+    id = Column(Integer, primary_key=True)
+    text = Column(String(15), nullable=True)
 
 def brandname_serializer(brandname):
     return {
@@ -486,10 +488,10 @@ def brandname_serializer(brandname):
         }
 
 # Copyright text here
-class CopyRight(db.Model):
+class CopyRight(BaseModel):
     __tablename__ = "copyright"
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    text = Column(String(256), nullable=True)
 
 def copyright_serializer(copyright):
     return {
@@ -499,11 +501,11 @@ def copyright_serializer(copyright):
 
 
 # Resources List 
-class Resource(db.Model):
+class Resource(BaseModel):
     __tablename__ = "resource"
-    id = db.Column(db.Integer, primary_key=True)
-    role_title = db.Column(db.String(100), nullable=True)
-    resourcedetails = db.relationship('ResourceDetail', backref='resource', uselist=False)
+    id = Column(Integer, primary_key=True)
+    role_title = Column(String(100), nullable=True)
+    resourcedetails = relationship('ResourceDetail', backref='resource', uselist=False)
 
 def resource_serializer(resource):
     return {
@@ -514,12 +516,12 @@ def resource_serializer(resource):
 
 
 # Resources Details Models
-class ResourceDetail(db.Model):
+class ResourceDetail(BaseModel):
     __tablename__ = "resource_detail"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150), nullable=True)
-    description = db.Column(db.String(1000), nullable=True)
-    resource_id = db.Column(db.Integer, db.ForeignKey('resource.id'))
+    id = Column(Integer, primary_key=True)
+    title = Column(String(150), nullable=True)
+    description = Column(String(1000), nullable=True)
+    resource_id = Column(Integer, ForeignKey('resource.id'))
 
 def resource_detail_serializer(resource_detail):
     return {
@@ -531,13 +533,13 @@ def resource_detail_serializer(resource_detail):
 
 
 
-class Pricing(db.Model):
+class Pricing(BaseModel):
     __tablename__ = "pricing"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=True)
-    description = db.Column(db.String(250), nullable=True)
-    pricing_attributes = db.relationship('PricingAttribute', backref='pricing', lazy=True)
-    costs = db.relationship('Cost', backref='pricing', lazy=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(50), nullable=True)
+    description = Column(String(250), nullable=True)
+    pricing_attributes = relationship('PricingAttribute', backref='pricing', lazy=True)
+    costs = relationship('Cost', backref='pricing', lazy=True)
 
 def pricing_serializer(pricing):
     return {
@@ -549,11 +551,11 @@ def pricing_serializer(pricing):
         }
 
 
-class PricingAttribute(db.Model):
+class PricingAttribute(BaseModel):
     __tablename__ = "pricing_attribute"
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(120), nullable=True)
-    pricing_id = db.Column(db.Integer, db.ForeignKey('pricing.id'),
+    id = Column(Integer, primary_key=True)
+    description = Column(String(120), nullable=True)
+    pricing_id = Column(Integer, ForeignKey('pricing.id'),
         nullable=True)
 
 def pricing_attribute_serializer(pricing_attribute):
@@ -564,13 +566,13 @@ def pricing_attribute_serializer(pricing_attribute):
         }
 
 
-class Cost(db.Model):
+class Cost(BaseModel):
     __tablename__ = "cost"
-    id = db.Column(db.Integer, primary_key=True)
-    figure = db.Column(db.Float, nullable=True)
-    currency = db.Column(db.String(120), nullable=True)
-    currency_icon = db.Column(db.String(10), nullable=True)
-    pricing_id = db.Column(db.Integer, db.ForeignKey('pricing.id'),
+    id = Column(Integer, primary_key=True)
+    figure = Column(Float, nullable=True)
+    currency = Column(String(120), nullable=True)
+    currency_icon = Column(String(10), nullable=True)
+    pricing_id = Column(Integer, ForeignKey('pricing.id'),
         nullable=True)
 
 

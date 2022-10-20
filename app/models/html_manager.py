@@ -1,13 +1,14 @@
 import os
 
 from flask import url_for
-from .. import db
+from app.common.BaseModel import BaseModel
+from sqlalchemy import Column, Text, String,Integer
 
 
-class Css(db.Model):
+class Css(BaseModel):
     __tablename__ = "css"
-    id = db.Column(db.Integer, primary_key=True)
-    css_filename = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    css_filename = Column(String(256), nullable=True)
 
     @property
     def css_url(self):
@@ -19,89 +20,89 @@ class Css(db.Model):
         return os.path.join(current_app.config['UPLOADED_DOCS_DEST'], self.css_filename)
 
 
-class FooterHtml(db.Model):
+class FooterHtml(BaseModel):
     __tablename__ = "footer_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class HeaderHtml(db.Model):
+class HeaderHtml(BaseModel):
     __tablename__ = "header_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class NavbarHtml(db.Model):
+class NavbarHtml(BaseModel):
     __tablename__ = "navbar_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class FooterScript(db.Model):
+class FooterScript(BaseModel):
     __tablename__ = "footer_script"
-    id = db.Column(db.Integer, primary_key=True)
-    js = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    js = Column(Text)
 
-class HeaderScript(db.Model):
+class HeaderScript(BaseModel):
     __tablename__ = "header_script"
-    id = db.Column(db.Integer, primary_key=True)
-    js = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    js = Column(Text)
 
-class CarouselHtml(db.Model):
+class CarouselHtml(BaseModel):
     __tablename__ = "carousel_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class AlbumHtml(db.Model):
+class AlbumHtml(BaseModel):
     __tablename__ = "album_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class BlankHtml(db.Model):
+class BlankHtml(BaseModel):
     __tablename__ = "blank_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class FormHtml(db.Model):
+class FormHtml(BaseModel):
     __tablename__ = "form_html"
-    id = db.Column(db.Integer, primary_key=True)
-    form_name = db.Column(db.String(80), nullable=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    form_name = Column(String(80), nullable=True)
+    html = Column(Text)
 
-class JumbotronHtml(db.Model):
+class JumbotronHtml(BaseModel):
     __tablename__ = "jumbotron_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class FeaturesHtml(db.Model):
+class FeaturesHtml(BaseModel):
     __tablename__ = "features_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class PricingHtml(db.Model):
+class PricingHtml(BaseModel):
     __tablename__ = "pricing_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class TestimonialsHtml(db.Model):
+class TestimonialsHtml(BaseModel):
     __tablename__ = "testimonials_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class ContactHtml(db.Model):
+class ContactHtml(BaseModel):
     __tablename__ = "contact_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
     
-class MetatagsHtml(db.Model):
+class MetatagsHtml(BaseModel):
     __tablename__ = "metatags_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class LinkHtml(db.Model):
+class LinkHtml(BaseModel):
     __tablename__ = "link_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 
-class TitleHtml(db.Model):
+class TitleHtml(BaseModel):
     __tablename__ = "title_html"
-    id = db.Column(db.Integer, primary_key=True)
-    html = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    html = Column(Text)
 

@@ -1,7 +1,25 @@
+import aiofiles
 from flask import url_for
 from wtforms.fields import Field
 from wtforms.widgets import HiddenInput
-import aiofiles
+from aioflask.patched.flask_login import LoginManager
+
+from redis import Redis
+from rq import Queue
+from config import Config
+
+
+redis_conn = Redis(host=Config.RQ_DEFAULT_HOST, 
+    port=Config.RQ_DEFAULT_PORT, db=0, 
+    password=Config.RQ_DEFAULT_PASSWORD)
+
+redis_q = Queue('high', connection=redis_conn)
+
+
+# Set up Flask-Login
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'account.login'
 
 
 
@@ -18,6 +36,7 @@ def register_template_utils(app):
         return isinstance(field, HiddenField)
 
     app.add_template_global(index_for_role)
+
 
 
 def index_for_role(role):

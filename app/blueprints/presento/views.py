@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """presento section, including homepage and signup."""
-from flask import (
+from aioflask import (
     Blueprint,
     flash,
     redirect,
@@ -8,7 +8,7 @@ from flask import (
     request,
     url_for,
 )
-from flask_login import (
+from aioflask.patched.flask_login import (
     current_user,
     login_required,
     login_user,
@@ -29,33 +29,33 @@ presento = Blueprint("presento", __name__, static_folder="../static")
 @login_required
 async def home():
     """Home page."""
-    nav_menu = NavMenu.query.all()
-    slideshows = SlideShowImage.query.all()
-    hometext = HomeText.query.first()
-    call_to_action = CallToAction.query.first()
-    logo = Logo.query.first()
-    techno_img = TechnologiesImage.query.all()
-    text_techno = TechnologiesText.query.first()
-    footer_text = FooterText.query.all()
-    tracking_script = TrackingScript.query.all()
-    media_icons = SocialMediaIcon.query.all()
-    footer_image = FooterImage.query.first()
-    copyright_text = CopyRight.query.first()
-    background_image = BackgroundImage.query.first()
-    favicon_image = FaviconImage.query.first()
-    brand = BrandName.query.first()
-    seo = Seo.query.first()
-    services = Service.query.all()
-    about = About.query.first()
-    team = Team.query.all()
-    video = Video.query.first()
-    counts = Counter.query.all()
-    portfolio = Portfolio.query.all()
-    faq = Faq.query.all()
-    testimonial = Testimonial.query.all()
-    client = Client.query.all()
-    location = Location.query.all()
-    apple_touch_icon = AppleTouchIcon.query.first()
+    nav_menu = await NavMenu.all()
+    slideshows = await SlideShowImage.all()
+    hometext = await HomeText.first()
+    call_to_action = await CallToAction.first()
+    logo = await Logo.first()
+    techno_img = await TechnologiesImage.all()
+    text_techno = await TechnologiesText.first()
+    footer_text = await FooterText.all()
+    tracking_script = await TrackingScript.all()
+    media_icons = await SocialMediaIcon.all()
+    footer_image = await FooterImage.first()
+    copyright_text = await CopyRight.first()
+    background_image = await BackgroundImage.first()
+    favicon_image = await FaviconImage.first()
+    brand = await BrandName.first()
+    seo = await Seo.first()
+    services = await Service.all()
+    about = await About.first()
+    team = await Team.all()
+    video = await Video.first()
+    counts = await Counter.all()
+    portfolio = await Portfolio.all()
+    faq = await Faq.all()
+    testimonial = await Testimonial.all()
+    client = await Client.all()
+    location = await Location.all()
+    apple_touch_icon = await AppleTouchIcon.first()
     return render_template("Presento/index.html", footer_image=footer_image, icons=media_icons,
                            footer_text=footer_text, slideshows=slideshows,
                            home_title=hometext, logo=logo, techno_img=techno_img,
@@ -118,13 +118,11 @@ async def portfolio_details(id):
 async def contact():
     form = PublicContactForm()
     if form.validate_on_submit():
-        data = ContactMessage(
-            name=form.name.data,
+        await ContactMessage.create(
+            **dict(name=form.name.data,
             text=form.text.data,
             email = form.email.data
-            )
-        db.session.add(data)
-        db.session.commit()
+            ))
         flash('Successfully sent contact message.', 'success')
         return redirect(url_for('onepage.contact'))
     return render_template('OnePage/contact.html', form=form)

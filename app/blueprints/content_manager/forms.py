@@ -23,10 +23,10 @@ from wtforms.validators import (
     DataRequired
 )
 
-from app import db
+
 from app.models import *
 from wtforms_alchemy import Unique, ModelForm, model_form_factory
-from app.flask_uploads import UploadSet, IMAGES
+from app.utils.flask_uploads import UploadSet, IMAGES
 
 images = UploadSet('images', IMAGES)
 docs = UploadSet('docs', ('rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'pdf', 'css'))

@@ -14,6 +14,7 @@
             } %}
 
             {{ f.begin_form(form, flashes) }}
+            <input type="hidden" name="next" value="{{ next }}">
                 {{ f.render_form_field(form.email) }}
                 {{ f.render_form_field(form.password) }}
                 <div class="ui two column grid">

@@ -1,3 +1,4 @@
+import asyncio
 from flask import url_for
 from flask_wtf import FlaskForm
 from wtforms import ValidationError
@@ -41,11 +42,15 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
     submit = SubmitField('Register')
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered. (Did you mean to '
+    """def validate_email(self, field):
+        event = asyncio.get_running_loop()
+        asyncio.ensure_future(_email(field), loop=event)
+
+        async def _email(field):
+            if await User.get_or_none(field.data, 'email'):
+                raise ValidationError('Email already registered. (Did you mean to '
                                   '<a href="{}">log in</a> instead?)'.format(
-                                    url_for('account.login')))
+                                    url_for('account.login')))"""
 
 
 class RequestResetPasswordForm(FlaskForm):

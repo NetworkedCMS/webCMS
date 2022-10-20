@@ -1,16 +1,14 @@
-import os
-
-from flask import url_for
-from .. import db
+from app.common.BaseModel import BaseModel
+from sqlalchemy import Column, String,Text, Integer
 
 
-class Page(db.Model):
+class Page(BaseModel):
     __tablename__ = "page"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=True)
-    #seo_title = db.Column(db.String(180), nullable=True)
-    #seo_description = db.Column(db.String(250), nullable=True)
-    content = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=True)
+    #seo_title = Column(String(180), nullable=True)
+    #seo_description = Column(String(250), nullable=True)
+    content = Column(Text)
 
 def page_serializer(page):
     return {

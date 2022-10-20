@@ -1,16 +1,16 @@
 import os
-
+from app.common.BaseModel import BaseModel
+from sqlalchemy import Column, Boolean, String, Integer
 from flask import url_for
-from .. import db
 
 
-class TemplateSetting(db.Model):
+class TemplateSetting(BaseModel):
     __tablename__ = "template_settings"
-    id = db.Column(db.Integer, primary_key=True)
-    template_name = db.Column(db.String(80), nullable=True)
-    category = db.Column(db.String(80), nullable=True)
-    choice = db.Column(db.Boolean, default=False, index=True)
-    image = db.Column(db.String(256), nullable=True)
+    id = Column(Integer, primary_key=True)
+    template_name = Column(String(80), nullable=True)
+    category = Column(String(80), nullable=True)
+    choice = Column(Boolean, default=False, index=True)
+    image = Column(String(256), nullable=True)
     
 
     @property
@@ -33,11 +33,11 @@ def template_settings_serializer(template_settings):
 
     
 
-class TemplateChoice(db.Model):
+class TemplateChoice(BaseModel):
     __tablename__ = "template_choice"
-    id = db.Column(db.Integer, primary_key=True)
-    template_name = db.Column(db.String(80), nullable=True)
-    choice = db.Column(db.Boolean, default=False, index=True)
+    id = Column(Integer, primary_key=True)
+    template_name = Column(String(80), nullable=True)
+    choice = Column(Boolean, default=False, index=True)
 
 
 def template_choice_serializer(template_choice):

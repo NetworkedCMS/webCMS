@@ -1,21 +1,17 @@
-import os
+from app.common.BaseModel import BaseModel
+from sqlalchemy import Column, Boolean, String,ForeignKey, Integer, Text
+from sqlalchemy.orm import relationship
 
-from flask import url_for
-from .. import db
-
-
-class ContactMessage(db.Model):
+class ContactMessage(BaseModel):
     __tablename__ = 'contact_messages'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    read = db.Column(db.Boolean, default=False)
-    spam = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=True)
-    name = db.Column(db.String(), default=None, nullable=True)
-    email = db.Column(db.String(64), default=None, nullable=True)
-    text = db.Column(db.Text)
-    user = db.relationship("User")
-    created_at = db.Column(db.DateTime, default=db.func.now())
-    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    read = Column(Boolean, default=False)
+    spam = Column(Boolean, default=False)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"), nullable=True)
+    name = Column(String(), default=None, nullable=True)
+    email = Column(String(64), default=None, nullable=True)
+    text = Column(Text)
+    user = relationship("User")
 
 def contact_messages_serializer(contact_messages):
     return {

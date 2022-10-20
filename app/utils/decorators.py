@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import abort, url_for, redirect
+from aioflask import abort, url_for, redirect
 from flask.globals import session
 from flask_login import current_user
 
@@ -25,8 +25,8 @@ def permission_required(permission):
 
     def decorator(f):
         @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if not current_user.can(permission):
+        async def decorated_function(*args, **kwargs):
+            if not await current_user.can(permission):
                 abort(403)
             return f(*args, **kwargs)
 

@@ -1,15 +1,17 @@
-from .. import db
+from app.common.BaseModel import BaseModel
+from sqlalchemy import Column, Text, String, Integer
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
-class EditableHTML(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    editor_name = db.Column(db.String(100), unique=True)
-    value = db.Column(db.Text)
+class EditableHTML(BaseModel):
+    id = Column(Integer, primary_key=True)
+    editor_name = Column(String(100), unique=True)
+    value = Column(Text)
 
     @staticmethod
-    def get_editable_html(editor_name):
-        editable_html_obj = EditableHTML.query.filter_by(
-            editor_name=editor_name).first()
+    async def get_editable_html(editor_name, session:AsyncSession):
+        editable_html_obj = await EditableHTML.get_by_field(
+            editor_name, 'editor_name' ,session)
 
         if editable_html_obj is None:
             editable_html_obj = EditableHTML(editor_name=editor_name, value='')

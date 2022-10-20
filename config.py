@@ -12,12 +12,8 @@ else:
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-if os.path.exists('.env'):
-    print('Importing environment from .env file')
-    for line in open('.env'):
-        var = line.strip().split('=')
-        if len(var) == 2:
-            os.environ[var[0]] = var[1].replace("\"", "")
+from dotenv import load_dotenv
+load_dotenv('.env')
 
 class Config:
     APP_NAME = os.environ.get('APP_NAME')
@@ -36,6 +32,9 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
+
+    #Pagination
+    PAGE_SIZE=50
 
     #Uploads & Images
 
@@ -85,9 +84,11 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL', 'sqlite:///''data-dev.sqlite')
-        #'SQLALCHEMY_DATABASE_URI' + os.path.join(basedir, 'data-dev.sqlite'))
-    #'postgresql+psycopg2://postgres:postgres@localhost:5432/webcms')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL', 
+        'sqlite:///''data-dev.sqlite')
+    
+
+    
 
     @classmethod
     def init_app(cls, app):
@@ -110,7 +111,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     USE_RELOADER = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///''data-dev.sqlite')#,
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL', 'sqlite:///''prod.sqlite')
         #'sqlite:///' + os.path.join(basedir, 'data.sqlite'))
     SSL_DISABLE = (os.environ.get('SSL_DISABLE', 'True') == 'True')
 
