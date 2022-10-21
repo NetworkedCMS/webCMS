@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+{% if seo %}
+  <title>{{seo.title }}</title>
+  <meta content="{{seo.content }}" name="description">
+ {% endif %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+
+  <!-- Favicons -->
+	{% if favicon_image %}
+  <link rel="shortcut icon" type="image/x-icon" href="{{ favicon_image.image_url }}">
+	{% endif %}
+
+{% if apple_touch_icon %}
+  <link href="{{ apple_touch_icon.image_url }}" rel="apple-touch-icon">
+	{% endif %}
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/bootstrap/css/bootstrap.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/icofont/icofont.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/boxicons/css/boxicons.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/remixicon/remixicon.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/venobox/venobox.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/owl.carousel/assets/owl.carousel.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/vendor/aos/aos.css')}}">
+
+
+  <!-- Template Main CSS File -->
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='OnePage/assets/css/style.css')}}">
+  
+  <!-- Tracking scripts -->
+  
+    {% block styles %}{% endblock %}
+    {% for script in tracking_script %}
+    {{ script.script | safe }}
+    {% endfor %}
+
+{% if background_image %}
+	<style>
+	#hero {
+		width: 100%;
+		height: 100vh;
+		position: relative;
+		background: url({{ background_image.image_url}}) top center;
+		background-size: cover;
+		position: relative;
+		
+	}
+	.owl-carousel {
+	display:flex;
+	}
+	</style>
+{# else #}
+{% endif %}
+  <!-- =======================================================
+  * Template Name: OnePage - v2.1.0
+  * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+			  {% if logo %}
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <a href="#hero" class="logo me-auto"><img src="{{ logo.image_url }}" alt=""></a>
+			  {% else %}
+		<h1 class="logo me-auto"><a href="/">{{ brand.text }}</a></h1>
+			   {% endif %}
+
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="/">Home</a></li>
+		  {% if about %}
+          <li><a href="#about">About</a></li>
+		  {% endif %}
+		  {% if pages %}
+		  {% for page in pages %}
+          <li><a href="/{{ page.name }}">{{ page.name }}</a></li>
+		  {% endfor %}
+		  {% endif %}
+		  {% if services %}
+          <li><a href="#services">Services</a></li>
+		  {% endif %}
+		  {% if portfolio %}
+          <li><a href="#portfolio">Portfolio</a></li>
+		  {% endif %}
+		  {% if testimonial %}
+          <li><a href="#testimonials">Testimonial</a></li>
+		  {% endif %}
+		  {% if faq %}
+          <li><a href="#faq">Faq</a></li>
+		  {% endif %}
+		  {% if team %}
+          <li><a href="#team">Team</a></li>
+		  {% endif %}
+          <!----<li class="drop-down"><a href="">Drop Down</a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li class="drop-down"><a href="#">Deep Drop Down</a>
+                <ul>
+                  <li><a href="#">Deep Drop Down 1</a></li>
+                  <li><a href="#">Deep Drop Down 2</a></li>
+                  <li><a href="#">Deep Drop Down 3</a></li>
+                  <li><a href="#">Deep Drop Down 4</a></li>
+                  <li><a href="#">Deep Drop Down 5</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Drop Down 2</a></li>
+              <li><a href="#">Drop Down 3</a></li>
+              <li><a href="#">Drop Down 4</a></li>
+            </ul>
+          </li>---->
+          <li><a href="/contact">Contact</a></li>
+
+        </ul>
+      </nav><!-- .nav-menu -->
+		  {% if call_to_action %}
+		<a href="{{ call_to_action.url }}" class="get-started-btn scrollto" target="_blank">{{ call_to_action.text }}</a>
+		{% else %}
+		<a href="/contact" class="get-started-btn scrollto" target="_blank">Contact Us</a>
+		  {% endif %}
+    </div>
+  </header><!-- End Header -->
+  
+    <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <div class="container position-relative" data-aos-delay="100">
+      <div class="row justify-content-center">
+        <div class="col-xl-7 col-lg-9 text-center">
+          <h1>{{ home_title.firstext }}</h1>
+          <h2>{{ home_title.secondtext }}</h2>
+        </div>
+      </div>
+	{% if call_to_action %}
+      <div class="text-center">
+       <a href="{{ call_to_action.url }}" class="get-started-btn scrollto" target="_blank">{{ call_to_action.text }}</a>
+      </div>
+   {% endif %}
+
+
+    </div>
+  </section><!-- End Hero -->
+
+
+  
+  <main id="main">
+
+	  {% if about %}
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>{{ about.title }}</h2>
+        </div>
+
+        <div class="row content">
+          <div class="col-lg-6 pt-4 pt-lg-0">
+            <p>
+              {{ about.description|safe }}
+            </p>
+          </div>
+        </div>
+
+
+      </div>
+    </section><!-- End About Section -->
+		  {% endif %}
+		  
+		  {% if counts %}
+    <!-- ======= Counts Section ======= -->
+    <section id="counts" class="counts section-bg">
+      <div class="container">
+
+        <div class="row justify-content-end">
+ {% for count in counts %}
+          <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
+            <div class="count-box">
+              <span data-toggle="counter-up">{{ count.count }}</span>
+              <p>{{ count.title }}</p>
+            </div>
+          </div>
+ {% endfor %}
+        </div>
+
+      </div>
+    </section><!-- End Counts Section -->
+			  {% endif %}
+			  
+{% if video %}
+   <!-- ======= About Video Section ======= -->
+   
+ <style>
+ .about-video 
+ .play-btn {
+    width: 94px;
+    height: 94px;
+    background: radial-gradient(#2487ce 50%, rgba(36, 135, 206, 0.4) 52%);
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    left: calc(50% - 47px);
+    top: calc(50% - 47px);
+    overflow: hidden;
+}
+.about-video .play-btn::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-40%) translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 15px solid #fff;
+    z-index: 100;
+    transition: all 400ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+ </style>
+    <section id="about-video" class="about-video">
+      <div class="container aos-init aos-animate" data-aos="fade-up">
+
+        <div class="row">
+
+          <div class="col-lg-6 video-box align-self-baseline aos-init aos-animate" data-aos="fade-right" data-aos-delay="100">
+		  {% if video.image_url %}
+		    <img src="{{ video.image_url }}" class="img-fluid" alt="">
+			{% else %}
+            <img src="/static/OnePage/assets/img/about-video.jpg" class="img-fluid" alt="">
+			{% endif %}
+            <a href="{{ video.url }}" class="glightbox play-btn mb-4" data-vbtype="video" data-autoplay="true"></a>
+          </div>
+		  
+
+
+          <div class="col-lg-6 pt-3 pt-lg-0 content aos-init aos-animate" data-aos="fade-left" data-aos-delay="100">
+            <h3>{{ video.title }}</h3>
+            <p>
+              {{ video.description }}
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+	<!-- End Tabs Section -->
+	{% endif  %}
+		  {% if client %}
+    <!-- ======= Clients Section ======= -->
+    <section id="clients" class="clients section-bg">
+      <div class="container">
+
+        <div class="row">
+		  {% for logo in client %}
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
+            <img src="{{ logo.image_url }}" class="img-fluid" alt="">
+          </div>
+        {% endfor %}
+        </div>
+
+      </div>
+    </section><!-- End Clients Section -->
+		  {% endif %}
+{% if testimonial %}
+    <!-- ======= Testimonials Section ======= -->
+    <section id="testimonials" class="testimonials">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Testimonials</h2>
+          <!---<p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>---->
+        </div>
+        <div class="owl-carousel testimonials-carousel">
+         {% for t in testimonial %}
+          <div class="testimonial-item">
+            <p>
+              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+              {{ t.comment }}
+              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+            </p>
+            <img src="{{ t.image_url }}" class="testimonial-img" alt="">
+            <h3>{{ t.full_name }}</h3>
+            <h4>{{ t.job_title }}</h4>
+          </div>
+		  {% endfor %}
+        </div>
+      </div>
+    </section><!-- End Testimonials Section -->
+	{% endif %}
+
+{% if services %}	
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Our Sevices</h2>
+        </div>
+        <div class="row">
+{% for service in services %}
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos-delay="300">
+            <div class="icon-box iconbox-teal">
+              <div class="icon">
+                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,566.797414625762C385.7384707136149,576.1784315230908,478.7894351017131,552.8928747891023,531.9192734346935,484.94944893311C584.6109503024035,417.5663521118492,582.489472248146,322.67544863468447,553.9536738515405,242.03673114598146C529.1557734026468,171.96086150256528,465.24506316201064,127.66468636344209,395.9583748389544,100.7403814666027C334.2173773831606,76.7482773500951,269.4350130405921,84.62216499799875,207.1952322260088,107.2889140133804C132.92018162631612,134.33871894543012,41.79353780512637,160.00259165414826,22.644507872594943,236.69541883565114C3.319112789854554,314.0945973066697,72.72355303640163,379.243833228382,124.04198916343866,440.3218312028393C172.9286146004772,498.5055451809895,224.45579914871206,558.5317968840102,300,566.797414625762"></path>
+                </svg>
+                <i class="bx bx-arch"></i>
+              </div>
+              <h4><a href="">{{ service.title }}</a></h4>
+              <p>{{ service.description }}</p>
+            </div>
+          </div>
+{% endfor %}
+        </div>
+      </div>
+    </section><!-- End Sevices Section -->
+	{% endif %}
+
+{% if call_to_action %}
+    <!-- ======= Cta Section ======= -->
+    <section id="cta" class="cta">
+      <div class="container">
+        <div class="text-center">
+          <!----<h3></h3>
+          <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>--->
+          <a class="cta-btn" href="{{ call_to_action.url }}">{{ call_to_action.text }}</a>
+        </div>
+      </div>
+    </section><!-- End Cta Section -->
+{% else %}
+    <section id="cta" class="cta">
+      <div class="container">
+        <div class="text-center">
+          <!----<h3></h3>
+          <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>--->
+          <a class="cta-btn" href="/contact">Contact Us</a>
+        </div>
+      </div>
+    </section><!-- End Cta Section -->
+{% endif %}
+{% if portfolio %}
+    <!-- ======= Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Portfolio</h2>
+          <!---<p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>--->
+        </div>
+
+        <div class="row" data-aos-delay="150">
+          <!----<div class="col-lg-12 d-flex justify-content-center">
+            <ul id="portfolio-flters">
+              <li data-filter="*" class="filter-active">All</li>
+              <li data-filter=".filter-app">App</li>
+              <li data-filter=".filter-card">Card</li>
+              <li data-filter=".filter-web">Web</li>
+            </ul>
+          </div>----->
+        </div>
+        <div class="row portfolio-container">
+{% for p in portfolio %}
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <img src="{{ p.image_url }}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>{{ p.title }}</h4>
+              <p>{{ p.description }}</p>
+              <a href="{{ p.image_url }}" data-gall="portfolioGallery" class="venobox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
+                  <!----<a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>---->
+            </div>
+          </div>
+{% endfor %}
+	</div>
+      </div>
+    </section><!-- End Portfolio Section -->
+	{% endif %}
+
+{% if team %}
+    <!-- ======= Team Section ======= -->
+    <section id="team" class="team section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Team</h2>
+        </div>
+
+        <div class="row">
+{% for t in team %}
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos-delay="100">
+            <div class="member">
+              <div class="member-img">
+                <img src="{{ t.image_url }}" class="img-fluid" alt="">
+              </div>
+              <div class="member-info">
+                <h4>{{ t.full_name }}</h4>
+                <span>{{ t.job_title }}</span>
+              </div>
+            </div>
+          </div>
+{% endfor %}
+        </div>
+
+      </div>
+    </section><!-- End Team Section -->
+{% endif %}
+
+{% if faq %}
+    <!-- ======= Frequently Asked Questions Section ======= -->
+    <section id="faq" class="faq section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Frequently Asked Questions</h2>
+          <!---<p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>--->
+        </div>
+
+        <div class="faq-list">
+          <ul>
+		  {% for f in faq %}
+            <li>
+              <i class="bx bx-help-circle icon-help"></i> <a data-toggle="collapse" class="collapse" href="#faq-list-faq{{ f.id }}">{{ f.question }} <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <div id="faq-list-faq{{ f.id }}" class="collapse show" data-parent=".faq-list">
+                <p>
+                               {{ f.answer |safe }}
+                </p>
+              </div>
+            </li>
+			{% endfor %}
+
+
+
+          </ul>
+        </div>
+
+      </div>
+    </section><!-- End Frequently Asked Questions Section -->
+{% endif %}
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h3>{{ brand.text }}</h3>
+			{% if footer_text %}
+            <p>
+             {{ footer_text.title }}
+            </p>
+			{% endif %}
+          </div>
+
+          <div class="col-lg-2 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+			  {% if about %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#about">About us</a></li>
+			  {% endif %}
+
+			{% if pages %}
+			{% for page in pages %}
+              <li><i class="bx bx-chevron-right"></i> <a href="/{{ page.name }}">{{ page.name }}</a></li>
+			{% endfor %}
+			{% endif %}			  
+			  {% if services %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#services">Services</a></li>
+			  {% endif %}
+			  {% if portfoilio %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#portfolio">Portfolio</a></li>
+			  {% endif %}
+			  {% if team %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#team">Team</a></li>
+			  {% endif %}
+			  {% if testimonial %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#testimonials">Testimonials</a></li>
+			  {% endif %}
+			  {% if faq %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#faq">Faq</a></li>
+			  {% endif %}
+            </ul>
+          </div>
+		  
+{% if services %}
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+			 {% for service in services %}
+              <li><i class="bx bx-chevron-right"></i> <a href="#services">{{ service.title }}</a></li>
+			  {% endfor %}
+            </ul>
+          </div>
+{% endif %}
+
+          <!----<div class="col-lg-4 col-md-6 footer-newsletter">
+            <h4>Join Our Newsletter</h4>
+            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+          </div>---->
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container d-md-flex py-4">
+
+      <div class="mr-md-auto text-center text-md-left">
+	  {% if copyright_text %}
+        <div class="copyright">
+          &copy; Copyright <strong><span>{{ copyright_text.text }} </span></strong>. All Rights Reserved
+        </div>
+	  {% endif %}
+      <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/ -->
+        </div>
+      </div>
+	  	  {% if media_icons %}
+      <div class="social-links text-center text-md-right pt-3 pt-md-0">
+       	  	  {% for icons in media_icons %}
+			  {% if icons.icon =='twitter' or 'twitter-square' or 'twitter-f'  %}
+        <a href="{{ media_icons.url_link }}" class="twitter"><i class="bx bxl-twitter"></i></a>
+					  {% endif %}
+			  {% if icons.icon =='facebook' or 'facebook-square' or 'facebook-f'  %}
+        <a href="{{ media_icons.url_link }}" class="facebook"><i class="bx bxl-facebook"></i></a>
+			  {% endif %}
+			  {% if icons.icon =='instagram' or 'instagram-square' or 'instagram-f'  %}
+        <a href="{{ media_icons.url_link }}" class="instagram"><i class="bx bxl-instagram"></i></a>
+			  {% endif %}
+			  {% if icons.icon =='google' or 'google-square' or 'google-f'  %}
+        <a href="{{ media_icons.url_link }}" class="google-plus"><i class="bx bxl-skype"></i></a>
+			  {% endif %}
+			  {% if icons.icon =='linkedin' or 'linkedin-square' or 'linkedin-f'  %}
+        <a href="{{ media_icons.url_link }}" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+			  {% endif %}
+			         	  	  {% endfor %}
+      </div>
+	  	  	  {% endif %}
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top"><i class="ri-arrow-up-line"></i></a>
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/jquery.easing/jquery.easing.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/php-email-form/validate.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/waypoints/jquery.waypoints.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/venobox/venobox.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/owl.carousel/owl.carousel.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='OnePage/assets/vendor/aos/aos.js')}}"></script>
+
+
+  <!-- Template Main JS File -->
+
+  <script src="{{ url_for('static', filename='OnePage/assets/js/main.js')}}"></script>
+
+
+</body>
+
+</html>

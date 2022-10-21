@@ -1,0 +1,81 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+
+{% macro dashboard_option(title, endpoint, description=None, icon=None) %}
+    <a class="column" href="{{ url_for(endpoint) }}">
+        <div class="ui padded segment">
+            <h3 class="ui header">
+                {% if icon is not none %}
+                    <i class="{{ icon }}"></i>
+                {% endif %}
+                <div class="content">
+                    {{ title }}
+                    {% if description is not none %}
+                        <div class="sub header">
+                            {{ description }}
+                        </div>
+                    {% endif %}
+                </div>
+            </h3>
+        </div>
+    </a>
+{% endmacro %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="sixteen wide tablet twelve wide computer centered column">
+            <a class="ui basic compact button" href="{{ url_for('template_manager.index') }}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>
+
+            <h2 class="ui header">
+                Select a default template
+                <div class="sub header">
+                    Select one template and make it default for your website's visitors.
+                </div>
+            </h2>
+            <div class="ui inverted red segment">
+                <h3 class="sub header">
+                    Information
+                  </h3>
+                <div class="content">
+                    <ul class="ui list">
+                        <li><p>Use this to select a template which will appear as your default website design.</p></li>
+                        <li><p>Click on the view button to preview the template. Note it will take you to a new tab where you can see the template.
+                      </ul>
+                </div>
+              </div>
+            <div class="ui header" style="width: 100%; height: 50px">
+                <a class="ui teal right floated button" href="{{ url_for('template_manager.add_template_setting') }}">Add New Template</a>
+			</div>
+
+			<div class="ui link cards">
+			{% for template in data %}
+			  <div class="card">
+				<div class="image">
+				  <img src="{{ template.image_url }}">
+				</div>
+				<div class="content">
+				  <div class="header">{{ template.template_name }}</div>
+				  <div class="meta">
+					<span class="date">{{ template.category }}</span>
+				  </div>
+				</div>
+				<div class="extra content">
+				  <div class="ui two buttons">
+				  {% if template.choice == false %}
+					<a class="ui basic red button" href="{{ url_for('template_manager.preview', template_name=template.template_name ) }}">View</a>
+					<a class="ui basic green button" href="{{ url_for('template_manager.add_default', id= template.id, template_name=template.template_name ) }}">Make Default</a>
+					{% else %}
+					<a class="ui basic red button" href="{{ url_for('template_manager.preview', template_name=template.template_name ) }}">View</a>
+					{% endif %}
+
+				  </div>
+				</div>
+			  </div>
+					{% endfor %}
+			</div>
+		</div>
+    </div>
+{% endblock %}
